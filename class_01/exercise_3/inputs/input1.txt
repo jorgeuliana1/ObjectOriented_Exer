@@ -1,0 +1,5 @@
+<nomeAluno1> 0.1
+<nomeAluno2> 2.0
+<nomeAluno3> 30.0
+<nomeAluno4> 400.0
+<nomeAluno5> 5000.0
