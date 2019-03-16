@@ -1,5 +1,0 @@
-Joao 0.1
-Pedro 2.0
-Lucas 7.3
-Antonio 8.0
-Gabriel 10.0
