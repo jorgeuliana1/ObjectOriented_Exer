@@ -1,16 +1,94 @@
 class Date {
-    int day;
-    int month;
-    int year;
+    private int day;
+    private int month;
+    private int year;
 
     public Date(int day, int month, int year) {
+
         this.day   = day;
         this.month = month;
         this.year  = year;
+
+        this.correctDate();
     }
 
-    public void Print() {
-        System.out.println(day + "/" + month + "/" + year);
+    public void increaseDay(int d) {
+        this.day += d;
+        this.correctDate();
+    }
+
+    public void increaseMonth(int m) {
+        this.month += m;
+        this.correctDate();
+    }
+
+    public void increaseYear(int y) {
+        this.year += y;
+        this.correctDate();
+    }
+
+    public String Get(boolean isAmerican) {
+        String sDay;
+        String sMonth;
+        String sYear;
+
+        if(this.day < 10)
+            sDay = "0" + this.day;
+        else
+            sDay = String.valueOf(this.day);
+
+        if(this.month < 10)
+            sMonth = "0" + this.month;
+        else
+            sMonth = String.valueOf(this.month);
+        
+        sYear = String.valueOf(this.year);
+
+        if(isAmerican)
+            return (sMonth + "/" + sDay + "/" + sYear);
+
+        return (sDay + "/" + sMonth + "/" + sYear);
+    }
+
+    private void correctDate() {
+
+        //Correcting month
+        while(this.month > 12) {
+            this.month -= 12;
+            this.year  += 1;
+        }
+
+        //Verifying if the year is leap
+        boolean isLeap;
+
+        if(this.year % 4 == 0)
+            isLeap = true;
+        else
+            isLeap = false;
+
+        //Discovering the month duration
+        int monthLength = 31;
+
+        if(this.month == 2 && isLeap)
+            monthLength = 29;
+        else
+            monthLength = 28;
+
+        if(this.month == 4 || this.month == 6 || this.month == 9 || this.month == 11)
+            monthLength = 30;
+
+        //Correcting the day
+        while(this.day > monthLength) {
+            this.day   -= monthLength;
+            this.month += 1;
+        }
+
+        //Correcting month again
+        while(this.month > 12) {
+            this.month -= 12;
+            this.year  += 1;
+        }
+
     }
 }
 
@@ -26,15 +104,15 @@ class Identify {
 }
 
 class Location {
-    String country       = "";
-    String state         = "";
-    String region        = "";
-    String city          = "";
-    String neighbourhood = "";
-    boolean IdCom        = false;
-    Identify id;
+    private String country       = "";
+    private String state         = "";
+    private String region        = "";
+    private String city          = "";
+    private String neighbourhood = "";
+    private boolean IdCom        = false;
+    private Identify id;
 
-    public Location(String country, String city) {
+    public Location(String city, String country) {
         this.country = country;
         this.city    = city;
     }
@@ -64,15 +142,21 @@ class Location {
         this.IdCom = true;
         this.id = id;
     }
+
+    public String getCity() {
+        if(this.city == "")
+            return "null";
+        return this.city + ", " + this.country;
+    }
 }
 
 class Name {
-    String first = "";
-    String last  = "";
-    String middle;
-    String preffix;
-    String suffix;
-    String nick;
+    private String first = "";
+    private String last  = "";
+    private String middle;
+    private String preffix;
+    private String suffix;
+    private String nick;
 
     public Name(String first, String last) {
         this.first = first;
@@ -121,11 +205,11 @@ class Name {
 }
 
 class Person {
-    Name     name;
-    Identify id;
-    String   eMail = "null";
-    Date     birthday;
-    Location city;
+    private Name     name;
+    private Identify id;
+    private String   eMail = "null";
+    private Date     birthday;
+    private Location city  = new Location("", "");
 
     public Person(String firstName, String lastName, String id) {
         
@@ -140,17 +224,62 @@ class Person {
     public String getName() {
         return this.name.getName();
     }
+
+    public String getEmail() {
+        return this.eMail;
+    }
+
+    public void setBirthday(int year, int month, int day) {
+        this.birthday = new Date(day, month, year);
+    }
+
+    public void setEmail(String eMail) {
+        this.eMail = eMail;
+    }
+
+    public void setCity(String city, String country) {
+        this.city = new Location(city, country);
+    }
+
+    public void Print() {
+
+        System.out.println("Id:       " + this.id.at);
+        System.out.println("Name:     " + this.name.getName());
+        System.out.println("eMail:    " + this.eMail);
+        System.out.println("City:     " + this.city.getCity());
+        System.out.println("Birthday: " + this.birthday.Get(false));
+
+    }
     
 }
 
 public class Profile {
     public static void main(String[] args) {
 
+        Interpreter(args);
+
+        //Testing the class Person:
+
+        /*
         Person eu;
         eu = new Person("Jorge", "Uliana", "jorgeuliana1");
-
-        System.out.println(eu.getName());
+        eu.setBirthday(1999, 7, 6);
+        eu.setCity("Vila Velha", "Brazil");
+        eu.setEmail("ulianamjjorge@gmail.com");
+        System.out.println("");
+        eu.Print();
+        */
         
+        
+    }
+
+    public static void Interpreter(String[] args) {
+        if(args.length == 0)
+            return;
+
+        if(args[0] == "newperson") {
+            System.out.println("Hello!");
+        }
     }
 
 }
