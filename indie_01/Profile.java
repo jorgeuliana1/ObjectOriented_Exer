@@ -256,7 +256,11 @@ class Person {
 public class Profile {
     public static void main(String[] args) {
 
-        Interpreter(args);
+        String interpretation = Interpreter(args);
+
+        if(interpretation.equals("CreateProfile")) {
+            //There is nuthin' here.
+        }
 
         //Testing the class Person:
 
@@ -273,13 +277,20 @@ public class Profile {
         
     }
 
-    public static void Interpreter(String[] args) {
-        if(args.length == 0)
-            return;
-
-        if(args[0] == "newperson") {
-            System.out.println("Hello!");
+    public static String Interpreter(String[] args) {
+        for(int i = 0; i < args.length; i++) {
+            System.out.println( i + " - " + args[i]);
         }
+
+        // String.equals("String to be compared") returns true if the strings are equal.
+
+        if(args[0].equals("new")) {
+            if(args[1].equals("profile")) {
+                return "CreateProfile";
+            }
+        }
+
+        return "Null";
     }
 
 }
