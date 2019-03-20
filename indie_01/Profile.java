@@ -259,7 +259,8 @@ public class Profile {
         String interpretation = Interpreter(args);
 
         if(interpretation.equals("CreateProfile")) {
-            //There is nuthin' here.
+            //args[2] should contain the person name.
+
         }
 
         //Testing the class Person:
@@ -286,7 +287,8 @@ public class Profile {
 
         if(args[0].equals("new")) {
             if(args[1].equals("profile")) {
-                return "CreateProfile";
+                if(args.length >= 5)
+                    return "CreateProfile";
             }
         }
 
