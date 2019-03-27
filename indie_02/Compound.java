@@ -20,6 +20,9 @@
             //Simulation of SELIC, aproximated values.
 
             Stock s = new Stock(1000, 0.07);
+
+            File output = new File("output.csv");
+
             if(args.length > 0) {
                 for(int i = 0; i < args.length; i++) {
                     if(Integer.parseInt(args[i]) < 10)
