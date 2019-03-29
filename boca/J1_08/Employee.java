@@ -1,15 +1,12 @@
-import java.util.DateFormat;
-
 public class Employee {
     private String name;
     private double salary;
-    private DateFormat admission;
+    private String admission;
 
     public Employee(String name, double salary, String admission) {
         this.name = name;
         this.salary = salary;
-        this.admission = java.text.DateFormat.getInstance();
-        this.admission = DateFormat.parse(admission);
+        this.admission = admission;
     }
 
     public String getName() {
@@ -26,5 +23,26 @@ public class Employee {
 
     public void decrementSalary(double decr) {
         this.salary -= decr;
+    }
+
+    public int getAdmissionDay() {
+        int day;
+        day = 10*this.admission.charAt(0) + this.admission.charAt(1);
+        //return Integer.parseInt(day);
+        return day;
+    }
+
+    public int getAdmissionMonth() {
+        int month;
+        month = 10*this.admission.charAt(4) + this.admission.charAt(5);
+        //return Integer.parseInt(month);
+        return month;
+    }
+
+    public int getAdmissionYear() {
+        int year;
+        year = 10*this.admission.charAt(7) + this.admission.charAt(8);
+        //return Integer.parseInt(year);
+        return year;
     }
 }

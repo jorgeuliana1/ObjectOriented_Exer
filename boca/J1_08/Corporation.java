@@ -3,12 +3,12 @@ import java.util.ArrayList;
 public class Corporation {
     private String name;
     private String cnpj;
-    private ArrayList<Department> depts;
+    private Department[] depts;
 
-    public Corporation(String name, String cnpj) {
+    public Corporation(String name, String cnpj, int num_depts) {
         this.name = name;
         this.cnpj = cnpj;
-        this.depts = new ArrayList();
+        this.depts = new Department[num_depts];
     }
 
     public String getName() {
@@ -20,14 +20,19 @@ public class Corporation {
     }
 
     public int getNumberOfDepartments() {
-        return this.depts.size();
+        return this.depts.length;
     }
 
     public void addDepartment(Department dept) {
-        this.depts.add(dept);
+        for(int i = 0; i < this.depts.length; i++) {
+            if(this.depts[i] == null) {
+                this.depts[i] = dept;
+                break;
+            }
+        }
     }
 
     public Department getDepartment(int index) {
-        return this.depts.get(index);
+        return this.depts[index];
     }
 }

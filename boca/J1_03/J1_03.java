@@ -25,7 +25,7 @@ public class J1_03 {
 	}
 
 	public static int MDC(int x, int y) {
-		/* MDC s.f. "Máximo Divisor Comum", Greatest common divisor */
+		/* MDC s.f. "Maximo Divisor Comum", Greatest common divisor */
 		
 		if(x == y)
 			return x;

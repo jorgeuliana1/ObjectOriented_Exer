@@ -93,7 +93,7 @@ public class J1_04 {
 		else if(j == -1)
 			str = new String("decrescente");
 		else
-			str = new String("não ordenado");
+			str = new String("nao ordenado");
 
 		 System.out.println(" " + str + " " + cmp[2] + " " + cmp[0] + " " + cmp[1]);
 		 // I tried not to waste a lot of space, so I didn't use toString().

@@ -14,26 +14,26 @@ public class J1_08 {
 
         // Programming here
         Corporation corp;
-        corp = new Corporation(in.nextLine(), in.nextLine());
+        corp = new Corporation(in.next(), in.next(), in.nextInt());
 
         int num_depts;
-        num_depts = new Integer(in.nextInt());
+        num_depts = corp.getNumberOfDepartments();
 
         for(int i = 0; i < num_depts; i++) {
 
             Department dept;
-            dept = new Department(in.nextLine());
+            dept = new Department(in.next(), in.nextInt());
             corp.addDepartment(dept);
 
             int num_emps;
-            num_emps = new Integer(in.nextInt());
+            num_emps = dept.getNumEmps();
 
-            for(int j = 0; j < num_emps; i++) {
+            for(int j = 0; j < num_emps; j++) {
                 Employee emp;
                 if(i == 0) // Increasing salaries of the first dept.
-                    emp = new Employee(in.nextLine(), in.nextDouble() * 1.1, in.nextLine());
+                    emp = new Employee(in.next(), in.nextDouble() * 1.1, in.next());
                 else
-                    emp = new Employee(in.nextLine(), in.nextDouble(), in.nextLine());
+                    emp = new Employee(in.next(), in.nextDouble(), in.next());
                 dept.addEmployee(emp);
             }
         }
@@ -44,7 +44,7 @@ public class J1_08 {
         dep1.moveEmployeeTo(0, dep2);
 
         for(int i = 0; i < corp.getNumberOfDepartments(); i++) {
-            System.out.printf("%s R$ %.2f", corp.getDepartment(i).getName(), corp.getDepartment(i).getSalary());
+            System.out.printf("%s R$ %.2f\n", corp.getDepartment(i).getName(), corp.getDepartment(i).getSalary());
         }
 
     }
