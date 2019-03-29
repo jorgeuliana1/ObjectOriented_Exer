@@ -8,9 +8,10 @@ public class J1_08 {
     public static void main(String[] args) {
 
         // Setting up input and output.
-        Locale br = new Locale("pt", "BR");
+        //Locale br = new Locale("pt", "BR");
+        //BOCA USES ANOTHER LOCALE
         Scanner in = new Scanner(System.in);
-        in.useLocale(br);
+        //in.useLocale(br);
 
         // Programming here
         Corporation corp;
