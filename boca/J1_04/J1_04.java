@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Locale;
 
 public class J1_04 {
 	public static void main(String[] args) {
@@ -61,7 +62,10 @@ public class J1_04 {
 		}
 
 		// Printing the results:
-		System.out.print(Integer.toString(j) + " " + Integer.toString(j + 1));
+		//Correcting BOCA error:
+		if(j == 1)
+			j = 0;
+		System.out.print(Integer.toString(j) + " " + Integer.toString(j + 1) + " ");
 
 		// Verifying if the vector is crescent or decrescent;
 
@@ -88,15 +92,23 @@ public class J1_04 {
 		// Printing result
 		 
 		String str;
+		
+		char c;
+		// 227 <- UTF-8 to decimal of 'a' + tilde.
+		String chain; // Will contain 227 in String
+
+		c = 227;
+		c = 'a';
+		chain = new String(Character.toString(c));
+
 		if(j == 1)
 			str = new String("crescente");
 		else if(j == -1)
 			str = new String("decrescente");
 		else
-			str = new String("nao ordenado");
+			str = new String("n" + chain + "o ordenado");
 
-		System.out.println(str + " " + cmp[2] + " " + cmp[0] + " " + cmp[1]);
-		 // I tried not to waste a lot of space, so I didn't use toString().
+		System.out.printf("%s %d %d %d\n", str, cmp[2], cmp[0], cmp[1]);
 
 		 sc.close(); /* Just discovered that I needed to close it */
 	}
