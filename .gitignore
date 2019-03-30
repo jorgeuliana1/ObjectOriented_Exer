@@ -83,9 +83,7 @@ release.properties
 out/
 .idea_modules/
 
-##########################
-## Eclipse
-##########################
+# Eclipse
 .metadata
 .classpath
 .project
@@ -99,9 +97,7 @@ tmp/
 local.properties
 .loadpath
 
-##########################
-## NetBeans
-##########################
+# NetBeans
 nbproject/private/
 build/
 nbbuild/
@@ -110,10 +106,9 @@ nbdist/
 nbactions.xml
 nb-configuration.xml
 
-##########################
-## OS X
-##########################
+# OS X
 .DS_Store
 
-*.pdf
+# My Options
 *.zip
+.vscode/

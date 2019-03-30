@@ -42,6 +42,8 @@ public class J1_06 {
             for(int j = 0; j < 6; j++) {
                 for(int k = 0; k < 4; k++) {
                     c[i][j] += a[i][k] * b[k][j];
+                    if(j == 5)
+                        c[i][j] = 0;
                 }
             }
         }

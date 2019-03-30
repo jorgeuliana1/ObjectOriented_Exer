@@ -7,11 +7,8 @@ import java.util.Date;
 public class J1_08 {
     public static void main(String[] args) {
 
-        // Setting up input and output.
-        //Locale br = new Locale("pt", "BR");
-        //BOCA USES ANOTHER LOCALE
         Scanner in = new Scanner(System.in);
-        //in.useLocale(br);
+        in.useLocale(Locale.US);
 
         // Programming here
         Corporation corp;
@@ -45,7 +42,7 @@ public class J1_08 {
         dep1.moveEmployeeTo(0, dep2);
 
         for(int i = 0; i < corp.getNumberOfDepartments(); i++) {
-            System.out.printf("%s R$ %.2f\n", corp.getDepartment(i).getName(), corp.getDepartment(i).getSalary());
+            System.out.printf(new Locale("pt", "BR"), "%s R$ %.2f\n", corp.getDepartment(i).getName(), corp.getDepartment(i).getSalary());
         }
 
     }

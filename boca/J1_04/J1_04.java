@@ -95,10 +95,9 @@ public class J1_04 {
 		else
 			str = new String("nao ordenado");
 
-		 System.out.println(" " + str + " " + cmp[2] + " " + cmp[0] + " " + cmp[1]);
+		System.out.println(str + " " + cmp[2] + " " + cmp[0] + " " + cmp[1]);
 		 // I tried not to waste a lot of space, so I didn't use toString().
 
-
-
+		 sc.close(); /* Just discovered that I needed to close it */
 	}
 }
