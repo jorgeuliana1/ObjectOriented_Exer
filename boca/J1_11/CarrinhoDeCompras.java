@@ -40,7 +40,7 @@ public class CarrinhoDeCompras {
             // i.print();
             double money;
             money = i.getItem().getPrice() * i.getAmount();
-            System.out.print("* " + i.getAmount() + " = R$ ");
+            System.out.print("* " + i.getAmount() + "x " +i.getItem().getName() + " = R$ ");
             System.out.printf("%.2f\n", money);
             moneySum += money;
         }

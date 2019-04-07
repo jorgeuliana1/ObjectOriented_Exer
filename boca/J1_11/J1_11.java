@@ -1,10 +1,12 @@
 import java.util.Scanner;
+import java.util.Locale;
 
 public class J1_11 {
     public static void main(String[] args) {
 
         // This code block given by the problem
         Scanner scanner = new Scanner(System.in);
+        scanner.useLocale(Locale.ENGLISH);
         int num = scanner.nextInt();
         scanner.nextLine();
         CarrinhoDeCompras c = new CarrinhoDeCompras(num);
