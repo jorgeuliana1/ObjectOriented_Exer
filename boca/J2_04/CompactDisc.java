@@ -12,7 +12,7 @@ public class CompactDisc extends Item {
 
     @Override
     public String toString() {
-        return this.name + " (R$"this.price + ") - " + this.tracks;
+        return this.name + " (R$"this.price + ") - " + this.tracks + " faixas";
     }
     
 }
