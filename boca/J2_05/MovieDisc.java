@@ -1,8 +1,8 @@
 public class MovieDisc extends Item {
     private int length;
 
-    public MovieDisc(String name, double price, int length) {
-        super(name, price);
+    public MovieDisc(int barcode, String name, double price, int length) {
+        super(barcode, name, price);
         this.length = length;
     }
 

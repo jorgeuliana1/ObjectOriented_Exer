@@ -1,8 +1,8 @@
 public class CompactDisc extends Item {
     private int tracks;
 
-    public CompactDisc(String name, double price, int tracks) {
-        super(name, price);
+    public CompactDisc(int barcode, String name, double price, int tracks) {
+        super(barcode, name, price);
         this.tracks = tracks;
     }
 

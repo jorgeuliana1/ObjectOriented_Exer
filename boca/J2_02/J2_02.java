@@ -7,16 +7,17 @@ public class J2_02 {
         in = new Scanner(System.in);
 
         // Receiving input.
-        long num;
-        num = in.nextLong();
+        long sNum;
+        sNum = in.nextLong();
 
         Aleatorio r;
-        
-        r = new Aleatorio(num);
+        r = new Aleatorio(sNum);
 
         // Printing the random numbers.
         for(int i = 0; i < 10; i++) {
+
             System.out.print(Integer.toString(r.getNum()) + " ");
+
         }
         
 

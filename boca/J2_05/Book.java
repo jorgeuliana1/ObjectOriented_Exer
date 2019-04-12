@@ -1,8 +1,8 @@
 public class Book extends Item {
     private String author;
 
-    public Book(String name, double price, String author) {
-        super(name, price);
+    public Book(int barcode, String name, double price, String author) {
+        super(barcode, name, price);
         this.author = author;
     }
 
