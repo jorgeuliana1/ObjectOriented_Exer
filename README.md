@@ -1,7 +1,12 @@
 # Object Oriented Programming Exercises
 My OO Programming discipline exercises.
-## Repository Organization
-### class_** folders:
+
+## Repository Organization:
+### boca:
+Exercises that the professor posted at the BOCA platform.
+(Substitutes the class)
+### class:
 Exercises that I received from the professor.
-### indie_** folders:
+(Not used anymore) (Pré-BOCA)
+### indie:
 Challenges that I made to myself.
