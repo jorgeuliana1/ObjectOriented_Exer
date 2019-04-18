@@ -1,5 +1,0 @@
-<nomeAluno1> 0.1
-<nomeAluno2> 2.0
-<nomeAluno3> 7.3
-<nomeAluno4> 8.0
-<nomeAluno5> 10.0
