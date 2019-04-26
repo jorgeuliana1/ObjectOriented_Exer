@@ -1,6 +1,6 @@
 import java.util.Formatter;
 
-public class Item implements Comparable {
+public class Item implements Comparable<Item> {
     private String name;
     private double price;
 
@@ -31,17 +31,16 @@ public class Item implements Comparable {
     }
 
     @Override
-    public int compareTo( Object item ) {
-
-        Item i = (Item) item;
-
-        if( this.price > i.price ) 
-            return 1;
-        else if ( this.price < i.price )
+    public int compareTo( Item i ) {
+        
+        if ( this.price > i.price ) 
             return -1;
+        else if ( this.price < i.price )
+            return 1;
         else {
             return this.name.compareTo(i.name);
         }
+
     }
 
 }
