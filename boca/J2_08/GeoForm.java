@@ -1,3 +1,4 @@
-abstract class GeoForm {
-    
+public interface GeoForm {
+    abstract double getPerimeter();
+    abstract double getArea();    
 }
