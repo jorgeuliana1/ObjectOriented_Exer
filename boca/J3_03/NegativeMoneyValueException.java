@@ -11,7 +11,7 @@ public class NegativeMoneyValueException extends Exception {
 
     @Override
     public String getMessage() {
-        return String.format(new Locale("pt", "BR"), "Nao e' possivel depositar/sacar valor negativo: %.1f", value);
+        return String.format(/*new Locale("pt", "BR"),*/ "Nao e' possivel depositar/sacar valor negativo: %.1f.", value);
     }
 
 }
