@@ -2,7 +2,7 @@ import java.util.Scanner;
 import java.util.Locale;
 import java.io.File;
 
-public class T1_2019_1_Etapa1 {
+public class T1_2019_1_Etapa01 {
 
     public static void main(String[] args) {
         // Setting up.
@@ -17,12 +17,9 @@ public class T1_2019_1_Etapa1 {
         // Loading the data from the file.
         PublicationStats stats = new PublicationStats();
         stats.fromCSV(f);
-    }
 
-    
-
-    public void searchAnnals() {
-
+        // Printing the stast:
+        stats.printAnnalsStats();
     }
 
 }

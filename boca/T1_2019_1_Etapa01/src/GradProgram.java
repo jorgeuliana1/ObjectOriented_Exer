@@ -43,7 +43,7 @@ public class GradProgram {
         
         GradProgram ao = (GradProgram)a;
 
-        if(this.getName().equals(ao.getName()) && this.getUName().equals(ao.getUName()))
+        if(this.getName().equals(ao.getName()))
             return true;
         else
             return false;

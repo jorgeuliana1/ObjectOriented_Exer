@@ -42,7 +42,12 @@ public class Publication {
 
     public int getPages() {
         if(pages[0] == 1)
-            return pages[2] - pages[1];
+            return pages[2] - pages[1] + 1; /*
+                I will give you a example:
+                - If you have an article that starts at page 42 and ends at page 42, the article has one page.
+                - Then, we conclude that the formula is "last page" - "first page" + 1,
+
+            */
         else
             return 0;
     }
@@ -54,12 +59,27 @@ public class Publication {
             return "(null)";
     }
 
+    public boolean publishedInAnnal() {
+        return wasInAnnal;
+    }
+
     public String getGradProgName() {
         return grad_prog;
     }
 
     public String getUniversityName() {
         return u_name;
+    }
+
+    public void setAnnal(boolean was) {
+        wasInAnnal = was;
+    }
+
+    public boolean hasPageNumber() {
+        if(pages[0] == 1)
+            return true;
+        else
+            return false;
     }
 
 }
