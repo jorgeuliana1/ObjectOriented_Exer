@@ -1,3 +1,5 @@
+package br.ufes.inf.prog3.jjmuliana.trab1;
+
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.File;

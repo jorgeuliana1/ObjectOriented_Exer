@@ -1,3 +1,5 @@
+package br.ufes.inf.prog3.jjmuliana.trab1;
+
 public class Publication {
 
     private String a_name; /* annal name */

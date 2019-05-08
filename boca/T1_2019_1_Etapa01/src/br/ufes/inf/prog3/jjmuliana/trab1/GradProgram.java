@@ -1,3 +1,5 @@
+package br.ufes.inf.prog3.jjmuliana.trab1;
+
 public class GradProgram {
 
     private String g_name; /* graduate program name */

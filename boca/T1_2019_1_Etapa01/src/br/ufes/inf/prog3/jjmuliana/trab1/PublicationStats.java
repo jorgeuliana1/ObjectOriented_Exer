@@ -1,7 +1,7 @@
+package br.ufes.inf.prog3.jjmuliana.trab1;
+
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.io.File;
-import java.io.FileNotFoundException;
 
 public class PublicationStats {
 
@@ -37,7 +37,7 @@ public class PublicationStats {
         System.out.printf(
                         "Instituicoes que publicaram em anais: %d\nPPGs que publicaram em anais: %d\n" +
                         "Quantidade de producoes em anais: %d\nQuantidade de paginas publicadas em anais: %d\n" +
-                        "Media de paginas por publicacao: %.2f\n",
+                        "Media de paginas por publicacao: %.1f\n",
                         itPIA, ptPIA, amountPIA, amountPages, avePages
         );
 
@@ -87,9 +87,15 @@ public class PublicationStats {
             if(uni_name.indexOf("PUC") == -1 && uni_name.indexOf("FGV") == -1)
                 uni_name = uni_name.split("/")[0];
 
-
             addGradProgram(new GradProgram(csv.getContent(j, 0), uni_name));
             addUniversity(new University(uni_name));
+
+            /*
+             * Pages must only be considered if:
+             * 1. They are integer positive numbers.
+             * 2. If the initial page is smaller than the final page.
+             * 3. If the difference between than are below than 2000 pages.
+             * */
 
             boolean pages;
             int first_page, last_page;
@@ -98,9 +104,17 @@ public class PublicationStats {
                 first_page = last_page = 0;
             }
             else {
+
                 pages = true;
                 first_page = Integer.parseInt(csv.getContent(j, 14));
                 last_page = Integer.parseInt(csv.getContent(j, 13));
+
+                if(first_page < 0 || last_page < 0)
+                    pages = false;
+
+                if(last_page - first_page >= 2000 || last_page - first_page < 0)
+                    pages = false;
+
             }
 
             addPublication(new Publication(csv.getContent(j, 9), csv.getContent(j, 3), csv.getContent(j, 1), pages, first_page, last_page));
