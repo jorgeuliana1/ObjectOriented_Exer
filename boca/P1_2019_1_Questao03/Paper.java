@@ -78,6 +78,10 @@ public abstract class Paper {
         } return -1;
     }
 
+    public boolean hasPages() {
+        return has_page;
+    }
+
     public String getQualis() {
         return qualis;
     }

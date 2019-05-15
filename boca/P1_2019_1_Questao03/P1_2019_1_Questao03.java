@@ -24,7 +24,7 @@ public class P1_2019_1_Questao03 {
         Paper[] p_array;
 
         // Receiving the first line (Size of p_array).
-        int siz_p = in.nextInt();
+        int siz_p = Integer.parseInt(in.nextLine());
         p_array = new Paper[siz_p];
 
         // Collecting the info.
@@ -56,10 +56,10 @@ public class P1_2019_1_Questao03 {
 
     public static void printPArrayData(Paper[] p_array) {
         // Defining the counter variables:
-        int long_count, short_count, periodic_count;
+        double long_count, short_count, periodic_count;
         long_count = short_count = periodic_count = 0;
 
-        int long_pages, short_pages, periodic_pages;
+        double long_pages, short_pages, periodic_pages;
         long_pages = short_pages = periodic_pages = 0;
 
         int a1, a2, b1, b2, b3, b4, b5, c;
@@ -88,29 +88,31 @@ public class P1_2019_1_Questao03 {
             }
 
             // Counting qualis...
-            String qualis = p_array[i].getQualis();
-            if(qualis.equals("C")) {
-                c++;
-            } else if(qualis.equals("B5")) {
-                b5++;
-            } else if(qualis.equals("B4")) {
-                b4++;
-            } else if(qualis.equals("B3")) {
-                b3++;
-            } else if(qualis.equals("B2")) {
-                b2++;
-            } else if(qualis.equals("B1")) {
-                b1++;
-            } else if(qualis.equals("A2")) {
-                a2++;
-            } else if(qualis.equals("A1")) {
-                a1++;
+            if(p_array[i].hasPages()) {
+                String qualis = p_array[i].getQualis();
+                if(qualis.equals("C")) {
+                    c++;
+                } else if(qualis.equals("B5")) {
+                    b5++;
+                } else if(qualis.equals("B4")) {
+                    b4++;
+                } else if(qualis.equals("B3")) {
+                    b3++;
+                } else if(qualis.equals("B2")) {
+                    b2++;
+                } else if(qualis.equals("B1")) {
+                    b1++;
+                } else if(qualis.equals("A2")) {
+                    a2++;
+                } else if(qualis.equals("A1")) {
+                    a1++;
+                }
             }
         }
 
-        System.out.println("Total de paginas produzidas: " + (long_pages + short_pages + periodic_pages));
+        System.out.printf(new Locale("en", "US"), "Total de paginas produzidas: %.0f\n", ((int)long_pages + short_pages + periodic_pages));
         System.out.printf(new Locale("en", "US"), "Media por tipo: curto %.2f / longo %.2f / periodico %.2f\n", (double)(short_pages/short_count), 
-        (double)(long_pages/long_count), (double)(periodic_pages/periodic_pages));
+        (double)(long_pages/long_count), (double)(periodic_pages/periodic_count));
         System.out.print("Publicacoes por Qualis: ");
         System.out.print(a1 + " x A1; ");
         System.out.print(a2 + " x A2; ");
