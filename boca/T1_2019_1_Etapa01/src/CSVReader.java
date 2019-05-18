@@ -1,5 +1,3 @@
-package br.ufes.inf.prog3.jjmuliana.trab1;
-
 import java.io.*;
 import java.util.ArrayList;
 
@@ -13,11 +11,11 @@ public class CSVReader {
 
         try {
             r = new FileReader(f);
-        } catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println("Erro de I/O");
         }
         s = separator;
-        if(autoread)
+        if (autoread)
             readCSV();
 
     }
@@ -27,22 +25,22 @@ public class CSVReader {
         BufferedReader br;
         try {
             br = new BufferedReader(r);
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             System.exit(-1);
             return;
         }
         String str;
 
-        while(true) {
+        while (true) {
 
             try {
                 str = br.readLine();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 System.out.println("Erro de I/O");
                 break;
             }
 
-            if(str == null)
+            if (str == null)
                 break;
             stream.add(str);
         }
@@ -62,7 +60,7 @@ public class CSVReader {
 
     public int[] getSize() {
 
-        int []ret = new int[2];
+        int[] ret = new int[2];
         /*
          INDEX 0 | CONTAINS THE NUMBER OF ROWS OF THE CSV
          INDEX 1 | CONTAINS THE NUMBER OF COLUMNS OF THE CSV

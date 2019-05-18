@@ -1,5 +1,3 @@
-package br.ufes.inf.prog3.jjmuliana.trab1;
-
 public class GradProgram {
 
     private String g_name; /* graduate program name */
@@ -13,7 +11,7 @@ public class GradProgram {
     }
 
     public void addPublication(int i) {
-        publ+=i;
+        publ += i;
     }
 
     public void addPublication() {
@@ -42,13 +40,10 @@ public class GradProgram {
 
     @Override
     public boolean equals(Object a) {
-        
-        GradProgram ao = (GradProgram)a;
 
-        if(this.getName().equals(ao.getName()))
-            return true;
-        else
-            return false;
+        GradProgram ao = (GradProgram) a;
+
+        return this.getName().equals(ao.getName());
     }
 
 }

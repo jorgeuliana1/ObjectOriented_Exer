@@ -1,7 +1,5 @@
-package br.ufes.inf.prog3.jjmuliana.trab1;
-
-import java.util.Scanner;
 import java.io.File;
+import java.util.Scanner;
 
 public class FilePath {
 
@@ -16,7 +14,7 @@ public class FilePath {
         this.fp = folder_path;
         this.fn = file_name;
 
-    
+
         // Creating a file path based on the given information.
         StringBuilder sb = new StringBuilder();
         sb.append(fp).append(fn);
@@ -28,7 +26,7 @@ public class FilePath {
         // Error handling.
         try {
             file = new File(file_path);
-        } catch(Exception e) {
+        } catch (Exception e) {
             hf = false; /* there is no file in the given path */
         }
 

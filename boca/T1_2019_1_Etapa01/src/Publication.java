@@ -1,5 +1,3 @@
-package br.ufes.inf.prog3.jjmuliana.trab1;
-
 public class Publication {
 
     private String a_name; /* annal name */
@@ -16,10 +14,7 @@ public class Publication {
     public Publication(String a, String u, String g, boolean p, int p1, int p2) {
 
         // Defining a_name
-        if(a.equals("(null)"))
-            wasInAnnal = false;
-        else
-            wasInAnnal = true;
+        wasInAnnal = !a.equals("(null)");
         a_name = a;
 
         u_name = u;
@@ -28,22 +23,22 @@ public class Publication {
         pages = new int[3];
 
         // Defining the pages vctr
-        if(p2 - p1 >= 2000 || p1 > p2 || p2 < 0 || p1 < 0)
+        if (p2 - p1 >= 2000 || p1 > p2 || p2 < 0 || p1 < 0)
             p = false;
 
 
-        if(p == true)
+        if (p == true)
             pages[0] = 1;
         else
             pages[0] = 0;
-        
+
         pages[1] = p1;
         pages[2] = p2;
-        
+
     }
 
     public int getPages() {
-        if(pages[0] == 1)
+        if (pages[0] == 1)
             return pages[2] - pages[1] + 1; /*
                 I will give you a example:
                 - If you have an article that starts at page 42 and ends at page 42, the article has one page.
@@ -55,7 +50,7 @@ public class Publication {
     }
 
     public String getAnnal() {
-        if(wasInAnnal)
+        if (wasInAnnal)
             return a_name;
         else
             return "(null)";
@@ -78,10 +73,7 @@ public class Publication {
     }
 
     public boolean hasPageNumber() {
-        if(pages[0] == 1)
-            return true;
-        else
-            return false;
+        return pages[0] == 1;
     }
 
 }

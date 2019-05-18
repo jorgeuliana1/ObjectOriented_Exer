@@ -1,7 +1,5 @@
-package br.ufes.inf.prog3.jjmuliana.trab1;
-
-import java.util.ArrayList;
 import java.io.File;
+import java.util.ArrayList;
 
 public class PublicationStats {
 
@@ -31,14 +29,14 @@ public class PublicationStats {
         // Getting the ave pages.
         avePages = getAveragePagesNumber();
         // Getting the amount of pages published.
-        amountPages = (int)(avePages * accountedPagesPublications());
+        amountPages = (int) (avePages * accountedPagesPublications());
 
         //Printing the stats as requested:
         System.out.printf(
-                        "Instituicoes que publicaram em anais: %d\nPPGs que publicaram em anais: %d\n" +
+                "Instituicoes que publicaram em anais: %d\nPPGs que publicaram em anais: %d\n" +
                         "Quantidade de producoes em anais: %d\nQuantidade de paginas publicadas em anais: %d\n" +
                         "Media de paginas por publicacao: %.1f\n",
-                        itPIA, ptPIA, amountPIA, amountPages, avePages
+                itPIA, ptPIA, amountPIA, amountPages, avePages
         );
 
     }
@@ -79,7 +77,7 @@ public class PublicationStats {
 
         int csv_rows = csv.getSize()[0];
 
-        for(int j = 1; j < csv_rows; j++) {
+        for (int j = 1; j < csv_rows; j++) {
 
             // Defining the university name.
             String uni_name;
@@ -99,20 +97,19 @@ public class PublicationStats {
 
             boolean pages;
             int first_page, last_page;
-            if(!(isNumeric(csv.getContent(j, 14)) && isNumeric(csv.getContent(j, 13)))) {
+            if (!(isNumeric(csv.getContent(j, 14)) && isNumeric(csv.getContent(j, 13)))) {
                 pages = false;
                 first_page = last_page = 0;
-            }
-            else {
+            } else {
 
                 pages = true;
                 first_page = Integer.parseInt(csv.getContent(j, 14));
                 last_page = Integer.parseInt(csv.getContent(j, 13));
 
-                if(first_page < 0 || last_page < 0)
+                if (first_page < 0 || last_page < 0)
                     pages = false;
 
-                if(last_page - first_page >= 2000 || last_page - first_page < 0)
+                if (last_page - first_page >= 2000 || last_page - first_page < 0)
                     pages = false;
 
             }
@@ -122,13 +119,13 @@ public class PublicationStats {
             p_list.get(j - 1).setAnnal(isAnnal(j - 1)); // Defining if it was in an Annal
         }
 
-        
+
     }
 
     private boolean isNumeric(String str) {
         try {
             Integer.parseInt(str); // Trying to parse a possible number
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return false; // Returns false if it is not a integer.
         }
         return true;
@@ -138,35 +135,33 @@ public class PublicationStats {
         Publication p = p_list.get(index);
 
         String event_name = p.getAnnal().toLowerCase();
-        if(event_name.indexOf("anal") != -1 || event_name.indexOf("anais") != -1 || event_name.indexOf("annal") != -1)
-            return true;
-        return false;
+        return event_name.indexOf("anal") != -1 || event_name.indexOf("anais") != -1 || event_name.indexOf("annal") != -1;
     }
 
     public void addUniversity(University u) {
-        if(!u_list.contains(u))
+        if (!u_list.contains(u))
             u_list.add(u);
     }
 
     public void addGradProgram(GradProgram g) {
-        if(!g_list.contains(g))
+        if (!g_list.contains(g))
             g_list.add(g);
     }
 
     public void addPublication(Publication p) {
-        if(!p_list.contains(p))
+        if (!p_list.contains(p))
             p_list.add(p);
     }
 
     public double getAveragePagesNumber() {
         // Getting the sum of the pages published.
         int sum = 0;
-        for(int i = 0; i < p_list.size(); i++) {
-            sum+=p_list.get(i).getPages();
+        for (int i = 0; i < p_list.size(); i++) {
+            sum += p_list.get(i).getPages();
         }
 
         // Getting the average
-        double average = (double)sum / (double)accountedPagesPublications();
+        double average = (double) sum / (double) accountedPagesPublications();
 
         return average;
     }
@@ -174,8 +169,8 @@ public class PublicationStats {
     private int accountedPagesPublications() {
         // Getting the sum.
         int sum = 0;
-        for(int i = 0; i < p_list.size(); i++) {
-            if(p_list.get(i).hasPageNumber())
+        for (int i = 0; i < p_list.size(); i++) {
+            if (p_list.get(i).hasPageNumber())
                 sum++;
         }
 

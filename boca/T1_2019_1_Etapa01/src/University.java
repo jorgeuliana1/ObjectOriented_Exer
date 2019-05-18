@@ -1,5 +1,3 @@
-package br.ufes.inf.prog3.jjmuliana.trab1;
-
 public class University {
 
     private String n; /* name */
@@ -48,7 +46,7 @@ public class University {
     public int getGradProgramsNum() {
         return gp;
     }
-    
+
     public int getPublicationsNum() {
         return p;
     }
@@ -60,12 +58,9 @@ public class University {
     @Override
     public boolean equals(Object a) {
 
-        University ao = (University)a;
+        University ao = (University) a;
 
-        if(this.getName().equals(ao.getName()) && this.s.equals(ao.s))
-            return true;
-        else
-            return false;
+        return this.getName().equals(ao.getName()) && this.s.equals(ao.s);
     }
 
 }
