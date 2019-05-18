@@ -88,7 +88,7 @@ public class P1_2019_1_Questao03 {
             }
 
             // Counting qualis...
-            if(p_array[i].hasPages()) {
+            if(!(p_array[i] instanceof ShortPaper)) {
                 String qualis = p_array[i].getQualis();
                 if(qualis.equals("C")) {
                     c++;

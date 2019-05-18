@@ -115,8 +115,6 @@ public class PublicationStats {
             }
 
             addPublication(new Publication(csv.getContent(j, 9), csv.getContent(j, 3), csv.getContent(j, 1), pages, first_page, last_page));
-
-            p_list.get(j - 1).setAnnal(isAnnal(j - 1)); // Defining if it was in an Annal
         }
 
 
@@ -129,13 +127,6 @@ public class PublicationStats {
             return false; // Returns false if it is not a integer.
         }
         return true;
-    }
-
-    private boolean isAnnal(int index) {
-        Publication p = p_list.get(index);
-
-        String event_name = p.getAnnal().toLowerCase();
-        return event_name.indexOf("anal") != -1 || event_name.indexOf("anais") != -1 || event_name.indexOf("annal") != -1;
     }
 
     public void addUniversity(University u) {

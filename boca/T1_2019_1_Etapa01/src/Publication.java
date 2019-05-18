@@ -9,12 +9,10 @@ public class Publication {
 
     private String u_name; /* university name */
     private String grad_prog; /* graduate program name */
-    private boolean wasInAnnal = true;
 
     public Publication(String a, String u, String g, boolean p, int p1, int p2) {
 
         // Defining a_name
-        wasInAnnal = !a.equals("(null)");
         a_name = a;
 
         u_name = u;
@@ -50,14 +48,7 @@ public class Publication {
     }
 
     public String getAnnal() {
-        if (wasInAnnal)
-            return a_name;
-        else
-            return "(null)";
-    }
-
-    public boolean publishedInAnnal() {
-        return wasInAnnal;
+        return a_name;
     }
 
     public String getGradProgName() {
@@ -66,10 +57,6 @@ public class Publication {
 
     public String getUniversityName() {
         return u_name;
-    }
-
-    public void setAnnal(boolean was) {
-        wasInAnnal = was;
     }
 
     public boolean hasPageNumber() {

@@ -11,8 +11,7 @@ public class T1_2019_1_Etapa01 {
         in.useLocale(Locale.ENGLISH);
 
         // Getting the file from the path.
-        FilePath file_path = new FilePath(in);
-        File f = file_path.getFile();
+        File f = new File(in.nextLine(), in.nextLine());
 
         // Loading the data from the file.
         PublicationStats stats = new PublicationStats();
