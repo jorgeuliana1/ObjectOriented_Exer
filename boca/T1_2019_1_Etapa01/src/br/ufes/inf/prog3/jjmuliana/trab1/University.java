@@ -3,12 +3,14 @@ package br.ufes.inf.prog3.jjmuliana.trab1;
 public class University {
 
     private String n; /* name */
+    private String s; /* short name */
     private int p = 0; /* publications */
     private boolean a = false; /* annals */
     private int gp = 0; /* graduate programs */
 
-    public University(String name) {
+    public University(String name, String shortname) {
         n = name;
+        s = shortname;
     }
 
     public void setAnnals(boolean hasAnnals) {
@@ -60,7 +62,7 @@ public class University {
 
         University ao = (University)a;
 
-        if(this.getName().equals(ao.getName()))
+        if(this.getName().equals(ao.getName()) && this.s.equals(ao.s))
             return true;
         else
             return false;

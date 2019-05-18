@@ -7,7 +7,7 @@ public class CSVReader {
 
     private FileReader r;
     private String s; // Separator
-    private ArrayList<String> stream = new ArrayList<String>();
+    private ArrayList<String> stream = new ArrayList<>();
 
     public CSVReader(File f, String separator, boolean autoread) {
 
@@ -56,7 +56,7 @@ public class CSVReader {
 
     public String getContent(int row, int column) {
 
-        return stream.get(row).split(s)[column];
+        return stream.get(row).split(s)[column].trim();
 
     }
 

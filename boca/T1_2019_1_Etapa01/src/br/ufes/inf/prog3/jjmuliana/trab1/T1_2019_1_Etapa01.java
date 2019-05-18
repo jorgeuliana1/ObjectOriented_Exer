@@ -20,7 +20,7 @@ public class T1_2019_1_Etapa01 {
         PublicationStats stats = new PublicationStats();
         stats.fromCSV(f);
 
-        // Printing the stast:
+        // Printing the stats:
         stats.printAnnalsStats();
     }
 

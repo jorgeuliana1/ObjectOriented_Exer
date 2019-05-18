@@ -1,8 +1,6 @@
 package br.ufes.inf.prog3.jjmuliana.trab1;
 
-import java.io.IOException;
 import java.util.Scanner;
-import java.io.File;
 import java.io.File;
 
 public class FilePath {
@@ -22,7 +20,6 @@ public class FilePath {
         // Creating a file path based on the given information.
         StringBuilder sb = new StringBuilder();
         sb.append(fp).append(fn);
-        sb.deleteCharAt(0);
         String file_path = sb.toString();
 
         // Defining the file path.

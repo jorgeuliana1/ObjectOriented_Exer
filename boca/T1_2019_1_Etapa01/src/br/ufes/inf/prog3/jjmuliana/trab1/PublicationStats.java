@@ -51,7 +51,7 @@ public class PublicationStats {
         0     | CD_PROGRAMA_IES               | GradProgram
         1     | NM_PROGRAMA_IES               |
         2     | SG_ENTIDADE_ENSINO            | University
-        3     | NM_ENTINDADE_ENSINO           |
+        3     | NM_ENTINDADE_ENSINO           | University
         4     | AN_BASE_PRODUCAO              |
         5     | ID_ADD_PRODUCAO_INTELECTUAL   |
         6     | ID_TIPO_PRODUCAO              |
@@ -75,7 +75,7 @@ public class PublicationStats {
         24    | IN_GLOSA                      |
         */
 
-        CSVReader csv = new CSVReader(f, ";", true);
+        CSVReader csv = new CSVReader(f, ";(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", true);
 
         int csv_rows = csv.getSize()[0];
 
@@ -83,12 +83,12 @@ public class PublicationStats {
 
             // Defining the university name.
             String uni_name;
-            uni_name = csv.getContent(j, 2);
-            if(uni_name.indexOf("PUC") == -1 && uni_name.indexOf("FGV") == -1)
-                uni_name = uni_name.split("/")[0];
+            String sho_name;
+            sho_name = csv.getContent(j, 2);
+            uni_name = csv.getContent(j, 3);
 
             addGradProgram(new GradProgram(csv.getContent(j, 0), uni_name));
-            addUniversity(new University(uni_name));
+            addUniversity(new University(uni_name, sho_name));
 
             /*
              * Pages must only be considered if:
