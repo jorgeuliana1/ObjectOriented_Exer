@@ -46,4 +46,17 @@ public class GradProgram {
         return this.getName().equals(ao.getName());
     }
 
+    @Override
+    public int hashCode() {
+        String lower_name = (g_name + u_name).toLowerCase().trim();
+
+        // Getting a hash code from the string:
+        int sum = 0;
+        for(int i = 0; i < lower_name.length(); i++) {
+            sum += (int)lower_name.charAt(i);
+        }
+
+        return 1;
+    }
+
 }

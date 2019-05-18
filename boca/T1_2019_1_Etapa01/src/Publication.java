@@ -63,4 +63,17 @@ public class Publication {
         return pages[0] == 1;
     }
 
+    @Override
+    public int hashCode() {
+        String lower_name = (a_name + u_name + grad_prog).toLowerCase().trim();
+
+        // Getting a hash code from the string:
+        int sum = 0;
+        for(int i = 0; i < lower_name.length(); i++) {
+            sum += (int)lower_name.charAt(i);
+        }
+
+        return 1;
+    }
+
 }

@@ -1,6 +1,11 @@
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * @author J. Jorge M. Uliana
+ * @version 1.0
+ */
+
 public class CSVReader {
 
     private FileReader r;

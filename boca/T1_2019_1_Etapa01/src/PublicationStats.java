@@ -1,18 +1,27 @@
 import java.io.File;
-import java.util.ArrayList;
+import java.util.LinkedList;
+
+/**
+ * @author J. Jorge M. Uliana
+ * @version 1.0
+ */
 
 public class PublicationStats {
 
-    private ArrayList<University> u_list;
-    private ArrayList<Publication> p_list;
-    private ArrayList<GradProgram> g_list;
+    private LinkedList<University> u_list;
+    private LinkedList<Publication> p_list;
+    private LinkedList<GradProgram> g_list;
+
+    // Stats vars:
+    private int valid_pages_sum = 0;
+    private int valid_publications_num = 0;
 
 
     public PublicationStats() {
         // Creating the lists of items.
-        u_list = new ArrayList<University>();
-        p_list = new ArrayList<Publication>();
-        g_list = new ArrayList<GradProgram>();
+        u_list = new LinkedList<>();
+        p_list = new LinkedList<>();
+        g_list = new LinkedList<>();
     }
 
     public void printAnnalsStats() {
@@ -29,7 +38,7 @@ public class PublicationStats {
         // Getting the ave pages.
         avePages = getAveragePagesNumber();
         // Getting the amount of pages published.
-        amountPages = (int) (avePages * accountedPagesPublications());
+        amountPages = valid_pages_sum;
 
         //Printing the stats as requested:
         System.out.printf(
@@ -140,33 +149,13 @@ public class PublicationStats {
     }
 
     public void addPublication(Publication p) {
-        if (!p_list.contains(p))
-            p_list.add(p);
+        p_list.add(p);
+        valid_pages_sum += p.getPages(); /* Counting the valid pages */
+        if(p.hasPageNumber()) valid_publications_num += 1; /* Counting the valid publications */
     }
 
     public double getAveragePagesNumber() {
-        // Getting the sum of the pages published.
-        int sum = 0;
-        for (int i = 0; i < p_list.size(); i++) {
-            sum += p_list.get(i).getPages();
-        }
-
-        // Getting the average
-        double average = (double) sum / (double) accountedPagesPublications();
-
-        return average;
-    }
-
-    private int accountedPagesPublications() {
-        // Getting the sum.
-        int sum = 0;
-        for (int i = 0; i < p_list.size(); i++) {
-            if (p_list.get(i).hasPageNumber())
-                sum++;
-        }
-
-        return sum;
-
+        return (double)valid_pages_sum/(double)valid_publications_num;
     }
 
 }
