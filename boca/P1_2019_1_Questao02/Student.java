@@ -27,7 +27,7 @@ public class Student {
     }
 
     public String getSituation() {
-        if((double)(missed/dis.getTime()) > 0.25) {
+        if((double)missed/(double)dis.getTime() > 0.25) {
             return "RF";
         } else if(getAverage() < 7.0) {
             return "PF";
