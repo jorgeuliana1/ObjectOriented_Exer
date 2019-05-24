@@ -1,5 +1,8 @@
 import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author J. Jorge M. Uliana
@@ -8,9 +11,9 @@ import java.util.LinkedList;
 
 public class PublicationStats {
 
-    private LinkedList<University> u_list;
-    private LinkedList<Publication> p_list;
-    private LinkedList<GradProgram> g_list;
+    private Map<String, University>   u_list;
+    private Map<Integer, Publication> p_list;
+    private Map<String, GradProgram>   g_list;
 
     // Stats vars:
     private int valid_pages_sum = 0;
@@ -19,9 +22,9 @@ public class PublicationStats {
 
     public PublicationStats() {
         // Creating the lists of items.
-        u_list = new LinkedList<>();
-        p_list = new LinkedList<>();
-        g_list = new LinkedList<>();
+        u_list = new HashMap<>();
+        p_list = new HashMap<>();
+        g_list = new HashMap<>();
     }
 
     public void printAnnalsStats() {
@@ -41,7 +44,7 @@ public class PublicationStats {
         amountPages = valid_pages_sum;
 
         //Printing the stats as requested:
-        System.out.printf(
+        System.out.printf(new Locale("pt", "BR"),
                 "Instituicoes que publicaram em anais: %d\nPPGs que publicaram em anais: %d\n" +
                         "Quantidade de producoes em anais: %d\nQuantidade de paginas publicadas em anais: %d\n" +
                         "Media de paginas por publicacao: %.1f\n",
@@ -56,7 +59,7 @@ public class PublicationStats {
         INDEXES TABLE:
         INDEX | INFO                          | UTIL PARA O PROGRAMA?
         0     | CD_PROGRAMA_IES               | GradProgram
-        1     | NM_PROGRAMA_IES               |
+        1     | NM_PROGRAMA_IES               | GradProgram
         2     | SG_ENTIDADE_ENSINO            | University
         3     | NM_ENTINDADE_ENSINO           | University
         4     | AN_BASE_PRODUCAO              |
@@ -82,19 +85,47 @@ public class PublicationStats {
         24    | IN_GLOSA                      |
         */
 
-        CSVReader csv = new CSVReader(f, ";(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", true);
+        CSVReader csv = new CSVReader(f, ";(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", false, true);
 
-        int csv_rows = csv.getSize()[0];
-
-        for (int j = 1; j < csv_rows; j++) {
+        while (true) {
 
             // Defining the university name.
+            csv.nextLine();
+            if(!csv.hasNextLine())
+                break;
+
             String uni_name;
             String sho_name;
-            sho_name = csv.getContent(j, 2);
-            uni_name = csv.getContent(j, 3);
+            String grd_name;
+            String ana_name;
 
-            addGradProgram(new GradProgram(csv.getContent(j, 0), uni_name));
+            int first_page;
+            int last_page;
+            boolean has_pages;
+
+            // Getting the data
+
+            try {
+                sho_name = csv.getCachedLineContent(2);
+                uni_name = csv.getCachedLineContent(3);
+                grd_name = csv.getCachedLineContent(0);
+                ana_name = csv.getCachedLineContent(9);
+            } catch(Exception e) {
+                break;
+            }
+
+            try {
+                first_page = Integer.parseInt(csv.getCachedLineContent(14));
+                last_page = Integer.parseInt(csv.getCachedLineContent(13));
+                has_pages = true;
+            } catch(NumberFormatException e) {
+                first_page = last_page = 0;
+                has_pages = false;
+            }
+
+            // Creating the data.
+
+            addGradProgram(new GradProgram(grd_name));
             addUniversity(new University(uni_name, sho_name));
 
             /*
@@ -104,26 +135,10 @@ public class PublicationStats {
              * 3. If the difference between than are below than 2000 pages.
              * */
 
-            boolean pages;
-            int first_page, last_page;
-            if (!(isNumeric(csv.getContent(j, 14)) && isNumeric(csv.getContent(j, 13)))) {
-                pages = false;
-                first_page = last_page = 0;
-            } else {
+            if (first_page < 0 || last_page < 0 || last_page - first_page >= 2000 || last_page - first_page < 0)
+                has_pages = false;
 
-                pages = true;
-                first_page = Integer.parseInt(csv.getContent(j, 14));
-                last_page = Integer.parseInt(csv.getContent(j, 13));
-
-                if (first_page < 0 || last_page < 0)
-                    pages = false;
-
-                if (last_page - first_page >= 2000 || last_page - first_page < 0)
-                    pages = false;
-
-            }
-
-            addPublication(new Publication(csv.getContent(j, 9), csv.getContent(j, 3), csv.getContent(j, 1), pages, first_page, last_page));
+            addPublication(new Publication(ana_name, uni_name, grd_name, has_pages, first_page, last_page));
         }
 
 
@@ -139,17 +154,15 @@ public class PublicationStats {
     }
 
     public void addUniversity(University u) {
-        if (!u_list.contains(u))
-            u_list.add(u);
+        u_list.put(u.getHashKey(), u);
     }
 
     public void addGradProgram(GradProgram g) {
-        if (!g_list.contains(g))
-            g_list.add(g);
+        g_list.put(g.getHashKey(), g);
     }
 
     public void addPublication(Publication p) {
-        p_list.add(p);
+        p_list.put(p.getHashKey(), p);
         valid_pages_sum += p.getPages(); /* Counting the valid pages */
         if(p.hasPageNumber()) valid_publications_num += 1; /* Counting the valid publications */
     }

@@ -76,4 +76,8 @@ public class University {
         return 1;
     }
 
+    public String getHashKey() {
+        return (n + s).toLowerCase().trim();
+    }
+
 }

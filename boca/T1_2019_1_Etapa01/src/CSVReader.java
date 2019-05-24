@@ -3,16 +3,19 @@ import java.util.ArrayList;
 
 /**
  * @author J. Jorge M. Uliana
- * @version 1.0
+ * @version 1.1
  */
 
 public class CSVReader {
 
     private FileReader r;
     private String s; // Separator
-    private ArrayList<String> stream = new ArrayList<>();
+    private ArrayList<String> stream;
+    private String cache_string;
+    private BufferedReader br;
+    private boolean thereIsNextLine = true;
 
-    public CSVReader(File f, String separator, boolean autoread) {
+    public CSVReader(File f, String separator, boolean autoread, boolean has_index_row) {
 
         try {
             r = new FileReader(f);
@@ -20,21 +23,19 @@ public class CSVReader {
             System.out.println("Erro de I/O");
         }
         s = separator;
+        initializeReader();
         if (autoread)
             readCSV();
+        else if(has_index_row)
+            nextLine();
 
     }
 
     public void readCSV() {
 
-        BufferedReader br;
-        try {
-            br = new BufferedReader(r);
-        } catch (NullPointerException e) {
-            System.exit(-1);
-            return;
-        }
         String str;
+
+        stream = new ArrayList<>();
 
         while (true) {
 
@@ -49,6 +50,33 @@ public class CSVReader {
                 break;
             stream.add(str);
         }
+
+        thereIsNextLine = false;
+    }
+
+    private void initializeReader() {
+        try {
+            br = new BufferedReader(r);
+        } catch (NullPointerException e) {
+            System.out.println("Erro de I/O");
+        }
+    }
+
+    public void nextLine() {
+        try {
+            cache_string = br.readLine();
+        } catch (IOException e) {
+            System.out.println("Erro de I/O");
+            thereIsNextLine = false;
+        }
+    }
+
+    public String getCachedLineContent(int elem) throws NullPointerException {
+        return cache_string.split(s)[elem].trim();
+    }
+
+    public boolean hasNextLine() {
+        return thereIsNextLine;
     }
 
     public String[] getRow(int row) {

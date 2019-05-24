@@ -1,13 +1,11 @@
 public class GradProgram {
 
     private String g_name; /* graduate program name */
-    private String u_name; /* university name */
     private int publ = 0;
     private boolean annals = false;
 
-    public GradProgram(String g, String u) {
+    public GradProgram(String g) {
         g_name = g;
-        u_name = u;
     }
 
     public void addPublication(int i) {
@@ -24,10 +22,6 @@ public class GradProgram {
 
     public String getName() {
         return g_name;
-    }
-
-    public String getUName() {
-        return u_name;
     }
 
     public int getPublicationsNumber() {
@@ -48,7 +42,7 @@ public class GradProgram {
 
     @Override
     public int hashCode() {
-        String lower_name = (g_name + u_name).toLowerCase().trim();
+        String lower_name = (g_name).toLowerCase().trim();
 
         // Getting a hash code from the string:
         int sum = 0;
@@ -57,6 +51,10 @@ public class GradProgram {
         }
 
         return 1;
+    }
+
+    public String getHashKey() {
+        return (g_name).toLowerCase().trim();
     }
 
 }

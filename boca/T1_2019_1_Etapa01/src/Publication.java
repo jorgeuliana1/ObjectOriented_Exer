@@ -9,6 +9,7 @@ public class Publication {
 
     private String u_name; /* university name */
     private String grad_prog; /* graduate program name */
+    private static int counter = 0;
 
     public Publication(String a, String u, String g, boolean p, int p1, int p2) {
 
@@ -74,6 +75,11 @@ public class Publication {
         }
 
         return 1;
+    }
+
+    public int getHashKey() {
+        counter += 1;
+        return counter;
     }
 
 }
