@@ -1,6 +1,4 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author J. Jorge M. Uliana
@@ -67,11 +65,35 @@ public class GradProgram {
 
     public void printUniversitiesList() {
 
-        Object[] key_set = university_map.keySet().toArray();
-        Arrays.sort(key_set);
+        ordenateUniversities();
 
-        for(Object key : key_set) {
-            System.out.printf("\t- %s\n", university_map.get(key).toString());
+        // Printing the items:
+        for(Map.Entry<String, University> entry : university_map.entrySet()) {
+            System.out.printf("\t- %s\n", entry.getValue().toString());
+        }
+    }
+
+    private void ordenateUniversities() {
+
+        // Helped by https://www.mkyong.com/java/how-to-sort-a-map-in-java/
+
+        // Converting map to list:
+        List<Map.Entry<String, University>> list
+                = new LinkedList<>(university_map.entrySet());
+
+        // Sorting the list:
+        Collections.sort(list, new Comparator<Map.Entry<String, University>>() {
+            // Implementing a comparator using UniversityComparator.
+            public int compare(Map.Entry<String, University> o1, Map.Entry<String, University> o2) {
+                return new UniversityComparator().compare(o1.getValue(), o2.getValue());
+            }
+        });
+
+        // Cleaning university_map to put the ordered values.
+        university_map = new LinkedHashMap<>();
+
+        for(Map.Entry<String, University> entry : list) {
+            university_map.put(entry.getKey(), entry.getValue());
         }
     }
 

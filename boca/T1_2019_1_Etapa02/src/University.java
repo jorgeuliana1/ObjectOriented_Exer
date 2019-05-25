@@ -55,6 +55,12 @@ public class University {
         return n;
     }
 
+    public String getShortName() {
+
+        return s;
+
+    }
+
     @Override
     public boolean equals(Object a) {
 
