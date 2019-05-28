@@ -1,5 +1,11 @@
+package br.ufes.inf.prog3.jjmuliana.stats;
+
 import java.io.File;
 import java.util.*;
+import br.ufes.inf.prog3.jjmuliana.csvreader.CSVReader;
+import br.ufes.inf.prog3.jjmuliana.university.University;
+import br.ufes.inf.prog3.jjmuliana.publication.Publication;
+import br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram;
 
 /**
  * @author J. Jorge M. Uliana
@@ -58,7 +64,7 @@ public class PublicationStats {
 
     public void printNetworks() {
 
-        System.out.println("Programas em rede: ");
+        System.out.println("Programas em rede:");
 
         Object[] key_set = g_list.keySet().toArray();
         Arrays.sort(key_set);
@@ -80,8 +86,8 @@ public class PublicationStats {
         /*
         INDEXES TABLE:
         INDEX | INFO                          | UTIL PARA O PROGRAMA?
-        0     | CD_PROGRAMA_IES               | GradProgram
-        1     | NM_PROGRAMA_IES               | GradProgram
+        0     | CD_PROGRAMA_IES               | br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram
+        1     | NM_PROGRAMA_IES               | br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram
         2     | SG_ENTIDADE_ENSINO            | University
         3     | NM_ENTINDADE_ENSINO           | University
         4     | AN_BASE_PRODUCAO              |
@@ -89,12 +95,12 @@ public class PublicationStats {
         6     | ID_TIPO_PRODUCAO              |
         7     | ID_SUBTIPO_PRODUCAO           |
         8     | DS_NATUREZA                   |
-        9     | NM_TITULO                     | Publication / Annal
+        9     | NM_TITULO                     | br.ufes.inf.prog3.jjmuliana.publication.Publication / Annal
         10    | NR_VOLUME                     |
         11    | DS_FASCICULO                  |
         12    | NR_SERIE                      |
-        13    | NR_PAGINA_FINAL               | Publication
-        14    | NR_PAGINA_INICIAL             | Publication
+        13    | NR_PAGINA_FINAL               | br.ufes.inf.prog3.jjmuliana.publication.Publication
+        14    | NR_PAGINA_INICIAL             | br.ufes.inf.prog3.jjmuliana.publication.Publication
         15    | DS_EVENTO                     |
         16    | NM_CIDADE                     |
         17    | NM_PAIS                       |
@@ -108,6 +114,12 @@ public class PublicationStats {
         */
 
         CSVReader csv = new CSVReader(f, ";(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", false, true);
+
+        // Optimizing the function.
+        if(store_grp && !store_arct && !store_uni) {
+            fromCSVOnlyGRP(csv);
+            return;
+        }
 
         while (true) {
 
@@ -127,7 +139,6 @@ public class PublicationStats {
             boolean has_pages = false;
 
             // Getting the data
-
             try {
                 sho_name = csv.getCachedLineContent(2);
                 uni_name = csv.getCachedLineContent(3);
@@ -150,17 +161,18 @@ public class PublicationStats {
             }
 
             // Creating the data.
-
             University uni;
             GradProgram gp;
 
             uni = new University(uni_name, sho_name);
             gp  = new GradProgram(grd_code, grd_name);
 
+
             if(store_uni)
                 addUniversity(uni);
             if(store_grp)
                 addGradProgram(gp, uni);
+
 
             /*
              * Pages must only be considered if:
@@ -182,6 +194,38 @@ public class PublicationStats {
 
     public void fromCSV(File f) {
         fromCSV(f, true, true, true);
+    }
+
+    private void fromCSVOnlyGRP(CSVReader csv) {
+        while (true) {
+            // Defining the university name.
+            csv.nextLine();
+            if (!csv.hasNextLine())
+                break;
+
+            String uni_name;
+            String sho_name;
+            String grd_code;
+            String grd_name;
+
+            try {
+                sho_name = csv.getCachedLineContent(2);
+                uni_name = csv.getCachedLineContent(3);
+                grd_code = csv.getCachedLineContent(0);
+                grd_name = csv.getCachedLineContent(1);
+            } catch (Exception e) {
+                break;
+            }
+
+            // Creating the data.
+            University uni;
+            GradProgram gp;
+
+            uni = new University(uni_name, sho_name);
+            gp = new GradProgram(grd_code, grd_name);
+
+            addGradProgram(gp, uni);
+        }
     }
 
     public void addUniversity(University u) {

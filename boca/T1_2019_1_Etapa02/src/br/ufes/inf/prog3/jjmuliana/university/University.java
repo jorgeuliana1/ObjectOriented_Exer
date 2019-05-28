@@ -1,3 +1,5 @@
+package br.ufes.inf.prog3.jjmuliana.university;
+
 public class University {
 
     private String n; /* name */

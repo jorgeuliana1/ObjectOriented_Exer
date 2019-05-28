@@ -1,3 +1,5 @@
+package br.ufes.inf.prog3.jjmuliana.csvreader;
+
 import java.io.*;
 import java.util.ArrayList;
 

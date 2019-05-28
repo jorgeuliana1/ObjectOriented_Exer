@@ -1,3 +1,5 @@
+package br.ufes.inf.prog3.jjmuliana.stats;
+
 /**
  * @author J. Jorge M. Uliana
  * @version 1.0
@@ -9,7 +11,7 @@ public enum StatsCommand {
     private final String value;
     private final int num;
 
-    private StatsCommand(String option_value, int number_value) {
+    StatsCommand(String option_value, int number_value) {
         value = option_value;
         num = number_value;
     }

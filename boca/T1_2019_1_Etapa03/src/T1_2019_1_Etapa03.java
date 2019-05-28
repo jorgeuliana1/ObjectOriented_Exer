@@ -5,7 +5,7 @@ import java.io.File;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class T1_2019_1_Etapa02 {
+public class T1_2019_1_Etapa03 {
 
     public static void main(String[] args) {
         // Setting up.
@@ -28,6 +28,8 @@ public class T1_2019_1_Etapa02 {
             if(line.equals("rede")) {
                 s = StatsCommand.REDE;
                 break;
+            } else if(line.equals("ppg")) {
+                // Work here
             }
 
             // Getting the file from the path.
@@ -42,7 +44,7 @@ public class T1_2019_1_Etapa02 {
             stats.fromCSV(f, false, true, false);
         }
 
-        stats.followCommand(s);
+        // Work here
     }
 
 }
