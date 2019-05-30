@@ -19,7 +19,6 @@ public class T1_2019_1_Etapa03 {
 
         String folder_path;
         String line;
-        String type;
 
         folder_path = in.nextLine();
 

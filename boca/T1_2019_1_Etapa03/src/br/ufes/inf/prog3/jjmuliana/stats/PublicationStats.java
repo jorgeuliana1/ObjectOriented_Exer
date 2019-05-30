@@ -102,11 +102,12 @@ public class PublicationStats {
         if(type == null)
             return;
 
-        CSVReader csv = new CSVReader(f, ";(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", false, true);
+        CSVReader csv =
+                new CSVReader(f, ";(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)",false, true);
 
         // Optimizing the function.
         if(store_grp && !store_arct && !store_uni) {
-            fromCSVOnlyGRP(csv);
+            fromCSVOnlyGRP(csv, type);
             return;
         }
 
@@ -156,26 +157,26 @@ public class PublicationStats {
             uni = new University(uni_name, sho_name);
             gp  = new GradProgram(grd_code, grd_name);
 
-
-            if(store_uni)
-                u_list.addUniversity(uni);
-            if(store_grp)
-                g_list.addGradProgram(gp, uni);
-
-
             /*
              * Pages must only be considered if:
              * 1. They are integer positive numbers.
              * 2. If the initial page is smaller than the final page.
-             * 3. If the difference between than are below than 2000 pages.
+             * 3. If the difference between them is below 2000 pages.
              * */
 
             if (store_arct &&
                     (first_page < 0 || last_page < 0 || last_page - first_page >= 2000 || last_page - first_page < 0))
                 has_pages = false;
 
+            Publication publi;
+            publi = new Publication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+
             if(store_arct)
-                p_list.addPublication(new Publication(ana_name, uni_name, grd_name, has_pages, first_page, last_page));
+                p_list.addPublication(publi);
+            if(store_uni)
+                u_list.addUniversity(uni);
+            if(store_grp)
+                g_list.addGradProgram(gp, uni, publi.getPages(), type);
         }
 
 
@@ -190,7 +191,7 @@ public class PublicationStats {
         fromCSV(f, true, true, true);
     }
 
-    private void fromCSVOnlyGRP(CSVReader csv) {
+    private void fromCSVOnlyGRP(CSVReader csv, String type) {
         while (true) {
             // Defining the university name.
             csv.nextLine();
@@ -218,7 +219,7 @@ public class PublicationStats {
             uni = new University(uni_name, sho_name);
             gp = new GradProgram(grd_code, grd_name);
 
-            g_list.addGradProgram(gp, uni);
+            g_list.addGradProgram(gp, uni, 0, type);
         }
     }
 
@@ -299,13 +300,22 @@ class GradProgramList {
         g = new HashMap<>();
     }
 
-    void addGradProgram(GradProgram grp, University u) {
+    void addGradProgram(GradProgram grp, University u, int publication_pages, String publication_type) {
+        boolean isInSet = false;
         if(g.containsKey(grp.getHashKey())) {
-            g.get(grp.getHashKey()).addUniversity(u);
-            return;
+            isInSet = true;
+            grp = g.get(grp.getHashKey());
         }
+        // common operations:
+        grp.plusPublication(publication_type);
+        grp.addUniversity(u);
+
+        if((publication_pages < 2000 && publication_pages >= 0))
+            grp.plusPublishedPages(publication_pages);
+
         // else ...
-        g.put(grp.getHashKey(), grp);
+        if(!isInSet)
+            g.put(grp.getHashKey(), grp);
     }
 
     int size() {
@@ -331,7 +341,7 @@ class GradProgramList {
     }
 
     void printProgramData(String program_id) {
-        if(g.containsKey(program_id))
+        if(g.containsKey(program_id.trim()))
             g.get(program_id).printData();
         else
             System.out.println("PPG nao encontrado.");

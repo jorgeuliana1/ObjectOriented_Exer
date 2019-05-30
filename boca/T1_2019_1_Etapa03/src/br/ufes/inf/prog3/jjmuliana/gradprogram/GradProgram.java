@@ -24,6 +24,8 @@ public class GradProgram {
     private int p_transl;
     private int p_miscel;
 
+    private int published_pages = 0;
+
     public GradProgram(String id, String n) {
         program_id = id;
         program_name = n;
@@ -57,6 +59,38 @@ public class GradProgram {
 
     public void plusGenericPublication() {
         p_miscel++;
+    }
+
+    public void plusPublication(String type) {
+        switch(type) {
+            case "anais":
+                plusAnnalPublication();
+                break;
+            case "artjr":
+                plusMagazinePublication();
+                break;
+            case "artpe":
+                plusPeriodicPublication();
+                break;
+            case "livro":
+                plusBooksPublication();
+                break;
+            case "partmu":
+                plusMusicPublication();
+                break;
+            case "tradu":
+                plusTranslationPublication();
+                break;
+            case "outro":
+                plusGenericPublication();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void plusPublishedPages(int n) {
+        published_pages+=n;
     }
 
     public void addUniversity(University u) {
@@ -141,7 +175,7 @@ public class GradProgram {
         System.out.printf("\t- Traducoes: %d\n", p_transl);
         System.out.printf("\t- Outros: %d\n", p_miscel);
         System.out.println();
-        System.out.println("Total de paginas produzidas pelo PPG: " + arcticlesNum());
+        System.out.println("Total de paginas produzidas pelo PPG: " + published_pages);
     }
 
     private int arcticlesNum() {

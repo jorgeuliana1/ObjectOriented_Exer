@@ -41,7 +41,7 @@ public class Publication {
     public int getPages() {
         if (pages[0] == 1)
             return pages[2] - pages[1] + 1; /*
-                I will give you a example:
+                I will give you an example:
                 - If you have an article that starts at page 42 and ends at page 42, the article has one page.
                 - Then, we conclude that the formula is "last page" - "first page" + 1,
 
