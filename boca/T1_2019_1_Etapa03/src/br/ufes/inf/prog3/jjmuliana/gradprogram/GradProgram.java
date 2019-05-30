@@ -15,10 +15,48 @@ public class GradProgram {
     private String program_name; /* graduate program name */
     private Map<String, University> university_map; /* tree containing universities */
 
+    // Stats variables:
+    private int p_annals;
+    private int p_magazi;
+    private int p_period;
+    private int p_books;
+    private int p_music;
+    private int p_transl;
+    private int p_miscel;
+
     public GradProgram(String id, String n) {
         program_id = id;
         program_name = n;
         university_map = new HashMap<>();
+        p_annals = p_magazi = p_period = p_books = p_music = p_transl = p_miscel = 0;
+    }
+
+    public void plusAnnalPublication() {
+        p_annals++;
+    }
+
+    public void plusMagazinePublication() {
+        p_magazi++;
+    }
+
+    public void plusPeriodicPublication() {
+        p_period++;
+    }
+
+    public void plusBooksPublication() {
+        p_books++;
+    }
+
+    public void plusMusicPublication() {
+        p_music++;
+    }
+
+    public void plusTranslationPublication() {
+        p_transl++;
+    }
+
+    public void plusGenericPublication() {
+        p_miscel++;
     }
 
     public void addUniversity(University u) {
@@ -87,6 +125,27 @@ public class GradProgram {
             System.out.printf("\t- %s\n", entry.getValue().toString());
         }
 
+    }
+
+    public void printData() {
+        System.out.println("Programa: " + program_name);
+        System.out.println("Instituicoes:");
+        printUniversitiesList();
+        System.out.println();
+        System.out.println("Quantidade de producoes por tipo: ");
+        System.out.printf("\t- Artigos em anais de eventos: %d\n", p_annals);
+        System.out.printf("\t- Artigos em jornais e revistas: %d\n", p_magazi);
+        System.out.printf("\t- Artigos em periodicos cientificos: %d\n", p_period);
+        System.out.printf("\t- Livros: %d\n", p_books);
+        System.out.printf("\t- Partituras musicais: %d\n", p_music);
+        System.out.printf("\t- Traducoes: %d\n", p_transl);
+        System.out.printf("\t- Outros: %d\n", p_miscel);
+        System.out.println();
+        System.out.println("Total de paginas produzidas pelo PPG: " + arcticlesNum());
+    }
+
+    private int arcticlesNum() {
+        return p_annals + p_magazi + p_period + p_books + p_music + p_transl + p_miscel;
     }
 
 }

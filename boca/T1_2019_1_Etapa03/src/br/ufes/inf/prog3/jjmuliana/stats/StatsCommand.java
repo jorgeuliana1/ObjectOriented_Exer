@@ -6,10 +6,12 @@ package br.ufes.inf.prog3.jjmuliana.stats;
  */
 
 public enum StatsCommand {
-    REDE("rede", 1);
+    REDE("rede", 1), PPG("ppg", 2);
 
     private final String value;
     private final int num;
+    private boolean hasSub = false;
+    private String subcommand;
 
     StatsCommand(String option_value, int number_value) {
         value = option_value;
@@ -22,6 +24,16 @@ public enum StatsCommand {
 
     public String getName() {
         return value;
+    }
+
+    public void setSubCommand(String s) {
+        subcommand = s;
+        hasSub = true;
+    }
+
+    public String getSubCommand() {
+        if(hasSub) return subcommand;
+        else return null;
     }
 
 }

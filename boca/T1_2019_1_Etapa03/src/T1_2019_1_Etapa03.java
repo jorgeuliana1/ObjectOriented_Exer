@@ -1,3 +1,4 @@
+import br.ufes.inf.prog3.jjmuliana.publication.Publication;
 import br.ufes.inf.prog3.jjmuliana.stats.PublicationStats;
 import br.ufes.inf.prog3.jjmuliana.stats.StatsCommand;
 
@@ -18,6 +19,7 @@ public class T1_2019_1_Etapa03 {
 
         String folder_path;
         String line;
+        String type;
 
         folder_path = in.nextLine();
 
@@ -25,11 +27,14 @@ public class T1_2019_1_Etapa03 {
             // Reading the input.
             line = in.nextLine();
 
+            // Defining the command.
             if(line.equals("rede")) {
                 s = StatsCommand.REDE;
                 break;
-            } else if(line.equals("ppg")) {
-                // Work here
+            } else if(line.split(" ")[0].equals("ppg")) {
+                s = StatsCommand.PPG;
+                s.setSubCommand(line.split(" ")[1]);
+                break;
             }
 
             // Getting the file from the path.
@@ -41,10 +46,10 @@ public class T1_2019_1_Etapa03 {
             }
 
             // Loading the data from the file.
-            stats.fromCSV(f, false, true, false);
+            stats.fromCSV(f, true, true, true);
         }
 
-        // Work here
+        stats.followCommand(s);
     }
 
 }

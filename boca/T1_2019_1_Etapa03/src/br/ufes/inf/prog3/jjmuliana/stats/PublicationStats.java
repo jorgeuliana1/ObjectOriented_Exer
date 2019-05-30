@@ -9,35 +9,32 @@ import br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram;
 
 /**
  * @author J. Jorge M. Uliana
- * @version 1.2
+ * @version 1.3
  */
 
 public class PublicationStats {
 
-    private Map<String, University>   u_list;
-    private Map<Integer, Publication> p_list;
-    private Map<String, GradProgram>   g_list;
-
-    // Stats vars:
-    private int valid_pages_sum = 0;
-    private int valid_publications_num = 0;
-
+    private UniversityList u_list;
+    private PublicationList p_list;
+    private GradProgramList g_list;
 
     public PublicationStats() {
         // Creating the lists of items.
-        u_list = new HashMap<>();
-        p_list = new HashMap<>();
-        g_list = new HashMap<>();
+        u_list = new UniversityList();
+        p_list = new PublicationList();
+        g_list = new GradProgramList();
     }
 
     public void followCommand(StatsCommand c) {
         if(c.equals(StatsCommand.REDE)) {
             printNetworks();
+        } else if(c.equals(StatsCommand.PPG)) {
+            printProgramData(c.getSubCommand());
         }
     }
 
     public void printProgramData(String program_id) {
-        // Work here
+        g_list.printProgramData(program_id);
     }
 
     public void printAnnalsStats() {
@@ -52,9 +49,9 @@ public class PublicationStats {
         // Getting the amount of graduate programs that published in annals.
         ptPIA = g_list.size();
         // Getting the ave pages.
-        avePages = getAveragePagesNumber();
+        avePages = p_list.getAveragePagesNum();
         // Getting the amount of pages published.
-        amountPages = valid_pages_sum;
+        amountPages = p_list.getValidPagesSum();
 
         //Printing the stats as requested:
         System.out.printf(new Locale("pt", "BR"),
@@ -67,25 +64,10 @@ public class PublicationStats {
     }
 
     public void printNetworks() {
-
-        System.out.println("Programas em rede:");
-
-        Object[] key_set = g_list.keySet().toArray();
-        Arrays.sort(key_set);
-
-        GradProgram gp;
-
-        for(Object key : key_set) {
-            gp = g_list.get(key);
-
-            if(gp.getUniversitiesNumber() > 1) {
-                System.out.println(gp.toString()); // Printing the grad. prog. ID and name.
-                gp.printUniversitiesList(); // Printing the universities list.
-            }
-        }
+        g_list.printNetworks();
     }
 
-    public void fromCSV(File f, boolean store_uni, boolean store_grp, boolean store_arct) {
+    public void fromCSV(File f, boolean store_uni, boolean store_grp, boolean store_arct, String type) {
 
         /*
         INDEXES TABLE:
@@ -116,6 +98,9 @@ public class PublicationStats {
         23    | DS_ISBN_ISSN                  |
         24    | IN_GLOSA                      |
         */
+
+        if(type == null)
+            return;
 
         CSVReader csv = new CSVReader(f, ";(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)", false, true);
 
@@ -173,9 +158,9 @@ public class PublicationStats {
 
 
             if(store_uni)
-                addUniversity(uni);
+                u_list.addUniversity(uni);
             if(store_grp)
-                addGradProgram(gp, uni);
+                g_list.addGradProgram(gp, uni);
 
 
             /*
@@ -190,10 +175,15 @@ public class PublicationStats {
                 has_pages = false;
 
             if(store_arct)
-                addPublication(new Publication(ana_name, uni_name, grd_name, has_pages, first_page, last_page));
+                p_list.addPublication(new Publication(ana_name, uni_name, grd_name, has_pages, first_page, last_page));
         }
 
 
+    }
+
+    public void fromCSV(File f, boolean store_uni, boolean store_grp, boolean store_arct) {
+        String type = getTypeFromPath(f.getPath());
+        fromCSV(f, store_uni, store_grp, store_arct, type);
     }
 
     public void fromCSV(File f) {
@@ -228,32 +218,122 @@ public class PublicationStats {
             uni = new University(uni_name, sho_name);
             gp = new GradProgram(grd_code, grd_name);
 
-            addGradProgram(gp, uni);
+            g_list.addGradProgram(gp, uni);
         }
     }
 
-    public void addUniversity(University u) {
-        u_list.put(u.getHashKey(), u);
+    public static String getTypeFromPath(String file_path) {
+        if(file_path.contains("-anais."))
+            return "anais";
+        else if(file_path.contains("-artjr."))
+            return "artjr";
+        else if(file_path.contains("-artpe."))
+            return "artpe";
+        else if(file_path.contains("-livro."))
+            return "livro";
+        else if(file_path.contains("-partmu."))
+            return "partmu";
+        else if(file_path.contains("-tradu."))
+            return "tradu";
+        else if(file_path.contains("-outro."))
+            return "outro";
+        else return null;
     }
 
-    public void addGradProgram(GradProgram g, University u) {
+}
 
-        if(g_list.containsKey(g.getHashKey())) {
-            g_list.get(g.getHashKey()).addUniversity(u);
+// Auxiliar classes:
+class UniversityList {
+    private Map<String, University> u;
+
+    UniversityList() {
+        u = new HashMap<>();
+    }
+
+    void addUniversity(University uni) {
+        if(!u.containsKey(uni.getHashKey()))
+            u.put(uni.getHashKey(), uni);
+    }
+
+    int size() {
+        return u.size();
+    }
+}
+
+class PublicationList {
+    private Map<Integer, Publication> p;
+    private int valid_pages_sum = 0;
+    private int valid_publications_num = 0;
+
+    PublicationList() {
+        p = new HashMap<>();
+    }
+
+    void addPublication(Publication publ) {
+        p.put(publ.getHashKey(), publ);
+        valid_pages_sum += publ.getPages(); /* Counting the valid pages */
+        if(publ.hasPageNumber()) valid_publications_num += 1; /* Counting the valid publications */
+    }
+
+    int size() {
+        return p.size();
+    }
+
+    int getValidPagesSum() {
+        return valid_pages_sum;
+    }
+
+    int getValidPublicationsNum() {
+        return valid_publications_num;
+    }
+
+    public double getAveragePagesNum() {
+        return (double)valid_pages_sum/(double)valid_publications_num;
+    }
+}
+
+class GradProgramList {
+    private Map<String, GradProgram> g;
+
+    GradProgramList() {
+        g = new HashMap<>();
+    }
+
+    void addGradProgram(GradProgram grp, University u) {
+        if(g.containsKey(grp.getHashKey())) {
+            g.get(grp.getHashKey()).addUniversity(u);
             return;
         }
         // else ...
-        g_list.put(g.getHashKey(), g);
+        g.put(grp.getHashKey(), grp);
     }
 
-    public void addPublication(Publication p) {
-        p_list.put(p.getHashKey(), p);
-        valid_pages_sum += p.getPages(); /* Counting the valid pages */
-        if(p.hasPageNumber()) valid_publications_num += 1; /* Counting the valid publications */
+    int size() {
+        return g.size();
     }
 
-    public double getAveragePagesNumber() {
-        return (double)valid_pages_sum/(double)valid_publications_num;
+    void printNetworks() {
+        System.out.println("Programas em rede:");
+
+        Object[] key_set = g.keySet().toArray();
+        Arrays.sort(key_set);
+
+        GradProgram gp;
+
+        for(Object key : key_set) {
+            gp = g.get(key);
+
+            if(gp.getUniversitiesNumber() > 1) {
+                System.out.println(gp.toString()); // Printing the grad. prog. ID and name.
+                gp.printUniversitiesList(); // Printing the universities list.
+            }
+        }
     }
 
+    void printProgramData(String program_id) {
+        if(g.containsKey(program_id))
+            g.get(program_id).printData();
+        else
+            System.out.println("PPG nao encontrado.");
+    }
 }
