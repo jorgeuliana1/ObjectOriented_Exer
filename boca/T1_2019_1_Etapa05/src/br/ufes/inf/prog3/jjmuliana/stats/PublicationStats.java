@@ -131,31 +131,145 @@ public class PublicationStats {
             if(!csv.hasNextLine())
                 break;
 
-            String uni_name;
-            String sho_name;
-            String grd_code;
-            String grd_name;
-            String ana_name;
+            String natur_ar; // Article nature
+            String title_ar; // Article title
+            String langu_ar; // Article language
+            String cityn_ar; // Article city
+
+            String uni_name; // University name
+            String sho_name; // Short name of university
+
+            String grd_code; // GradProgram name
+            String grd_name; // GradProgram code
+
+            String ana_name; // Event name
+
+            String iss_isbn; // ISSN or ISBN
+            String editor_a; // Editorial editor
+
+            String publi_dt; // Publishing date
+
+            String volume_a; // Periodic volume
+            String fascic_a; // Periodic fascicle
+            String series_a; // Periodic series
+
+            String instrume; // Instrumental formation
+
+            String translat; // Translated language
 
             int first_page = 0;
             int last_page = 0;
             boolean has_pages = false;
 
+            // Inserting some default values:
+            editor_a = null;
+            iss_isbn = null;
+            ana_name = null;
+            publi_dt = null;
+            volume_a = null;
+            fascic_a = null;
+            series_a = null;
+            instrume = null;
+            translat = null;
+
             // Getting the data
             try {
+                natur_ar = csv.getCachedLineContent("DS_NATUREZA");
+                title_ar = csv.getCachedLineContent("NM_TITULO");
+                langu_ar = csv.getCachedLineContent("DS_IDIOMA");
+                cityn_ar = csv.getCachedLineContent("NM_CIDADE");
                 sho_name = csv.getCachedLineContent(2);
                 uni_name = csv.getCachedLineContent(3);
                 grd_code = csv.getCachedLineContent(0);
                 grd_name = csv.getCachedLineContent(1);
-                ana_name = csv.getCachedLineContent(9);
             } catch(Exception e) {
                 break;
             }
 
+            // Getting the data for editorials
+            if(type.equals(PublicationConst.BOOK.toString()) || type.equals(PublicationConst.PERIODIC.toString()) ||
+                    type.equals(PublicationConst.MAGAZINE.toString()) || type.equals(PublicationConst.MUSIC.toString())
+                    || type.equals(PublicationConst.TRANSLATION.toString())
+                    || type.equals(PublicationConst.GENERIC.toString()) )
+            {
+                try {
+                    editor_a = csv.getCachedLineContent("NM_EDITORA");
+                } catch(Exception e) {
+                    editor_a = null;
+                }
+            }
+
+            // Getting ISSN
+            if(type.equals(PublicationConst.PERIODIC.toString()) || type.equals(PublicationConst.MAGAZINE.toString())) {
+                try {
+                    iss_isbn = csv.getCachedLineContent("DS_ISSN");
+                } catch(Exception e) {
+                    iss_isbn = null;
+                }
+            }
+
+            // Getting ISBN
+            if(type.equals(PublicationConst.BOOK.toString())) {
+                try {
+                    iss_isbn = csv.getCachedLineContent("DS_ISBN");
+                } catch(Exception e) {
+                    iss_isbn = null;
+                }
+            }
+
+            // Getting newspaper and magazine data
+            if(type.equals(PublicationConst.MAGAZINE.toString())) {
+                try {
+                    publi_dt = csv.getCachedLineContent("DT_PUBLICACAO");
+                } catch(Exception e) {
+                    publi_dt = null;
+                }
+            }
+
+            // Getting periodic data
+            if(type.equals(PublicationConst.PERIODIC.toString())) {
+                try {
+                    volume_a = csv.getCachedLineContent("NR_VOLUME");
+                    fascic_a = csv.getCachedLineContent("DS_FASCICULO");
+                    series_a = csv.getCachedLineContent("NR_SERIE");
+                } catch(Exception e) {
+                    volume_a = null;
+                    fascic_a = null;
+                    series_a = null;
+                }
+            }
+
+            // Getting data for musical piece
+            if(type.equals(PublicationConst.MUSIC.toString())) {
+                try {
+                    instrume = csv.getCachedLineContent("DS_FORMACAO_INSTRUMENTAL");
+                } catch (Exception e) {
+                    instrume = null;
+                }
+            }
+
+            // Getting translated article data
+            if(type.equals(PublicationConst.TRANSLATION.toString())) {
+                try {
+                    translat = csv.getCachedLineContent("DS_IDIOMA_TRADUCAO");
+                } catch(Exception e) {
+                    translat = null;
+                }
+            }
+
+            // Getting data for annal
+            if(type.equals(PublicationConst.ANNAL.toString())) {
+                try {
+                    ana_name = csv.getCachedLineContent("DS_EVENTO");
+                } catch (Exception e) {
+
+                }
+            }
+
             try {
-                if(type.equals("livro")) {
+                if(type.equals(PublicationConst.BOOK.toString())) {
                     last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINAS_CONTRIBUICAO")) - 1;
-                } else if(type.equals("partmus")) {
+                } else if(type.equals(PublicationConst.MUSIC.toString())) {
                     last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINAS"));
                 } else {
                     first_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINA_INICIAL"));
@@ -186,13 +300,29 @@ public class PublicationStats {
 
             Publication publi;
 
-            if(type.equals("livro")) publi = new BookPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
-            else if(type.equals("anais")) publi = new AnnalPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
-            else if(type.equals("artjr")) publi = new MagazinePublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
-            else if(type.equals("artpe")) publi = new PeriodicPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
-            else if(type.equals("partmu")) publi = new MusicalPiece(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
-            else if(type.equals("tradu")) publi = new TranslatedPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
-            else publi = new Publication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            if(type.equals(PublicationConst.BOOK.toString()))
+                publi = new BookPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a, iss_isbn);
+
+            else if(type.equals(PublicationConst.ANNAL.toString()))
+                publi = new AnnalPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, ana_name);
+
+            else if(type.equals(PublicationConst.MAGAZINE.toString()))
+                publi = new MagazinePublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a, iss_isbn,
+                        publi_dt);
+
+            else if(type.equals(PublicationConst.PERIODIC.toString()))
+                publi = new PeriodicPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a,
+                        iss_isbn, volume_a, fascic_a, series_a);
+
+            else if(type.equals(PublicationConst.MUSIC.toString()))
+                publi = new MusicalPiece(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a, instrume);
+
+            else if(type.equals(PublicationConst.TRANSLATION.toString()))
+                publi = new TranslatedPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a,
+                        translat);
+
+            else
+                publi = new GenericPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a);
 
             p_list.addPublication(publi);
             u_list.addUniversity(uni, gp);
