@@ -181,7 +181,7 @@ public class GradProgram {
         System.out.println("Total de paginas produzidas pelo PPG: " + published_pages );
     }
 
-    private int arcticlesNum() {
+    public int productionsNum() {
         return p_annals + p_magazi + p_period + p_books + p_music + p_transl + p_miscel;
     }
 

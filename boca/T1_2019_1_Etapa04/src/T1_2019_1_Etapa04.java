@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class T1_2019_1_Etapa03 {
+public class T1_2019_1_Etapa04 {
 
     public static void main(String[] args) {
         // Setting up.
@@ -32,6 +32,10 @@ public class T1_2019_1_Etapa03 {
                 break;
             } else if(line.split(" ")[0].equals("ppg")) {
                 s = StatsCommand.PPG;
+                s.setSubCommand(line.split(" ")[1]);
+                break;
+            } else if(line.split(" ")[0].equals("ies")) {
+                s = StatsCommand.IES;
                 s.setSubCommand(line.split(" ")[1]);
                 break;
             }

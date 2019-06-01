@@ -3,9 +3,10 @@ package br.ufes.inf.prog3.jjmuliana.stats;
 import java.io.File;
 import java.util.*;
 import br.ufes.inf.prog3.jjmuliana.csvreader.CSVReader;
+import br.ufes.inf.prog3.jjmuliana.publication.*;
 import br.ufes.inf.prog3.jjmuliana.university.University;
-import br.ufes.inf.prog3.jjmuliana.publication.Publication;
 import br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram;
+import br.ufes.inf.prog3.jjmuliana.university.UniversityComparator;
 
 /**
  * @author J. Jorge M. Uliana
@@ -30,6 +31,24 @@ public class PublicationStats {
             printNetworks();
         } else if(c.equals(StatsCommand.PPG)) {
             printProgramData(c.getSubCommand());
+        } else if(c.equals(StatsCommand.IES)) {
+            printUniversityData(c.getSubCommand());
+        }
+    }
+
+    public void printUniversityData(String university_sn) {
+
+        List<University> unilist = u_list.getFromShortName(university_sn);
+
+        unilist.sort(new Comparator<University>() {
+            @Override
+            public int compare(University o1, University o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
+        for(University uni : unilist) {
+            uni.printData();
         }
     }
 
@@ -97,7 +116,7 @@ public class PublicationStats {
         22    | NR_EDICAO                     |
         23    | DS_ISBN_ISSN                  |
         24    | IN_GLOSA                      |
-        */
+         */
 
         if(type == null)
             return;
@@ -134,8 +153,14 @@ public class PublicationStats {
             }
 
             try {
-                first_page = Integer.parseInt(csv.getCachedLineContent(14));
-                last_page = Integer.parseInt(csv.getCachedLineContent(13));
+                if(type.equals("livro")) {
+                    last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINAS_CONTRIBUICAO")) - 1;
+                } else if(type.equals("partmus")) {
+                    last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINAS"));
+                } else {
+                    first_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINA_INICIAL"));
+                    last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINA_FINAL"));
+                }
                 has_pages = true;
             } catch (NumberFormatException e) {
                 first_page = last_page = 0;
@@ -160,10 +185,17 @@ public class PublicationStats {
                 has_pages = false;
 
             Publication publi;
-            publi = new Publication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+
+            if(type.equals("livro")) publi = new BookPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else if(type.equals("anais")) publi = new AnnalPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else if(type.equals("artjr")) publi = new MagazinePublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else if(type.equals("artpe")) publi = new PeriodicPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else if(type.equals("partmu")) publi = new MusicalPiece(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else if(type.equals("tradu")) publi = new TranslatedPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else publi = new Publication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
 
             p_list.addPublication(publi);
-            u_list.addUniversity(uni);
+            u_list.addUniversity(uni, gp);
             g_list.addGradProgram(gp, uni, publi.getPages(), type);
         }
 
@@ -203,13 +235,30 @@ class UniversityList {
         u = new HashMap<>();
     }
 
-    void addUniversity(University uni) {
+    void addUniversity(University uni, GradProgram gp) {
         if(!u.containsKey(uni.getHashKey()))
             u.put(uni.getHashKey(), uni);
+        // Common operations
+        u.get(uni.getHashKey()).addGraduateProgram(gp);
     }
 
     int size() {
         return u.size();
+    }
+
+    List<University> getFromShortName(String shortn) {
+        Object[] keys = u.keySet().toArray();
+
+        List<University> l;
+        l = new ArrayList<>(); // List of universities that have the short name.
+
+        // Filling the list
+        for(Object key : keys) {
+            if(key.toString().contains("-" + shortn.toLowerCase() + "-")) l.add(u.get(key));
+        }
+
+        // Returning the array of wanted universities.
+        return l;
     }
 }
 

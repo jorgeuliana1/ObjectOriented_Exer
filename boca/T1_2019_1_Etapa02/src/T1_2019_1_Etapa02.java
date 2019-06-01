@@ -39,7 +39,7 @@ public class T1_2019_1_Etapa02 {
             }
 
             // Loading the data from the file.
-            stats.fromCSV(f, false, true, false);
+            stats.fromCSV(f);
         }
 
         stats.followCommand(s);

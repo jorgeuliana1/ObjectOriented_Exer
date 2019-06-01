@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * @
  * @author J. Jorge M. Uliana
- * @version 1.1
+ * @version 1.2
  */
 
 public class CSVReader {
@@ -14,7 +14,7 @@ public class CSVReader {
     private FileReader r;
     private String s; // Separator
     private ArrayList<String> stream;
-    private String cache_string;
+    private String[] cache_string;
     private BufferedReader br;
     private boolean thereIsNextLine = true;
 
@@ -67,15 +67,19 @@ public class CSVReader {
 
     public void nextLine() {
         try {
-            cache_string = br.readLine();
-        } catch (IOException e) {
-            System.out.println("Erro de I/O");
+            cache_string = br.readLine().split(s);
+            // Performance optimization.
+            /*
+            The program was spending a lot of time with splits, so I decided to store only one splitted vector instead of
+            splitting at the get function.
+             */
+        } catch (IOException | NullPointerException e) {
             thereIsNextLine = false;
         }
     }
 
     public String getCachedLineContent(int elem) throws NullPointerException {
-        return cache_string.split(s)[elem].trim();
+        return cache_string[elem].trim();
     }
 
     public boolean hasNextLine() {

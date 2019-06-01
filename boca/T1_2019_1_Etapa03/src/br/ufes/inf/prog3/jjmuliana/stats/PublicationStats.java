@@ -3,8 +3,8 @@ package br.ufes.inf.prog3.jjmuliana.stats;
 import java.io.File;
 import java.util.*;
 import br.ufes.inf.prog3.jjmuliana.csvreader.CSVReader;
+import br.ufes.inf.prog3.jjmuliana.publication.*;
 import br.ufes.inf.prog3.jjmuliana.university.University;
-import br.ufes.inf.prog3.jjmuliana.publication.Publication;
 import br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram;
 
 /**
@@ -67,7 +67,7 @@ public class PublicationStats {
         g_list.printNetworks();
     }
 
-    public void fromCSV(File f, boolean store_uni, boolean store_grp, boolean store_arct, String type) {
+    public void fromCSV(File f, String type) {
 
         /*
         INDEXES TABLE:
@@ -97,19 +97,56 @@ public class PublicationStats {
         22    | NR_EDICAO                     |
         23    | DS_ISBN_ISSN                  |
         24    | IN_GLOSA                      |
-        */
+
+        IN "LIVRO" TYPE:
+        CD_PROGRAMA_IES
+        NM_PROGRAMA_IES
+        SG_ENTIDADE_ENSINO
+        NM_ENTIDADE_ENSINO
+        AN_BASE_PRODUCAO
+        ID_ADD_PRODUCAO_INTELECTUAL
+        ID_TIPO_PRODUCAO
+        ID_SUBTIPO_PRODUCAO
+        NR_PAGINAS
+        DS_NATUREZA
+        NM_EDITORA
+        NM_CIDADE_PAIS
+        DS_ISBN
+        DS_URL
+        DS_OBSERVACOES
+        NM_TITULO
+        AN_PRIMEIRA_EDICAO
+        NR_TIRAGEM
+        IN_REEDICAO
+        IN_REIMPRESSAO
+        DS_DIVULGACAO
+        DS_IDIOMA
+        DS_TIPO_EDITORA
+        DS_TIPO_FINANCIADOR
+        NM_FINANCIADOR
+        DS_CONSELHO_EDITORIAL
+        DS_DISTRIBUICAO
+        IN_REVISAO
+        IN_REMISSIVO
+        DS_TIPO_CONTRIBUICAO
+        DS_PREMIACAO
+        NM_INST_PROMOTORA_PREMIO
+        DT_PREMIACAO
+        DS_OBRA_REFERENCIA
+        NM_INST_OBRA_REFERENCIA
+        DT_INDICACAO_REFERENCIA
+        DS_NATUREZA_CONTEUDO
+        IN_INFORMACAO_AUTORES
+        NR_PAGINAS_CONTRIBUICAO - INDEX 38
+        NM_CIDADE
+        IN_GLOSA
+         */
 
         if(type == null)
             return;
 
         CSVReader csv =
                 new CSVReader(f, ";(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)",false, true);
-
-        // Optimizing the function.
-        if(store_grp && !store_arct && !store_uni) {
-            fromCSVOnlyGRP(csv, type);
-            return;
-        }
 
         while (true) {
 
@@ -139,15 +176,19 @@ public class PublicationStats {
                 break;
             }
 
-            if(store_arct) {
-                try {
-                    first_page = Integer.parseInt(csv.getCachedLineContent(14));
-                    last_page = Integer.parseInt(csv.getCachedLineContent(13));
-                    has_pages = true;
-                } catch (NumberFormatException e) {
-                    first_page = last_page = 0;
-                    has_pages = false;
+            try {
+                if(type.equals("livro")) {
+                    last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINAS_CONTRIBUICAO")) - 1;
+                } else if(type.equals("partmus")) {
+                    last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINAS"));
+                } else {
+                    first_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINA_INICIAL"));
+                    last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINA_FINAL"));
                 }
+                has_pages = true;
+            } catch (NumberFormatException e) {
+                first_page = last_page = 0;
+                has_pages = false;
             }
 
             // Creating the data.
@@ -164,63 +205,30 @@ public class PublicationStats {
              * 3. If the difference between them is below 2000 pages.
              * */
 
-            if (store_arct &&
-                    (first_page < 0 || last_page < 0 || last_page - first_page >= 2000 || last_page - first_page < 0))
+            if (first_page < 0 || last_page < 0 || last_page - first_page >= 2000 || last_page - first_page < 0)
                 has_pages = false;
 
             Publication publi;
-            publi = new Publication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
 
-            if(store_arct)
-                p_list.addPublication(publi);
-            if(store_uni)
-                u_list.addUniversity(uni);
-            if(store_grp)
-                g_list.addGradProgram(gp, uni, publi.getPages(), type);
+            if(type.equals("livro")) publi = new BookPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else if(type.equals("anais")) publi = new AnnalPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else if(type.equals("artjr")) publi = new MagazinePublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else if(type.equals("artpe")) publi = new PeriodicPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else if(type.equals("partmu")) publi = new MusicalPiece(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else if(type.equals("tradu")) publi = new TranslatedPublication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+            else publi = new Publication(ana_name, uni_name, grd_name, has_pages, first_page, last_page);
+
+            p_list.addPublication(publi);
+            u_list.addUniversity(uni);
+            g_list.addGradProgram(gp, uni, publi.getPages(), type);
         }
 
 
-    }
-
-    public void fromCSV(File f, boolean store_uni, boolean store_grp, boolean store_arct) {
-        String type = getTypeFromPath(f.getPath());
-        fromCSV(f, store_uni, store_grp, store_arct, type);
     }
 
     public void fromCSV(File f) {
-        fromCSV(f, true, true, true);
-    }
-
-    private void fromCSVOnlyGRP(CSVReader csv, String type) {
-        while (true) {
-            // Defining the university name.
-            csv.nextLine();
-            if (!csv.hasNextLine())
-                break;
-
-            String uni_name;
-            String sho_name;
-            String grd_code;
-            String grd_name;
-
-            try {
-                sho_name = csv.getCachedLineContent(2);
-                uni_name = csv.getCachedLineContent(3);
-                grd_code = csv.getCachedLineContent(0);
-                grd_name = csv.getCachedLineContent(1);
-            } catch (Exception e) {
-                break;
-            }
-
-            // Creating the data.
-            University uni;
-            GradProgram gp;
-
-            uni = new University(uni_name, sho_name);
-            gp = new GradProgram(grd_code, grd_name);
-
-            g_list.addGradProgram(gp, uni, 0, type);
-        }
+        String type = getTypeFromPath(f.getPath());
+        fromCSV(f, type);
     }
 
     public static String getTypeFromPath(String file_path) {

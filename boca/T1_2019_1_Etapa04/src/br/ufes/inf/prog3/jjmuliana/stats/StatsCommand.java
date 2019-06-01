@@ -2,11 +2,11 @@ package br.ufes.inf.prog3.jjmuliana.stats;
 
 /**
  * @author J. Jorge M. Uliana
- * @version 1.0
+ * @version 1.1
  */
 
 public enum StatsCommand {
-    REDE("rede", 1), PPG("ppg", 2);
+    REDE("rede", 1), PPG("ppg", 2), IES("ppg", 3);
 
     private final String value;
     private final int num;
