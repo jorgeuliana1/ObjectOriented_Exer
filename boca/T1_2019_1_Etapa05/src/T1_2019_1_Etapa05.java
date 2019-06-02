@@ -43,6 +43,14 @@ public class T1_2019_1_Etapa05 {
                 String[] subline = line.split(" ");
                 s.setSubCommand(subline[1], subline[2]);
                 break;
+            } else {
+                String[] splited;
+                splited = line.split(".");
+                if(splited.length > 0 && !splited[splited.length - 1].equals("csv")) {
+                    // Invalid command was inserted
+                    System.out.println("Comando desconhecido.");
+                    return;
+                }
             }
 
             // Getting the file from the path.

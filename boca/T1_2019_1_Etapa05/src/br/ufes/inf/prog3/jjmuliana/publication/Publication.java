@@ -22,7 +22,7 @@ public class Publication {
 
         pages = new int[3];
 
-        // Defining the pages vctr
+        // Defining the pages
         if (p2 - p1 >= 2000 || p1 > p2 || p2 < 0 || p1 < 0)
             p = false;
 
@@ -65,6 +65,10 @@ public class Publication {
         return lang;
     }
 
+    public String getCity() {
+        return city;
+    }
+
     public boolean hasPageNumber() {
         return pages[0] == 1;
     }
@@ -80,6 +84,12 @@ public class Publication {
         }
 
         return 1;
+    }
+
+    public String getBigHashKey() {
+        if(nature != null && a_name != null)
+            return nature.replaceAll("\\s", "") + ";" + a_name;
+        else return "0" + getHashKey();
     }
 
     public int getHashKey() {

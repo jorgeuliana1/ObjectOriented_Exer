@@ -1,6 +1,6 @@
 package br.ufes.inf.prog3.jjmuliana.stats;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 import br.ufes.inf.prog3.jjmuliana.csvreader.CSVReader;
 import br.ufes.inf.prog3.jjmuliana.publication.*;
@@ -27,13 +27,47 @@ public class PublicationStats {
     }
 
     public void followCommand(StatsCommand c) {
+
+        // This function is responsible for the interpretation of the command.
+
         if(c.equals(StatsCommand.REDE)) {
             printNetworks();
         } else if(c.equals(StatsCommand.PPG)) {
             printProgramData(c.getSubCommand());
         } else if(c.equals(StatsCommand.IES)) {
             printUniversityData(c.getSubCommand());
+        } else if(c.equals(StatsCommand.CSV)) {
+            generateCSV(c.getSubCommand(0), c.getSubCommand(1));
         }
+    }
+
+    public void generateCSV(String gpid /* grad program id */, String prodtype /* production type */) {
+
+        // Printing the header
+        System.out.print("Natureza;Titulo;Idioma;");
+        if(prodtype.equals(PublicationConst.ANNAL.toString())) {
+            System.out.print("Evento;Cidade;");
+        } else {
+            System.out.print("Editora;Cidade;");
+            if(prodtype.equals(PublicationConst.MAGAZINE.toString())) {
+                System.out.print("Data de publicacao; ISSN;");
+            } else if(prodtype.equals(PublicationConst.PERIODIC.toString())) {
+                System.out.print("Volume;Fasciculo;Serie;ISSN;");
+            } else if(prodtype.equals(PublicationConst.BOOK.toString())) {
+                System.out.print("ISBN;");
+            } else if(prodtype.equals(PublicationConst.MUSIC.toString())) {
+                System.out.print("Formacao instrumental;");
+            } else if(prodtype.equals(PublicationConst.TRANSLATION.toString())) {
+                System.out.print("Idioma traducao;");
+            }
+        }
+        System.out.println("Paginas");
+
+       // Getting GradProgram
+       GradProgram g = g_list.get(gpid);
+       g.printCSVStyleTable(";", prodtype);
+
+
     }
 
     public void printUniversityData(String university_sn) {
@@ -173,6 +207,7 @@ public class PublicationStats {
             translat = null;
 
             // Getting the data
+
             try {
                 natur_ar = csv.getCachedLineContent("DS_NATUREZA");
                 title_ar = csv.getCachedLineContent("NM_TITULO");
@@ -324,9 +359,11 @@ public class PublicationStats {
             else
                 publi = new GenericPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a);
 
+            publi.setNature(natur_ar);
+
             p_list.addPublication(publi);
             u_list.addUniversity(uni, gp);
-            g_list.addGradProgram(gp, uni, publi.getPages(), type);
+            g_list.addGradProgram(gp, uni, publi.getPages(), publi);
         }
 
 
@@ -432,14 +469,14 @@ class GradProgramList {
         g = new HashMap<>();
     }
 
-    void addGradProgram(GradProgram grp, University u, int publication_pages, String publication_type) {
+    void addGradProgram(GradProgram grp, University u, int publication_pages, Publication p) {
         boolean isInSet = false;
         if(g.containsKey(grp.getHashKey())) {
             isInSet = true;
             grp = g.get(grp.getHashKey());
         }
         // common operations:
-        grp.plusPublication(publication_type);
+        grp.plusPublication(p);
         grp.addUniversity(u);
 
         if((publication_pages < 2000 && publication_pages >= 0))
@@ -477,5 +514,9 @@ class GradProgramList {
             g.get(program_id).printData();
         else
             System.out.println("PPG nao encontrado.");
+    }
+
+    GradProgram get(String id) {
+        return g.get(id);
     }
 }
