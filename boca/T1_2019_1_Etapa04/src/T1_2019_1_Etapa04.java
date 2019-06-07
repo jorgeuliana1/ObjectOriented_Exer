@@ -45,8 +45,8 @@ public class T1_2019_1_Etapa04 {
                 break;
             } else {
                 String[] splited;
-                splited = line.split(".");
-                if(splited.length > 0 && !splited[splited.length - 1].equals("csv")) {
+                splited = line.split(" ");
+                if(splited.length > 1) {
                     // Invalid command was inserted
                     System.out.println("Comando desconhecido.");
                     return;
