@@ -1,12 +1,17 @@
 package br.ufes.inf.prog3.jjmuliana.gradprogram;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import br.ufes.inf.prog3.jjmuliana.csvreader.CSVBuilder;
+import br.ufes.inf.prog3.jjmuliana.publication.*;
 import br.ufes.inf.prog3.jjmuliana.university.University;
 import br.ufes.inf.prog3.jjmuliana.university.UniversityComparator;
 
 /**
  * @author J. Jorge M. Uliana
- * @version 1.1
+ * @version 1.3
  */
 
 public class GradProgram {
@@ -15,82 +20,92 @@ public class GradProgram {
     private String program_name; /* graduate program name */
     private Map<String, University> university_map; /* tree containing universities */
 
-    // Stats variables:
-    private int p_annals;
-    private int p_magazi;
-    private int p_period;
-    private int p_books;
-    private int p_music;
-    private int p_transl;
-    private int p_miscel;
+    // HashMaps of publications:
+    private Set<AnnalPublication>      m_anna = new TreeSet<>(); // Annals publications
+    private Set<MagazinePublication>   m_maga = new TreeSet<>(); // Magazines publications
+    private Set<PeriodicPublication>   m_peri = new TreeSet<>(); // Periodic publications
+    private Set<BookPublication>       m_book = new TreeSet<>(); // Book publications
+    private Set<TranslatedPublication> m_tran = new TreeSet<>(); // Translated publications
+    private Set<MusicalPiece>          m_musi = new TreeSet<>(); // Musical pieces
+    private Set<GenericPublication>    m_gene = new TreeSet<>(); // Generic publications
 
-    private int published_pages = 0;
+    private long published_pages = 0;
+    private long valid_publications = 0;
 
     public GradProgram(String id, String n) {
         program_id = id;
         program_name = n;
-        university_map = new HashMap<>();
-        p_annals = p_magazi = p_period = p_books = p_music = p_transl = p_miscel = 0;
+        university_map = new TreeMap<>(new Comparator<String>() {
+            // Implementing a comparator using UniversityComparator.
+            public int compare(String o1, String o2) {
+                String[] infos_1;
+                String[] infos_2;
+
+                infos_1 = o1.substring(1, o1.length()).split("_");
+                infos_2 = o2.substring(1, o2.length()).split("_");
+
+                // Comparing short names, since university key is in the format -shortname-name
+                int compare = infos_1[0].compareTo(infos_2[0]);
+                if(compare != 0)
+                    return compare;
+
+                // else ...
+                // compare names
+                return infos_1[1].compareTo(infos_2[1]);
+            }
+        });
     }
 
-    public void plusAnnalPublication() {
-        p_annals++;
+    public void plusAnnalPublication(AnnalPublication p) {
+        m_anna.add(p);
     }
 
-    public void plusMagazinePublication() {
-        p_magazi++;
+    public void plusMagazinePublication(MagazinePublication p) {
+        m_maga.add(p);
     }
 
-    public void plusPeriodicPublication() {
-        p_period++;
+    public void plusPeriodicPublication(PeriodicPublication p) {
+        m_peri.add(p);
     }
 
-    public void plusBooksPublication() {
-        p_books++;
+    public void plusBooksPublication(BookPublication p) {
+        m_book.add(p);
     }
 
-    public void plusMusicPublication() {
-        p_music++;
+    public void plusMusicPublication(MusicalPiece p) {
+        m_musi.add(p);
     }
 
-    public void plusTranslationPublication() {
-        p_transl++;
+    public void plusTranslatedPublication(TranslatedPublication p) {
+        m_tran.add(p);
     }
 
-    public void plusGenericPublication() {
-        p_miscel++;
+    public void plusGenericPublication(GenericPublication p) {
+        m_gene.add(p);
     }
 
-    public void plusPublication(String type) {
-        switch(type) {
-            case "anais":
-                plusAnnalPublication();
-                break;
-            case "artjr":
-                plusMagazinePublication();
-                break;
-            case "artpe":
-                plusPeriodicPublication();
-                break;
-            case "livro":
-                plusBooksPublication();
-                break;
-            case "partmu":
-                plusMusicPublication();
-                break;
-            case "tradu":
-                plusTranslationPublication();
-                break;
-            case "outro":
-                plusGenericPublication();
-                break;
-            default:
-                break;
-        }
+    public void plusPublication(Publication p) {
+
+        // Higher lever function to insert publications in hashsets.
+        if(p instanceof AnnalPublication)
+            plusAnnalPublication((AnnalPublication) p);
+        else if(p instanceof MagazinePublication)
+            plusMagazinePublication((MagazinePublication) p);
+        else if(p instanceof PeriodicPublication)
+            plusPeriodicPublication((PeriodicPublication) p);
+        else if(p instanceof BookPublication)
+            plusBooksPublication((BookPublication) p);
+        else if(p instanceof MusicalPiece)
+            plusMusicPublication((MusicalPiece) p);
+        else if(p instanceof TranslatedPublication)
+            plusTranslatedPublication((TranslatedPublication) p);
+        else if(p instanceof GenericPublication)
+            plusGenericPublication((GenericPublication) p);
     }
 
     public void plusPublishedPages(int n) {
         published_pages+=n;
+        valid_publications+=1;
     }
 
     public void addUniversity(University u) {
@@ -141,24 +156,11 @@ public class GradProgram {
 
     public void printUniversitiesList() {
 
-        // Helped by https://www.mkyong.com/java/how-to-sort-a-map-in-java/
-
-        // Converting map to list:
-        List<Map.Entry<String, University>> list
-                = new LinkedList<>(university_map.entrySet());
-
-        // Sorting the list:
-        list.sort(new Comparator<Map.Entry<String, University>>() {
-            // Implementing a comparator using UniversityComparator.
-            public int compare(Map.Entry<String, University> o1, Map.Entry<String, University> o2) {
-                return new UniversityComparator().compare(o1.getValue(), o2.getValue());
-            }
-        });
-
-        for(Map.Entry<String, University> entry : list) {
-            System.out.printf("\t- %s\n", entry.getValue().toString());
+        Iterator iterator = university_map.values().iterator();
+        while(iterator.hasNext()) {
+            University u = (University) iterator.next();
+            System.out.printf("\t- %s\n", u.toString());
         }
-
     }
 
     public void printData() {
@@ -167,19 +169,132 @@ public class GradProgram {
         printUniversitiesList();
         System.out.println();
         System.out.println("Quantidade de producoes por tipo: ");
-        System.out.printf("\t- Artigos em anais de eventos: %d\n", p_annals);
-        System.out.printf("\t- Artigos em jornais e revistas: %d\n", p_magazi);
-        System.out.printf("\t- Artigos em periodicos cientificos: %d\n", p_period);
-        System.out.printf("\t- Livros: %d\n", p_books);
-        System.out.printf("\t- Partituras musicais: %d\n", p_music);
-        System.out.printf("\t- Traducoes: %d\n", p_transl);
-        System.out.printf("\t- Outros: %d\n", p_miscel);
+        System.out.printf("\t- Artigos em anais de eventos: %d\n", m_anna.size());
+        System.out.printf("\t- Artigos em jornais e revistas: %d\n", m_maga.size());
+        System.out.printf("\t- Artigos em periodicos cientificos: %d\n", m_peri.size());
+        System.out.printf("\t- Livros: %d\n", m_book.size());
+        System.out.printf("\t- Partituras musicais: %d\n", m_musi.size());
+        System.out.printf("\t- Traducoes: %d\n", m_tran.size());
+        System.out.printf("\t- Outros: %d\n", m_gene.size());
         System.out.println();
-        System.out.println("Total de paginas produzidas pelo PPG: " + published_pages);
+
+        System.out.println("Total de paginas produzidas pelo PPG: " + published_pages );
     }
 
-    private int arcticlesNum() {
-        return p_annals + p_magazi + p_period + p_books + p_music + p_transl + p_miscel;
+    public int productionsNum() {
+        return m_anna.size() + m_tran.size() + m_book.size() + m_gene.size() + m_maga.size() + m_musi.size() + m_peri.size();
     }
+
+    public void printCSVStyleTable(String separator, String type) {
+
+        List<String> output_buffer;
+        output_buffer = new ArrayList<>();
+
+        if(type.equals(PublicationConst.GENERIC.toString())) {
+
+            // Key iterator
+            Iterator<GenericPublication> iterator = m_gene.iterator();
+
+            for(int i = 0; i < m_gene.size(); i++) {
+                GenericPublication p;
+                if(iterator.hasNext())
+                    p = iterator.next();
+                else return;
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(), String.valueOf(p.getPages())));
+            }
+        }
+        else if(type.equals(PublicationConst.ANNAL.toString())) {
+
+            // Key iterator
+            Iterator<AnnalPublication> iterator = m_anna.iterator();
+
+            for(int i = 0; i < m_anna.size(); i++) {
+                AnnalPublication p;
+                if(iterator.hasNext())
+                    p = iterator.next();
+                else return;
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(),
+                        p.getAnnal(), p.getCity(), String.valueOf(p.getPages())));
+            }
+        }
+        else if(type.equals(PublicationConst.MAGAZINE.toString())) {
+
+            // Key iterator
+            Iterator<MagazinePublication> iterator = m_maga.iterator();
+
+            for(int i = 0; i < m_maga.size(); i++) {
+                MagazinePublication p;
+                if(iterator.hasNext())
+                    p = iterator.next();
+                else return;
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getTitle(), p.getLanguage(), p.getCity(),
+                        p.getPublishingDate(), p.getISSN(), String.valueOf(p.getPages())));
+            }
+        }
+        else if(type.equals(PublicationConst.PERIODIC.toString())) {
+
+            // Key iterator
+            Iterator<PeriodicPublication> iterator = m_peri.iterator();
+
+            for(int i = 0; i < m_peri.size(); i++) {
+                PeriodicPublication p;
+                if(iterator.hasNext())
+                    p = iterator.next();
+                else return;
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getLanguage(),
+                        p.getEditor(), p.getCity(), p.getVolume(), p.getFascicle(), p.getSeries(), p.getISSN(),
+                        String.valueOf(p.getPages())));
+            }
+        }
+        else if(type.equals(PublicationConst.BOOK.toString())) {
+
+            // Key iterator
+            Iterator<BookPublication> iterator = m_book.iterator();
+
+            for(int i = 0; i < m_book.size(); i++) {
+                BookPublication p;
+                if(iterator.hasNext())
+                    p = iterator.next();
+                else return;
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(),
+                        p.getISBN()));
+            }
+        }
+        else if(type.equals(PublicationConst.MUSIC.toString())) {
+
+            // Key iterator
+            Iterator<MusicalPiece> iterator = m_musi.iterator();
+
+            for(int i = 0; i < m_musi.size(); i++) {
+                MusicalPiece p;
+                if(iterator.hasNext())
+                    p = iterator.next();
+                else return;
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(),
+                        p.getEditor(), p.getCity(), p.getInstrumentalFormation()));
+            }
+        }
+        else if(type.equals(PublicationConst.TRANSLATION.toString())) {
+
+            // Key iterator
+            Iterator<TranslatedPublication> iterator = m_tran.iterator();
+
+            for(int i = 0; i < m_tran.size(); i++) {
+                TranslatedPublication p;
+                if(iterator.hasNext())
+                    p = iterator.next();
+                else return;
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(),
+                        p.getEditor(), p.getCity(), p.getTranslation()));
+            }
+        }
+
+        // Printing the strings.
+        for(String line : output_buffer) {
+            System.out.println(line);
+        }
+
+    }
+
 
 }

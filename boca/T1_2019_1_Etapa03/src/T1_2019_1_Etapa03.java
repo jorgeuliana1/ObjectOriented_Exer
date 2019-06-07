@@ -1,4 +1,3 @@
-import br.ufes.inf.prog3.jjmuliana.publication.Publication;
 import br.ufes.inf.prog3.jjmuliana.stats.PublicationStats;
 import br.ufes.inf.prog3.jjmuliana.stats.StatsCommand;
 
@@ -34,6 +33,23 @@ public class T1_2019_1_Etapa03 {
                 s = StatsCommand.PPG;
                 s.setSubCommand(line.split(" ")[1]);
                 break;
+            } else if(line.split(" ")[0].equals("ies")) {
+                s = StatsCommand.IES;
+                s.setSubCommand(line.split(" ")[1]);
+                break;
+            } else if(line.split(" ")[0].equals("csv")) {
+                s = StatsCommand.CSV;
+                String[] subline = line.split(" ");
+                s.setSubCommand(subline[1], subline[2]);
+                break;
+            } else {
+                String[] splited;
+                splited = line.split(".");
+                if(splited.length > 0 && !splited[splited.length - 1].equals("csv")) {
+                    // Invalid command was inserted
+                    System.out.println("Comando desconhecido.");
+                    return;
+                }
             }
 
             // Getting the file from the path.

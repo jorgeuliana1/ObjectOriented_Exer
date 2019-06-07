@@ -10,7 +10,7 @@ import br.ufes.inf.prog3.jjmuliana.university.UniversityComparator;
 
 /**
  * @author J. Jorge M. Uliana
- * @version 1.3
+ * @version 1.4
  */
 
 public class PublicationStats {
@@ -44,19 +44,29 @@ public class PublicationStats {
     public void generateCSV(String gpid /* grad program id */, String prodtype /* production type */) {
 
         // Printing the header
-        System.out.print("Natureza;Titulo;Idioma;");
+        if(prodtype.equals(PublicationConst.MUSIC.toString())) {
+            System.out.println("Natureza;Editora;Cidade;Formacao;Paginas");
+            GradProgram g = g_list.get(gpid);
+            g.printCSVStyleTable(";", prodtype);
+            return;
+        }
+        if(!prodtype.equals(PublicationConst.MAGAZINE.toString()))
+            System.out.print("Natureza;");
+        if(!prodtype.equals(PublicationConst.PERIODIC.toString()))
+            System.out.print("Titulo;");
+        System.out.print("Idioma;");
         if(prodtype.equals(PublicationConst.ANNAL.toString())) {
             System.out.print("Evento;Cidade;");
         } else {
-            System.out.print("Editora;Cidade;");
+            if(!prodtype.equals(PublicationConst.MAGAZINE.toString()))
+                System.out.print("Editora;");
+            System.out.print("Cidade;");
             if(prodtype.equals(PublicationConst.MAGAZINE.toString())) {
-                System.out.print("Data de publicacao; ISSN;");
+                System.out.print("Data;ISSN;");
             } else if(prodtype.equals(PublicationConst.PERIODIC.toString())) {
                 System.out.print("Volume;Fasciculo;Serie;ISSN;");
             } else if(prodtype.equals(PublicationConst.BOOK.toString())) {
                 System.out.print("ISBN;");
-            } else if(prodtype.equals(PublicationConst.MUSIC.toString())) {
-                System.out.print("Formacao instrumental;");
             } else if(prodtype.equals(PublicationConst.TRANSLATION.toString())) {
                 System.out.print("Idioma traducao;");
             }
@@ -270,6 +280,27 @@ public class PublicationStats {
                 } catch(Exception e) {
                     volume_a = null;
                     fascic_a = null;
+                    series_a = null;
+                }
+
+                /* Fixing the numbers problem:
+                RESOLUTION LOGIC:
+                try to convert in integer and then in string again.
+                if it fails, null the value.
+                 */
+                try {
+                    volume_a = String.valueOf(Integer.parseInt(volume_a));
+                } catch(Exception e) {
+                    volume_a = null;
+                }
+                try {
+                    fascic_a = String.valueOf(Integer.parseInt(fascic_a));
+                } catch(Exception e) {
+                    fascic_a = null;
+                }
+                try {
+                    series_a = String.valueOf(Integer.parseInt(series_a));
+                } catch (Exception e) {
                     series_a = null;
                 }
             }

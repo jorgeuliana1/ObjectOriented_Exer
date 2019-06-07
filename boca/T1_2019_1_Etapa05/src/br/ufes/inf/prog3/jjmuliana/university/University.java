@@ -92,7 +92,7 @@ public class University {
     }
 
     public String getHashKey() {
-        return ("-" + s + "-" + n).toLowerCase().trim();
+        return ("_" + s + "_" + n).toLowerCase().trim();
     }
 
     @Override

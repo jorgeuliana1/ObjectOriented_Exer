@@ -1,14 +1,17 @@
 package br.ufes.inf.prog3.jjmuliana.gradprogram;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import br.ufes.inf.prog3.jjmuliana.csvreader.CSVBuilder;
 import br.ufes.inf.prog3.jjmuliana.publication.*;
 import br.ufes.inf.prog3.jjmuliana.university.University;
 import br.ufes.inf.prog3.jjmuliana.university.UniversityComparator;
 
 /**
  * @author J. Jorge M. Uliana
- * @version 1.2
+ * @version 1.3
  */
 
 public class GradProgram {
@@ -18,13 +21,13 @@ public class GradProgram {
     private Map<String, University> university_map; /* tree containing universities */
 
     // HashMaps of publications:
-    private Map<String, AnnalPublication>      m_anna = new TreeMap<>(); // Annals publications
-    private Map<String, MagazinePublication>   m_maga = new TreeMap<>(); // Magazines publications
-    private Map<String, PeriodicPublication>   m_peri = new TreeMap<>(); // Periodic publications
-    private Map<String, BookPublication>       m_book = new TreeMap<>(); // Book publications
-    private Map<String, TranslatedPublication> m_tran = new TreeMap<>(); // Translated publications
-    private Map<String, MusicalPiece>          m_musi = new TreeMap<>(); // Musical pieces
-    private Map<String, GenericPublication>    m_gene = new TreeMap<>(); // Generic publications
+    private Set<AnnalPublication>      m_anna = new TreeSet<>(); // Annals publications
+    private Set<MagazinePublication>   m_maga = new TreeSet<>(); // Magazines publications
+    private Set<PeriodicPublication>   m_peri = new TreeSet<>(); // Periodic publications
+    private Set<BookPublication>       m_book = new TreeSet<>(); // Book publications
+    private Set<TranslatedPublication> m_tran = new TreeSet<>(); // Translated publications
+    private Set<MusicalPiece>          m_musi = new TreeSet<>(); // Musical pieces
+    private Set<GenericPublication>    m_gene = new TreeSet<>(); // Generic publications
 
     private long published_pages = 0;
     private long valid_publications = 0;
@@ -38,8 +41,8 @@ public class GradProgram {
                 String[] infos_1;
                 String[] infos_2;
 
-                infos_1 = o1.substring(1, o1.length()).split("-");
-                infos_2 = o2.substring(1, o2.length()).split("-");
+                infos_1 = o1.substring(1, o1.length()).split("_");
+                infos_2 = o2.substring(1, o2.length()).split("_");
 
                 // Comparing short names, since university key is in the format -shortname-name
                 int compare = infos_1[0].compareTo(infos_2[0]);
@@ -54,31 +57,31 @@ public class GradProgram {
     }
 
     public void plusAnnalPublication(AnnalPublication p) {
-        m_anna.put(p.getBigHashKey(), p);
+        m_anna.add(p);
     }
 
     public void plusMagazinePublication(MagazinePublication p) {
-        m_maga.put(p.getBigHashKey(), p);
+        m_maga.add(p);
     }
 
     public void plusPeriodicPublication(PeriodicPublication p) {
-        m_peri.put(p.getBigHashKey(), p);
+        m_peri.add(p);
     }
 
     public void plusBooksPublication(BookPublication p) {
-        m_book.put(p.getBigHashKey(), p);
+        m_book.add(p);
     }
 
     public void plusMusicPublication(MusicalPiece p) {
-        m_musi.put(p.getBigHashKey(), p);
+        m_musi.add(p);
     }
 
     public void plusTranslatedPublication(TranslatedPublication p) {
-        m_tran.put(p.getBigHashKey(), p);
+        m_tran.add(p);
     }
 
     public void plusGenericPublication(GenericPublication p) {
-        m_gene.put(p.getBigHashKey(), p);
+        m_gene.add(p);
     }
 
     public void plusPublication(Publication p) {
@@ -152,8 +155,11 @@ public class GradProgram {
     }
 
     public void printUniversitiesList() {
-        for(Map.Entry<String, University> entry : university_map.entrySet()) {
-            System.out.printf("\t- %s\n", entry.getValue().toString());
+
+        Iterator iterator = university_map.values().iterator();
+        while(iterator.hasNext()) {
+            University u = (University) iterator.next();
+            System.out.printf("\t- %s\n", u.toString());
         }
     }
 
@@ -180,135 +186,115 @@ public class GradProgram {
     }
 
     public void printCSVStyleTable(String separator, String type) {
+
+        List<String> output_buffer;
+        output_buffer = new ArrayList<>();
+
         if(type.equals(PublicationConst.GENERIC.toString())) {
 
             // Key iterator
-            Iterator<String> iterator = m_gene.keySet().iterator();
+            Iterator<GenericPublication> iterator = m_gene.iterator();
 
             for(int i = 0; i < m_gene.size(); i++) {
-                String key;
-                key = iterator.next();
-
                 GenericPublication p;
-                if(m_gene.containsKey(key))
-                    p = m_gene.get(key);
+                if(iterator.hasNext())
+                    p = iterator.next();
                 else return;
-                printCSVLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity());
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(), String.valueOf(p.getPages())));
             }
-            return;
-        } else if(type.equals(PublicationConst.ANNAL.toString())) {
+        }
+        else if(type.equals(PublicationConst.ANNAL.toString())) {
 
             // Key iterator
-            Iterator<String> iterator = m_anna.keySet().iterator();
+            Iterator<AnnalPublication> iterator = m_anna.iterator();
 
             for(int i = 0; i < m_anna.size(); i++) {
-                String key;
-                key = iterator.next();
-
                 AnnalPublication p;
-                if(m_anna.containsKey(key))
-                    p = m_anna.get(key);
+                if(iterator.hasNext())
+                    p = iterator.next();
                 else return;
-                printCSVLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getAnnal(), p.getCity());
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(),
+                        p.getAnnal(), p.getCity(), String.valueOf(p.getPages())));
             }
-            return;
-        } else if(type.equals(PublicationConst.MAGAZINE.toString())) {
+        }
+        else if(type.equals(PublicationConst.MAGAZINE.toString())) {
 
             // Key iterator
-            Iterator<String> iterator = m_maga.keySet().iterator();
+            Iterator<MagazinePublication> iterator = m_maga.iterator();
 
             for(int i = 0; i < m_maga.size(); i++) {
-                String key;
-                key = iterator.next();
-
                 MagazinePublication p;
-                if(m_maga.containsKey(key))
-                    p = m_maga.get(key);
+                if(iterator.hasNext())
+                    p = iterator.next();
                 else return;
-                printCSVLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(),
-                        p.getPublishingDate(), p.getISSN());
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getTitle(), p.getLanguage(), p.getCity(),
+                        p.getPublishingDate(), p.getISSN(), String.valueOf(p.getPages())));
             }
-            return;
-        } else if(type.equals(PublicationConst.PERIODIC.toString())) {
+        }
+        else if(type.equals(PublicationConst.PERIODIC.toString())) {
 
             // Key iterator
-            Iterator<String> iterator = m_peri.keySet().iterator();
+            Iterator<PeriodicPublication> iterator = m_peri.iterator();
 
             for(int i = 0; i < m_peri.size(); i++) {
-                String key;
-                key = iterator.next();
-
                 PeriodicPublication p;
-                if(m_peri.containsKey(key))
-                    p = m_peri.get(key);
+                if(iterator.hasNext())
+                    p = iterator.next();
                 else return;
-                printCSVLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(),
-                        p.getVolume(), p.getFascicle(), p.getSeries(), p.getISSN());
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getLanguage(),
+                        p.getEditor(), p.getCity(), p.getVolume(), p.getFascicle(), p.getSeries(), p.getISSN(),
+                        String.valueOf(p.getPages())));
             }
-            return;
-        } else if(type.equals(PublicationConst.BOOK.toString())) {
+        }
+        else if(type.equals(PublicationConst.BOOK.toString())) {
 
             // Key iterator
-            Iterator<String> iterator = m_book.keySet().iterator();
+            Iterator<BookPublication> iterator = m_book.iterator();
 
             for(int i = 0; i < m_book.size(); i++) {
-                String key;
-                key = iterator.next();
-
                 BookPublication p;
-                p = m_book.get(key);
-                printCSVLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(),
-                        p.getISBN());
+                if(iterator.hasNext())
+                    p = iterator.next();
+                else return;
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(),
+                        p.getISBN()));
             }
-            return;
-        } else if(type.equals(PublicationConst.MUSIC.toString())) {
+        }
+        else if(type.equals(PublicationConst.MUSIC.toString())) {
 
             // Key iterator
-            Iterator<String> iterator = m_musi.keySet().iterator();
+            Iterator<MusicalPiece> iterator = m_musi.iterator();
 
             for(int i = 0; i < m_musi.size(); i++) {
-
-                String key;
-                key = iterator.next();
-
                 MusicalPiece p;
-                if(m_musi.containsKey(key))
-                    p = m_musi.get(key);
+                if(iterator.hasNext())
+                    p = iterator.next();
                 else return;
-                printCSVLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(),
-                        p.getInstrumentalFormation());
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(),
+                        p.getEditor(), p.getCity(), p.getInstrumentalFormation()));
             }
-            return;
-        } else if(type.equals(PublicationConst.TRANSLATION.toString())) {
+        }
+        else if(type.equals(PublicationConst.TRANSLATION.toString())) {
 
             // Key iterator
-            Iterator iterator = m_tran.keySet().iterator();
+            Iterator<TranslatedPublication> iterator = m_tran.iterator();
 
             for(int i = 0; i < m_tran.size(); i++) {
-                int key;
-                key = (int)iterator.next();
-
                 TranslatedPublication p;
-                if(m_tran.containsKey(key))
-                    p = m_tran.get(key);
+                if(iterator.hasNext())
+                    p = iterator.next();
                 else return;
-                printCSVLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(),
-                        p.getTranslation());
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(),
+                        p.getEditor(), p.getCity(), p.getTranslation()));
             }
-            return;
         }
+
+        // Printing the strings.
+        for(String line : output_buffer) {
+            System.out.println(line);
+        }
+
     }
 
-    private void printCSVLine(String separator, String ... content /* content of the csv line*/) {
-        // NOTE: AUXILIAR FUNCTION
-        for ( String cont : content ) {
-            System.out.print(cont);
-            if(cont != content[content.length - 1]) /* if cont isn't the last element of content... */ {
-                System.out.print(separator);
-            }
-        }
-        // Break line
-        System.out.println();
-    }
 
 }

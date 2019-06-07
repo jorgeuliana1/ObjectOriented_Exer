@@ -18,4 +18,34 @@ public class TranslatedPublication extends EditorialPublication {
     public String getTranslation() {
         return translation;
     }
+
+    @Override
+    public int compareTo(Publication pa) {
+        TranslatedPublication p = (TranslatedPublication) pa;
+
+        int compare;
+
+        compare = getNature().compareTo(p.getNature());
+        if(compare != 0)
+            return compare;
+
+        try {
+            compare = getEditor().compareTo(p.getEditor());
+        } catch(NullPointerException e) {
+            compare = 0;
+        }
+        if(compare != 0)
+            return compare;
+
+        compare = getCity().compareTo(p.getCity());
+        if(compare != 0)
+            return compare;
+
+        compare = getTranslation().compareTo(p.getTranslation());
+        if(compare != 0)
+            return 0;
+
+        compare = getPages() - p.getPages();
+        return compare;
+    }
 }

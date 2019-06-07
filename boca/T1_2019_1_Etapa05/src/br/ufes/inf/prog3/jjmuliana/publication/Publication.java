@@ -1,12 +1,13 @@
 package br.ufes.inf.prog3.jjmuliana.publication;
 
-public class Publication {
+import br.ufes.inf.prog3.jjmuliana.csvreader.CSVBuilder;
+
+public abstract class Publication implements Comparable<Publication> {
 
     private String nature; /* publication nature */
     private String a_name; /* publication title */
     private String lang;   /* language used to write the publication */
     private String city;   /* city of the publication */
-
     private int[] pages;    /* 
                             pages vctr: index 0: 1 or 0, 1 if there is a defined
                             number of pages; index 1 and 2: first and last page number
@@ -87,8 +88,12 @@ public class Publication {
     }
 
     public String getBigHashKey() {
+        String pages = String.valueOf(getPages());
+        if(pages.equals("0"))
+            pages = "";
+
         if(nature != null && a_name != null)
-            return nature.replaceAll("\\s", "") + ";" + a_name;
+            return CSVBuilder.getCSVStyleLine(";", nature, a_name, lang, city, pages);
         else return "0" + getHashKey();
     }
 
@@ -97,4 +102,6 @@ public class Publication {
         return counter;
     }
 
+    @Override
+    public abstract int compareTo(Publication p);
 }

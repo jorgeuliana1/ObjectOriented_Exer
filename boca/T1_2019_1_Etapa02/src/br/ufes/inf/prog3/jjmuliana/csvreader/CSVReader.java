@@ -2,11 +2,13 @@ package br.ufes.inf.prog3.jjmuliana.csvreader;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @
- * @author J. Jorge M. Uliana
- * @version 1.2
+ * @author Jose Jorge Moutinho Uliana
+ * @version 1.3
  */
 
 public class CSVReader {
@@ -17,6 +19,7 @@ public class CSVReader {
     private String[] cache_string;
     private BufferedReader br;
     private boolean thereIsNextLine = true;
+    private Map<String, Integer> index;
 
     public CSVReader(File f, String separator, boolean autoread, boolean has_index_row) {
 
@@ -29,8 +32,16 @@ public class CSVReader {
         initializeReader();
         if (autoread)
             readCSV();
-        else if(has_index_row)
+        else if(has_index_row) {
+            String[] i;
+            try {
+                i = br.readLine().split(s);
+                createIndex(i);
+            } catch(IOException e) {
+                return;
+            }
             nextLine();
+        }
 
     }
 
@@ -82,20 +93,39 @@ public class CSVReader {
         return cache_string[elem].trim();
     }
 
+    public String getCachedLineContent(String elem) {
+        try {
+            return cache_string[getIndexNumberbyName(elem)].trim();
+        } catch(ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    public void createIndex(String[] ind) {
+
+        int counter = 0;
+
+        index = new HashMap<>();
+
+        for(String i : ind) {
+            index.put(i, counter);
+            counter++;
+        }
+
+        // Creates a HashMap that represents the indexes.
+
+    }
+
+    private int getIndexNumberbyName(String index_name) {
+        try {
+            return index.get(index_name);
+        } catch(NullPointerException e) {
+            return -1;
+        }
+    }
+
     public boolean hasNextLine() {
         return thereIsNextLine;
-    }
-
-    public String[] getRow(int row) {
-
-        return stream.get(row).split(s);
-
-    }
-
-    public String getContent(int row, int column) {
-
-        return stream.get(row).split(s)[column].trim();
-
     }
 
     public int[] getSize() {

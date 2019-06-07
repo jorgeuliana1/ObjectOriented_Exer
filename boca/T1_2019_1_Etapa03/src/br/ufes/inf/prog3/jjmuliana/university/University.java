@@ -1,24 +1,25 @@
 package br.ufes.inf.prog3.jjmuliana.university;
 
-public class University {
+import br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram;
+
+import java.util.*;
+
+public class University implements Comparable<University> {
 
     private String n; /* name */
     private String s; /* short name */
     private int p = 0; /* publications */
     private boolean a = false; /* annals */
-    private int gp = 0; /* graduate programs */
+    private Map<String, GradProgram> g_list;
 
     public University(String name, String shortname) {
         n = name;
         s = shortname;
+        g_list = new TreeMap<>();
     }
 
     public void setAnnals(boolean hasAnnals) {
         a = hasAnnals;
-    }
-
-    public void setGraduateProgramsNumber(int gp_number) {
-        gp = gp_number;
     }
 
     public void setPublications(int p_number) {
@@ -33,12 +34,18 @@ public class University {
         p += i;
     }
 
-    public void addGraduateProgram() {
-        addGraduateProgram(1);
+    public void addGraduateProgram(GradProgram g) {
+        if(!g_list.containsKey(g.getName()))
+            g_list.put(g.getName(), g);
     }
 
-    public void addGraduateProgram(int i) {
-        gp += i;
+    public void printData() {
+        // Printing the "name (short name)"
+        System.out.println(n + " (" + s + "):");
+
+        for(Map.Entry<String, GradProgram> i : g_list.entrySet()) {
+            System.out.printf("\t- %s: %d producoes\n", i.getValue().getName(), i.getValue().productionsNum());
+        }
     }
 
     public boolean publishesInAnnals() {
@@ -46,7 +53,7 @@ public class University {
     }
 
     public int getGradProgramsNum() {
-        return gp;
+        return g_list.size();
     }
 
     public int getPublicationsNum() {
@@ -85,12 +92,17 @@ public class University {
     }
 
     public String getHashKey() {
-        return (s + n).toLowerCase().trim();
+        return ("_" + s + "_" + n).toLowerCase().trim();
     }
 
     @Override
     public String toString() {
         return (s + " (" + n + ")");
+    }
+
+    @Override
+    public int compareTo(University u) {
+        return getShortName().compareTo(u.getName()) + getName().compareTo(u.getName());
     }
 
 }

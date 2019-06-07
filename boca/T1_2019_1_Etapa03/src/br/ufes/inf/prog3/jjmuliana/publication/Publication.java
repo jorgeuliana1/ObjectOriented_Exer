@@ -1,34 +1,32 @@
 package br.ufes.inf.prog3.jjmuliana.publication;
 
-public class Publication {
+public abstract class Publication implements Comparable<Publication> {
 
-    private String a_name; /* annal name */
-
+    private String nature; /* publication nature */
+    private String a_name; /* publication title */
+    private String lang;   /* language used to write the publication */
+    private String city;   /* city of the publication */
     private int[] pages;    /* 
                             pages vctr: index 0: 1 or 0, 1 if there is a defined
                             number of pages; index 1 and 2: first and last page number
                             */
 
-    private String u_name; /* university name */
-    private String grad_prog; /* graduate program name */
     private static int counter = 0;
 
-    public Publication(String a, String u, String g, boolean p, int p1, int p2) {
+    public Publication(String a, String l, String c, boolean p, int p1, int p2) {
 
-        // Defining a_name
         a_name = a;
-
-        u_name = u;
-        grad_prog = g;
+        lang = l;
+        city = c;
 
         pages = new int[3];
 
-        // Defining the pages vctr
+        // Defining the pages
         if (p2 - p1 >= 2000 || p1 > p2 || p2 < 0 || p1 < 0)
             p = false;
 
 
-        if (p == true)
+        if (p)
             pages[0] = 1;
         else
             pages[0] = 0;
@@ -50,16 +48,24 @@ public class Publication {
             return 0;
     }
 
-    public String getAnnal() {
+    public void setNature(String n) {
+        nature = n;
+    }
+
+    public String getNature() {
+        return nature;
+    }
+
+    public String getTitle() {
         return a_name;
     }
 
-    public String getGradProgName() {
-        return grad_prog;
+    public String getLanguage() {
+        return lang;
     }
 
-    public String getUniversityName() {
-        return u_name;
+    public String getCity() {
+        return city;
     }
 
     public boolean hasPageNumber() {
@@ -68,7 +74,7 @@ public class Publication {
 
     @Override
     public int hashCode() {
-        String lower_name = (a_name + u_name + grad_prog).toLowerCase().trim();
+        String lower_name = (a_name + nature + city).toLowerCase().trim();
 
         // Getting a hash code from the string:
         int sum = 0;
@@ -83,5 +89,8 @@ public class Publication {
         counter += 1;
         return counter;
     }
+
+    @Override
+    public abstract int compareTo(Publication p);
 
 }
