@@ -1,63 +1,66 @@
 package br.ufes.inf.prog3.jjmuliana.university;
 
 import br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram;
+import br.ufes.inf.prog3.jjmuliana.publication.Publication;
 
 import java.util.*;
 
-public class University {
+public class University implements Comparable<University> {
 
     private String n; /* name */
     private String s; /* short name */
     private int p = 0; /* publications */
     private boolean a = false; /* annals */
-    private Map<String, GradProgram> g_list;
+    private Set<GradProgram> g_list = new TreeSet<>();
 
     public University(String name, String shortname) {
         n = name;
         s = shortname;
-        g_list = new TreeMap<>();
     }
 
-    public void setAnnals(boolean hasAnnals) {
-        a = hasAnnals;
-    }
-
-    public void setPublications(int p_number) {
-        p = p_number;
-    }
-
-    public void addPublication() {
-        addPublication(1);
-    }
-
-    public void addPublication(int i) {
-        p += i;
+    public boolean equals(University u) {
+        if(this.compareTo(u) == 0)
+            return true;
+        else return false;
     }
 
     public void addGraduateProgram(GradProgram g) {
-        if(!g_list.containsKey(g.getName()))
-            g_list.put(g.getName(), g);
+        addGraduateProgram(g, null);
+    }
+
+    public void addGraduateProgram(GradProgram g, Publication p) {
+        if(!g_list.contains(g)) {
+            g_list.add(g);
+        } else {
+            // getting gradprogram
+            Iterator<GradProgram> iterator;
+            iterator = g_list.iterator();
+
+            while(iterator.hasNext()) {
+                GradProgram gradProgram;
+                gradProgram = iterator.next();
+                if(g.equals(gradProgram)) {
+                    g = gradProgram;
+                }
+            }
+        }
+
+        if(p != null) {
+            g.plusPublication(p);
+        }
+
     }
 
     public void printData() {
         // Printing the "name (short name)"
         System.out.println(n + " (" + s + "):");
 
-        for(Map.Entry<String, GradProgram> i : g_list.entrySet()) {
-            System.out.printf("\t- %s: %d producoes\n", i.getValue().getName(), i.getValue().productionsNum());
+        Iterator<GradProgram> iterator = g_list.iterator();
+
+        while(iterator.hasNext()) {
+            GradProgram i = iterator.next();
+            System.out.printf("\t- %s: %d producoes\n", i.getName(), i.productionsNum());
         }
-    }
-
-    public boolean publishesInAnnals() {
-        return a;
-    }
-
-    public int getGradProgramsNum() {
-        return g_list.size();
-    }
-
-    public int getPublicationsNum() {
-        return p;
     }
 
     public String getName() {
@@ -98,6 +101,15 @@ public class University {
     @Override
     public String toString() {
         return (s + " (" + n + ")");
+    }
+
+    @Override
+    public int compareTo(University u) {
+        int compare;
+        compare = getShortName().compareTo(u.getShortName());
+        if(compare == 0)
+            return getName().compareTo(u.getName());
+        return compare;
     }
 
 }

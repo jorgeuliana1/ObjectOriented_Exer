@@ -106,7 +106,7 @@ public class University implements Comparable<University> {
     @Override
     public int compareTo(University u) {
         int compare;
-        compare = getShortName().compareTo(u.getName());
+        compare = getShortName().compareTo(u.getShortName());
         if(compare == 0)
             return getName().compareTo(u.getName());
         return compare;

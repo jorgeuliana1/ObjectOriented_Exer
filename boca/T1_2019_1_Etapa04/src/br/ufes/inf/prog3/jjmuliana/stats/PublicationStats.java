@@ -50,6 +50,11 @@ public class PublicationStats {
 
         Set<University> unilist = u_list.getFromShortName(university_sn);
 
+        if(unilist.size() == 0) {
+            System.out.println("IES nao encontrada.");
+            return;
+        }
+
         Iterator<University> iterator = unilist.iterator();
 
         while(iterator.hasNext())

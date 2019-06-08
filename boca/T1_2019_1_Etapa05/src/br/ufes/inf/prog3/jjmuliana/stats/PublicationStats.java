@@ -6,10 +6,9 @@ import br.ufes.inf.prog3.jjmuliana.csvreader.CSVReader;
 import br.ufes.inf.prog3.jjmuliana.publication.*;
 import br.ufes.inf.prog3.jjmuliana.university.University;
 import br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram;
-import br.ufes.inf.prog3.jjmuliana.university.UniversityComparator;
 
 /**
- * @author J. Jorge M. Uliana
+ * @author Jose Jorge M. Uliana
  * @version 1.4
  */
 
@@ -42,58 +41,28 @@ public class PublicationStats {
     }
 
     public void generateCSV(String gpid /* grad program id */, String prodtype /* production type */) {
-
-        // Printing the header
-        if(prodtype.equals(PublicationConst.MUSIC.toString())) {
-            System.out.println("Natureza;Editora;Cidade;Formacao;Paginas");
-            GradProgram g = g_list.get(gpid);
-            g.printCSVStyleTable(";", prodtype);
+        GradProgram g = g_list.get(gpid); /* getting GradProgram */
+        if(g == null) {
+            System.out.println("PPG nao encontrado.");
             return;
         }
-        if(!prodtype.equals(PublicationConst.MAGAZINE.toString()))
-            System.out.print("Natureza;");
-        if(!prodtype.equals(PublicationConst.PERIODIC.toString()))
-            System.out.print("Titulo;");
-        System.out.print("Idioma;");
-        if(prodtype.equals(PublicationConst.ANNAL.toString())) {
-            System.out.print("Evento;Cidade;");
-        } else {
-            if(!prodtype.equals(PublicationConst.MAGAZINE.toString()))
-                System.out.print("Editora;");
-            System.out.print("Cidade;");
-            if(prodtype.equals(PublicationConst.MAGAZINE.toString())) {
-                System.out.print("Data;ISSN;");
-            } else if(prodtype.equals(PublicationConst.PERIODIC.toString())) {
-                System.out.print("Volume;Fasciculo;Serie;ISSN;");
-            } else if(prodtype.equals(PublicationConst.BOOK.toString())) {
-                System.out.print("ISBN;");
-            } else if(prodtype.equals(PublicationConst.TRANSLATION.toString())) {
-                System.out.print("Idioma traducao;");
-            }
-        }
-        System.out.println("Paginas");
-
-       // Getting GradProgram
-       GradProgram g = g_list.get(gpid);
-       g.printCSVStyleTable(";", prodtype);
-
-
+        Publication.printCSVStyleHeader(prodtype); /* printing the header */
+        g.printCSVStyleTable(";", prodtype); /* printing the table */
     }
 
     public void printUniversityData(String university_sn) {
 
-        List<University> unilist = u_list.getFromShortName(university_sn);
+        Set<University> unilist = u_list.getFromShortName(university_sn);
 
-        unilist.sort(new Comparator<University>() {
-            @Override
-            public int compare(University o1, University o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
-
-        for(University uni : unilist) {
-            uni.printData();
+        if(unilist.size() == 0) {
+            System.out.println("IES nao encontrada.");
+            return;
         }
+
+        Iterator<University> iterator = unilist.iterator();
+
+        while(iterator.hasNext())
+            iterator.next().printData();
     }
 
     public void printProgramData(String program_id) {
@@ -132,36 +101,6 @@ public class PublicationStats {
 
     public void fromCSV(File f, String type) {
 
-        /*
-        INDEXES TABLE:
-        INDEX | INFO                          | UTIL PARA O PROGRAMA?
-        0     | CD_PROGRAMA_IES               | br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram
-        1     | NM_PROGRAMA_IES               | br.ufes.inf.prog3.jjmuliana.gradprogram.GradProgram
-        2     | SG_ENTIDADE_ENSINO            | University
-        3     | NM_ENTINDADE_ENSINO           | University
-        4     | AN_BASE_PRODUCAO              |
-        5     | ID_ADD_PRODUCAO_INTELECTUAL   |
-        6     | ID_TIPO_PRODUCAO              |
-        7     | ID_SUBTIPO_PRODUCAO           |
-        8     | DS_NATUREZA                   |
-        9     | NM_TITULO                     | br.ufes.inf.prog3.jjmuliana.publication.Publication / Annal
-        10    | NR_VOLUME                     |
-        11    | DS_FASCICULO                  |
-        12    | NR_SERIE                      |
-        13    | NR_PAGINA_FINAL               | br.ufes.inf.prog3.jjmuliana.publication.Publication
-        14    | NR_PAGINA_INICIAL             | br.ufes.inf.prog3.jjmuliana.publication.Publication
-        15    | DS_EVENTO                     |
-        16    | NM_CIDADE                     |
-        17    | NM_PAIS                       |
-        18    | DS_IDIOMA                     |
-        19    | DS_DIVULGACAO                 |
-        20    | DS_URL                        |
-        21    | DS_OBSERVACOES                |
-        22    | NR_EDICAO                     |
-        23    | DS_ISBN_ISSN                  |
-        24    | IN_GLOSA                      |
-         */
-
         if(type == null)
             return;
 
@@ -169,64 +108,45 @@ public class PublicationStats {
                 new CSVReader(f, ";(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)",false, true);
 
         while (true) {
-
             // Defining the university name.
-            csv.nextLine();
             if(!csv.hasNextLine())
                 break;
+            csv.nextLine();
 
             String natur_ar; // Article nature
             String title_ar; // Article title
             String langu_ar; // Article language
             String cityn_ar; // Article city
-
             String uni_name; // University name
             String sho_name; // Short name of university
-
             String grd_code; // GradProgram name
             String grd_name; // GradProgram code
+            String ana_name = null; // Event name
+            String iss_isbn = null; // ISSN or ISBN
+            String editor_a = null; // Editorial editor
+            String publi_dt = null; // Publishing date
+            String volume_a = null; // Periodic volume
+            String fascic_a = null; // Periodic fascicle
+            String series_a = null; // Periodic series
+            String instrume = null; // Instrumental formation
+            String translat = null; // Translated language
 
-            String ana_name; // Event name
-
-            String iss_isbn; // ISSN or ISBN
-            String editor_a; // Editorial editor
-
-            String publi_dt; // Publishing date
-
-            String volume_a; // Periodic volume
-            String fascic_a; // Periodic fascicle
-            String series_a; // Periodic series
-
-            String instrume; // Instrumental formation
-
-            String translat; // Translated language
-
-            int first_page = 0;
-            int last_page = 0;
+            int first_page = 0, last_page;
             boolean has_pages = false;
 
-            // Inserting some default values:
-            editor_a = null;
-            iss_isbn = null;
-            ana_name = null;
-            publi_dt = null;
-            volume_a = null;
-            fascic_a = null;
-            series_a = null;
-            instrume = null;
-            translat = null;
-
-            // Getting the data
-
             try {
+                // Fundamental info, if we can't get it we break the loop.
                 natur_ar = csv.getCachedLineContent("DS_NATUREZA");
                 title_ar = csv.getCachedLineContent("NM_TITULO");
                 langu_ar = csv.getCachedLineContent("DS_IDIOMA");
-                cityn_ar = csv.getCachedLineContent("NM_CIDADE");
-                sho_name = csv.getCachedLineContent(2);
-                uni_name = csv.getCachedLineContent(3);
-                grd_code = csv.getCachedLineContent(0);
-                grd_name = csv.getCachedLineContent(1);
+                if(type.equals(PublicationConst.BOOK.toString()))
+                    cityn_ar = csv.getCachedLineContent("NM_CIDADE_PAIS");
+                else
+                    cityn_ar = csv.getCachedLineContent("NM_CIDADE");
+                sho_name = csv.getCachedLineContent("SG_ENTIDADE_ENSINO");
+                uni_name = csv.getCachedLineContent("NM_ENTIDADE_ENSINO");
+                grd_code = csv.getCachedLineContent("CD_PROGRAMA_IES");
+                grd_name = csv.getCachedLineContent("NM_PROGRAMA_IES");
             } catch(Exception e) {
                 break;
             }
@@ -234,125 +154,72 @@ public class PublicationStats {
             // Getting the data for editorials
             if(type.equals(PublicationConst.BOOK.toString()) || type.equals(PublicationConst.PERIODIC.toString()) ||
                     type.equals(PublicationConst.MAGAZINE.toString()) || type.equals(PublicationConst.MUSIC.toString())
-                    || type.equals(PublicationConst.TRANSLATION.toString())
                     || type.equals(PublicationConst.GENERIC.toString()) )
-            {
-                try {
-                    editor_a = csv.getCachedLineContent("NM_EDITORA");
-                } catch(Exception e) {
-                    editor_a = null;
-                }
-            }
+                editor_a = tryToGetData(csv, "NM_EDITORA");
+
+            if(type.equals(PublicationConst.TRANSLATION.toString()))
+                editor_a = tryToGetData(csv, "NM_EDITORA_TRADUCAO");
 
             // Getting ISSN
-            if(type.equals(PublicationConst.PERIODIC.toString()) || type.equals(PublicationConst.MAGAZINE.toString())) {
-                try {
-                    iss_isbn = csv.getCachedLineContent("DS_ISSN");
-                } catch(Exception e) {
-                    iss_isbn = null;
-                }
-            }
+            if(type.equals(PublicationConst.PERIODIC.toString()) || type.equals(PublicationConst.MAGAZINE.toString()))
+                iss_isbn = tryToGetData(csv, "DS_ISSN");
 
             // Getting ISBN
-            if(type.equals(PublicationConst.BOOK.toString())) {
-                try {
-                    iss_isbn = csv.getCachedLineContent("DS_ISBN");
-                } catch(Exception e) {
-                    iss_isbn = null;
-                }
-            }
+            if(type.equals(PublicationConst.BOOK.toString()))
+                iss_isbn = tryToGetData(csv, "DS_ISBN");
 
             // Getting newspaper and magazine data
-            if(type.equals(PublicationConst.MAGAZINE.toString())) {
-                try {
-                    publi_dt = csv.getCachedLineContent("DT_PUBLICACAO");
-                } catch(Exception e) {
-                    publi_dt = null;
-                }
-            }
+            if(type.equals(PublicationConst.MAGAZINE.toString()))
+                publi_dt = tryToGetData(csv, "DT_PUBLICACAO");
 
             // Getting periodic data
             if(type.equals(PublicationConst.PERIODIC.toString())) {
-                try {
-                    volume_a = csv.getCachedLineContent("NR_VOLUME");
-                    fascic_a = csv.getCachedLineContent("DS_FASCICULO");
-                    series_a = csv.getCachedLineContent("NR_SERIE");
-                } catch(Exception e) {
-                    volume_a = null;
-                    fascic_a = null;
-                    series_a = null;
-                }
+
+                volume_a = tryToGetData(csv, "NR_VOLUME");
+                fascic_a = tryToGetData(csv, "DS_FASCICULO");
+                series_a = tryToGetData(csv, "NR_SERIE");
 
                 /* Fixing the numbers problem:
                 RESOLUTION LOGIC:
                 try to convert in integer and then in string again.
                 if it fails, null the value.
                  */
-                try {
-                    volume_a = String.valueOf(Integer.parseInt(volume_a));
-                } catch(Exception e) {
-                    volume_a = null;
-                }
-                try {
-                    fascic_a = String.valueOf(Integer.parseInt(fascic_a));
-                } catch(Exception e) {
-                    fascic_a = null;
-                }
-                try {
-                    series_a = String.valueOf(Integer.parseInt(series_a));
-                } catch (Exception e) {
-                    series_a = null;
-                }
+                volume_a = tryToParse(volume_a);
+                fascic_a = tryToParse(fascic_a);
+                series_a = tryToParse(series_a);
             }
 
             // Getting data for musical piece
-            if(type.equals(PublicationConst.MUSIC.toString())) {
-                try {
-                    instrume = csv.getCachedLineContent("DS_FORMACAO_INSTRUMENTAL");
-                } catch (Exception e) {
-                    instrume = null;
-                }
-            }
+            if(type.equals(PublicationConst.MUSIC.toString()))
+                instrume = tryToGetData(csv, "DS_FORMACAO_INSTRUMENTAL");
 
             // Getting translated article data
-            if(type.equals(PublicationConst.TRANSLATION.toString())) {
-                try {
-                    translat = csv.getCachedLineContent("DS_IDIOMA_TRADUCAO");
-                } catch(Exception e) {
-                    translat = null;
-                }
-            }
+            if(type.equals(PublicationConst.TRANSLATION.toString()))
+                translat = tryToGetData(csv, "DS_IDIOMA_TRADUCAO");
 
             // Getting data for annal
-            if(type.equals(PublicationConst.ANNAL.toString())) {
-                try {
-                    ana_name = csv.getCachedLineContent("DS_EVENTO");
-                } catch (Exception e) {
+            if(type.equals(PublicationConst.ANNAL.toString()))
+                ana_name = tryToGetData(csv, "DS_EVENTO");
 
-                }
+            // Getting the pages.
+            if(type.equals(PublicationConst.BOOK.toString())) {
+                last_page = tryToGetPositiveInt(csv, "NR_PAGINAS_CONTRIBUICAO") - 1;
             }
-
-            try {
-                if(type.equals(PublicationConst.BOOK.toString())) {
-                    last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINAS_CONTRIBUICAO")) - 1;
-                } else if(type.equals(PublicationConst.MUSIC.toString())) {
-                    last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINAS"));
-                } else {
-                    first_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINA_INICIAL"));
-                    last_page = Integer.parseInt(csv.getCachedLineContent("NR_PAGINA_FINAL"));
-                }
-                has_pages = true;
-            } catch (NumberFormatException e) {
-                first_page = last_page = 0;
-                has_pages = false;
+            else if(type.equals(PublicationConst.MUSIC.toString()) ||
+                    type.equals(PublicationConst.GENERIC.toString()) ||
+                    type.equals(PublicationConst.TRANSLATION.toString())) {
+                last_page = tryToGetPositiveInt(csv, "NR_PAGINAS") - 1;
+            } else {
+                first_page = tryToGetPositiveInt(csv, "NR_PAGINA_INICIAL");
+                last_page = tryToGetPositiveInt(csv, "NR_PAGINA_FINAL");
             }
 
             // Creating the data.
             University uni;
-            GradProgram gp;
+            GradProgram grp;
 
-            uni = new University(uni_name, sho_name);
-            gp  = new GradProgram(grd_code, grd_name);
+            uni  = new University(uni_name, sho_name);
+            grp  = new GradProgram(grd_code, grd_name);
 
             /*
              * Pages must only be considered if:
@@ -361,48 +228,63 @@ public class PublicationStats {
              * 3. If the difference between them is below 2000 pages.
              * */
 
-            if (first_page < 0 || last_page < 0 || last_page - first_page >= 2000 || last_page - first_page < 0)
-                has_pages = false;
-
+            // Creating the publication.
             Publication publi;
-
             if(type.equals(PublicationConst.BOOK.toString()))
-                publi = new BookPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a, iss_isbn);
-
+                publi = new BookPublication(title_ar, langu_ar, cityn_ar, last_page, editor_a, iss_isbn);
             else if(type.equals(PublicationConst.ANNAL.toString()))
-                publi = new AnnalPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, ana_name);
-
+                publi = new AnnalPublication(title_ar, langu_ar, cityn_ar, first_page, last_page, ana_name);
             else if(type.equals(PublicationConst.MAGAZINE.toString()))
-                publi = new MagazinePublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a, iss_isbn,
+                publi = new MagazinePublication(title_ar, langu_ar, cityn_ar, first_page, last_page, editor_a, iss_isbn,
                         publi_dt);
-
             else if(type.equals(PublicationConst.PERIODIC.toString()))
-                publi = new PeriodicPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a,
+                publi = new PeriodicPublication(title_ar, langu_ar, cityn_ar, first_page, last_page, editor_a,
                         iss_isbn, volume_a, fascic_a, series_a);
-
             else if(type.equals(PublicationConst.MUSIC.toString()))
-                publi = new MusicalPiece(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a, instrume);
-
+                publi = new MusicalPiece(title_ar, langu_ar, cityn_ar, last_page, editor_a, instrume);
             else if(type.equals(PublicationConst.TRANSLATION.toString()))
-                publi = new TranslatedPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a,
+                publi = new TranslatedPublication(title_ar, langu_ar, cityn_ar, last_page, editor_a,
                         translat);
-
             else
-                publi = new GenericPublication(title_ar, langu_ar, cityn_ar, has_pages, first_page, last_page, editor_a);
+                publi = new GenericPublication(title_ar, langu_ar, cityn_ar, last_page, editor_a);
 
             publi.setNature(natur_ar);
 
             p_list.addPublication(publi);
-            u_list.addUniversity(uni, gp);
-            g_list.addGradProgram(gp, uni, publi.getPages(), publi);
+            grp = g_list.addGradProgram(grp, uni, publi);
+            u_list.addUniversity(uni, grp);
         }
-
 
     }
 
     public void fromCSV(File f) {
         String type = getTypeFromPath(f.getPath());
         fromCSV(f, type);
+    }
+
+    private String tryToGetData(CSVReader file, String index) {
+        try {
+            return file.getCachedLineContent(index);
+        } catch(Exception e) {
+            return null;
+        }
+
+    }
+
+    private String tryToParse(String number) {
+        try {
+            return String.valueOf(Integer.parseInt(number));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private int tryToGetPositiveInt(CSVReader file, String index) {
+        try {
+            return Integer.parseInt(file.getCachedLineContent(index));
+        } catch (Exception e) {
+            return -1;
+        }
     }
 
     public static String getTypeFromPath(String file_path) {
@@ -425,129 +307,3 @@ public class PublicationStats {
 
 }
 
-// Auxiliar classes:
-class UniversityList {
-    private Map<String, University> u;
-
-    UniversityList() {
-        u = new HashMap<>();
-    }
-
-    void addUniversity(University uni, GradProgram gp) {
-        if(!u.containsKey(uni.getHashKey()))
-            u.put(uni.getHashKey(), uni);
-        // Common operations
-        u.get(uni.getHashKey()).addGraduateProgram(gp);
-    }
-
-    int size() {
-        return u.size();
-    }
-
-    List<University> getFromShortName(String shortn) {
-        Object[] keys = u.keySet().toArray();
-
-        List<University> l;
-        l = new ArrayList<>(); // List of universities that have the short name.
-
-        // Filling the list
-        for(Object key : keys) {
-            if(key.toString().contains("-" + shortn.toLowerCase() + "-"))
-                l.add(u.get(key));
-        }
-
-        // Returning the array of wanted universities.
-        return l;
-    }
-}
-
-class PublicationList {
-    private Map<Integer, Publication> p;
-    private int valid_pages_sum = 0;
-    private int valid_publications_num = 0;
-
-    PublicationList() {
-        p = new HashMap<>();
-    }
-
-    void addPublication(Publication publ) {
-        p.put(publ.getHashKey(), publ);
-        valid_pages_sum += publ.getPages(); /* Counting the valid pages */
-        if(publ.hasPageNumber()) valid_publications_num += 1; /* Counting the valid publications */
-    }
-
-    int size() {
-        return p.size();
-    }
-
-    int getValidPagesSum() {
-        return valid_pages_sum;
-    }
-
-    int getValidPublicationsNum() {
-        return valid_publications_num;
-    }
-
-    public double getAveragePagesNum() {
-        return (double)valid_pages_sum/(double)valid_publications_num;
-    }
-}
-
-class GradProgramList {
-    private Map<String, GradProgram> g;
-
-    GradProgramList() {
-        g = new HashMap<>();
-    }
-
-    void addGradProgram(GradProgram grp, University u, int publication_pages, Publication p) {
-        boolean isInSet = false;
-        if(g.containsKey(grp.getHashKey())) {
-            isInSet = true;
-            grp = g.get(grp.getHashKey());
-        }
-        // common operations:
-        grp.plusPublication(p);
-        grp.addUniversity(u);
-
-        if((publication_pages < 2000 && publication_pages >= 0))
-            grp.plusPublishedPages(publication_pages);
-
-        // else ...
-        if(!isInSet)
-            g.put(grp.getHashKey(), grp);
-    }
-
-    int size() {
-        return g.size();
-    }
-
-    void printNetworks() {
-        System.out.println("Programas em rede:");
-
-        Object[] key_set = g.keySet().toArray();
-        Arrays.sort(key_set);
-
-        GradProgram gp;
-
-        for(Object key : key_set) {
-            gp = g.get(key);
-
-            if(gp.getUniversitiesNumber() > 1) {
-                System.out.println(gp.toString()); // Printing the grad. prog. ID and name.
-                gp.printUniversitiesList(); // Printing the universities list.
-            }
-        }
-    }
-
-    void printProgramData(String program_id) {
-        if(g.containsKey(program_id.trim()))
-            g.get(program_id).printData();
-        else
-            System.out.println("PPG nao encontrado.");
-    }
-
-    GradProgram get(String id) {
-        return g.get(id);
-    }
-}

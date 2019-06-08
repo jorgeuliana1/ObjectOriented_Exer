@@ -8,8 +8,8 @@ public class BookPublication extends EditorialPublication {
 
     private String isbn;
 
-    public BookPublication(String title, String lang, String city, boolean p, int p1, int p2, String editor, String isbn) {
-        super(title, lang, city, p, p1, p2, editor);
+    public BookPublication(String title, String lang, String city, int pages, String editor, String isbn) {
+        super(title, lang, city, 0, pages, editor);
         super.setNature(PublicationConst.BOOK.toString());
         this.isbn = isbn;
     }
@@ -50,5 +50,9 @@ public class BookPublication extends EditorialPublication {
 
         compare = getPages() - p.getPages();
         return compare;
+    }
+
+    public static String getCSVStyleHeader() {
+        return "Natureza;Titulo;Idioma;Editora;Cidade;ISBN;Paginas";
     }
 }

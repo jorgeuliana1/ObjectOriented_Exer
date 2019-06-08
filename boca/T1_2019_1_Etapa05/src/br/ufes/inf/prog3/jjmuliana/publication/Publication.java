@@ -1,7 +1,5 @@
 package br.ufes.inf.prog3.jjmuliana.publication;
 
-import br.ufes.inf.prog3.jjmuliana.csvreader.CSVBuilder;
-
 public abstract class Publication implements Comparable<Publication> {
 
     private String nature; /* publication nature */
@@ -15,7 +13,9 @@ public abstract class Publication implements Comparable<Publication> {
 
     private static int counter = 0;
 
-    public Publication(String a, String l, String c, boolean p, int p1, int p2) {
+    public Publication(String a, String l, String c, int p1, int p2) {
+
+        boolean p;
 
         a_name = a;
         lang = l;
@@ -26,9 +26,11 @@ public abstract class Publication implements Comparable<Publication> {
         // Defining the pages
         if (p2 - p1 >= 2000 || p1 > p2 || p2 < 0 || p1 < 0)
             p = false;
+        else
+            p = true;
 
 
-        if (p == true)
+        if (p)
             pages[0] = 1;
         else
             pages[0] = 0;
@@ -67,6 +69,8 @@ public abstract class Publication implements Comparable<Publication> {
     }
 
     public String getCity() {
+        if(city == null)
+            return "-";
         return city;
     }
 
@@ -76,6 +80,7 @@ public abstract class Publication implements Comparable<Publication> {
 
     @Override
     public int hashCode() {
+
         String lower_name = (a_name + nature + city).toLowerCase().trim();
 
         // Getting a hash code from the string:
@@ -85,16 +90,7 @@ public abstract class Publication implements Comparable<Publication> {
         }
 
         return 1;
-    }
 
-    public String getBigHashKey() {
-        String pages = String.valueOf(getPages());
-        if(pages.equals("0"))
-            pages = "";
-
-        if(nature != null && a_name != null)
-            return CSVBuilder.getCSVStyleLine(";", nature, a_name, lang, city, pages);
-        else return "0" + getHashKey();
     }
 
     public int getHashKey() {
@@ -104,4 +100,32 @@ public abstract class Publication implements Comparable<Publication> {
 
     @Override
     public abstract int compareTo(Publication p);
+
+    public static String getCSVStyleHeader() {
+        return "Tipo invalido.";
+    }
+
+    public static void printCSVStyleHeader(String prodtype) {
+        String header;
+
+        if(prodtype.equals(PublicationConst.GENERIC.toString()))
+            header = GenericPublication.getCSVStyleHeader();
+        else if(prodtype.equals(PublicationConst.MUSIC.toString()))
+            header = MusicalPiece.getCSVStyleHeader();
+        else if(prodtype.equals(PublicationConst.TRANSLATION.toString()))
+            header = TranslatedPublication.getCSVStyleHeader();
+        else if(prodtype.equals(PublicationConst.PERIODIC.toString()))
+            header = PeriodicPublication.getCSVStyleHeader();
+        else if(prodtype.equals(PublicationConst.MAGAZINE.toString()))
+            header = MagazinePublication.getCSVStyleHeader();
+        else if(prodtype.equals(PublicationConst.ANNAL.toString()))
+            header = AnnalPublication.getCSVStyleHeader();
+        else if(prodtype.equals(PublicationConst.BOOK.toString()))
+            header = BookPublication.getCSVStyleHeader();
+        else
+            header = getCSVStyleHeader();
+
+        System.out.println(header);
+    }
+
 }

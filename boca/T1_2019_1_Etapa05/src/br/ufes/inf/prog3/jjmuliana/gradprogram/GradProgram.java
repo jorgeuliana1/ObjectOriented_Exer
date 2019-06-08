@@ -1,26 +1,24 @@
 package br.ufes.inf.prog3.jjmuliana.gradprogram;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import br.ufes.inf.prog3.jjmuliana.csvreader.CSVBuilder;
 import br.ufes.inf.prog3.jjmuliana.publication.*;
 import br.ufes.inf.prog3.jjmuliana.university.University;
-import br.ufes.inf.prog3.jjmuliana.university.UniversityComparator;
 
 /**
  * @author J. Jorge M. Uliana
  * @version 1.3
  */
 
-public class GradProgram {
+public class GradProgram implements Comparable<GradProgram> {
 
     private String program_id; /* graduate program id */
     private String program_name; /* graduate program name */
     private Map<String, University> university_map; /* tree containing universities */
+    private int publications_count = 0;
 
-    // HashMaps of publications:
+    // TreeSets of publications:
     private Set<AnnalPublication>      m_anna = new TreeSet<>(); // Annals publications
     private Set<MagazinePublication>   m_maga = new TreeSet<>(); // Magazines publications
     private Set<PeriodicPublication>   m_peri = new TreeSet<>(); // Periodic publications
@@ -28,9 +26,6 @@ public class GradProgram {
     private Set<TranslatedPublication> m_tran = new TreeSet<>(); // Translated publications
     private Set<MusicalPiece>          m_musi = new TreeSet<>(); // Musical pieces
     private Set<GenericPublication>    m_gene = new TreeSet<>(); // Generic publications
-
-    private long published_pages = 0;
-    private long valid_publications = 0;
 
     public GradProgram(String id, String n) {
         program_id = id;
@@ -86,7 +81,7 @@ public class GradProgram {
 
     public void plusPublication(Publication p) {
 
-        // Higher lever function to insert publications in hashsets.
+        // Higher lever function to insert publications in set.
         if(p instanceof AnnalPublication)
             plusAnnalPublication((AnnalPublication) p);
         else if(p instanceof MagazinePublication)
@@ -101,11 +96,8 @@ public class GradProgram {
             plusTranslatedPublication((TranslatedPublication) p);
         else if(p instanceof GenericPublication)
             plusGenericPublication((GenericPublication) p);
-    }
 
-    public void plusPublishedPages(int n) {
-        published_pages+=n;
-        valid_publications+=1;
+        publications_count++;
     }
 
     public void addUniversity(University u) {
@@ -145,6 +137,14 @@ public class GradProgram {
         return (program_id);
     }
 
+    public int compareTo(GradProgram g) {
+        int compare;
+        compare = getName().compareTo(g.getName());
+        if(compare == 0)
+            return getID().compareTo(g.getID());
+        return compare;
+    }
+
     public int getUniversitiesNumber() {
         return university_map.size();
     }
@@ -178,7 +178,8 @@ public class GradProgram {
         System.out.printf("\t- Outros: %d\n", m_gene.size());
         System.out.println();
 
-        System.out.println("Total de paginas produzidas pelo PPG: " + published_pages );
+        System.out.println("Total de paginas produzidas pelo PPG: " + getPublishedPages());
+        System.out.println();
     }
 
     public int productionsNum() {
@@ -200,7 +201,7 @@ public class GradProgram {
                 if(iterator.hasNext())
                     p = iterator.next();
                 else return;
-                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(), String.valueOf(p.getPages())));
+                output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getLanguage(), p.getEditor(), p.getCity(), String.valueOf(p.getPages())));
             }
         }
         else if(type.equals(PublicationConst.ANNAL.toString())) {
@@ -257,7 +258,7 @@ public class GradProgram {
                     p = iterator.next();
                 else return;
                 output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(), p.getEditor(), p.getCity(),
-                        p.getISBN()));
+                        p.getISBN(), String.valueOf(p.getPages())));
             }
         }
         else if(type.equals(PublicationConst.MUSIC.toString())) {
@@ -271,7 +272,7 @@ public class GradProgram {
                     p = iterator.next();
                 else return;
                 output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(),
-                        p.getEditor(), p.getCity(), p.getInstrumentalFormation()));
+                        p.getEditor(), p.getCity(), p.getInstrumentalFormation(), String.valueOf(p.getPages())));
             }
         }
         else if(type.equals(PublicationConst.TRANSLATION.toString())) {
@@ -285,8 +286,11 @@ public class GradProgram {
                     p = iterator.next();
                 else return;
                 output_buffer.add(CSVBuilder.getCSVStyleLine(";", p.getNature(), p.getTitle(), p.getLanguage(),
-                        p.getEditor(), p.getCity(), p.getTranslation()));
+                        p.getEditor(), p.getCity(), p.getTranslation(), String.valueOf(p.getPages())));
             }
+        }
+        else {
+            return;
         }
 
         // Printing the strings.
@@ -294,6 +298,38 @@ public class GradProgram {
             System.out.println(line);
         }
 
+    }
+
+    public int getPublishedPages() {
+        int sum = 0;
+        sum += getSetPages(m_anna.iterator());
+        sum += getSetPages(m_gene.iterator());
+        sum += getSetPages(m_book.iterator());
+        sum += getSetPages(m_maga.iterator());
+        sum += getSetPages(m_musi.iterator());
+        sum += getSetPages(m_peri.iterator());
+        sum += getSetPages(m_tran.iterator());
+        return sum;
+    }
+
+    private static int getSetPages(Iterator p) {
+
+        Iterator<Publication> iterator;
+        iterator = (Iterator<Publication>) p;
+
+        int sum = 0;
+
+        while(iterator.hasNext()) {
+            int toSum = iterator.next().getPages();
+            sum += toSum;
+        }
+
+        return sum;
+    }
+
+    public boolean equals(GradProgram p) {
+        if(compareTo(p) == 0) return true;
+        else return false;
     }
 
 

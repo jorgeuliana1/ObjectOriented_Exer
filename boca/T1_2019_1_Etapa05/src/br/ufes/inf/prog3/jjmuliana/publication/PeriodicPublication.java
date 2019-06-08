@@ -13,10 +13,10 @@ public class PeriodicPublication extends SerializedPublication {
     private String fascicle;
     private String series;
 
-    public PeriodicPublication(String title, String lang, String city, boolean p, int p1, int p2, String editor,
+    public PeriodicPublication(String title, String lang, String city, int p1, int p2, String editor,
                                String issn, String volume, String fascicle, String series)
     {
-        super(title, lang, city, p, p1, p2, editor, issn);
+        super(title, lang, city, p1, p2, editor, issn);
         this.volume = volume;
         this.fascicle = fascicle;
         this.series = series;
@@ -40,7 +40,6 @@ public class PeriodicPublication extends SerializedPublication {
         PeriodicPublication p = (PeriodicPublication) pa;
 
         int compare;
-
         compare = getNature().compareTo(p.getNature());
         if(compare != 0)
             return compare;
@@ -58,57 +57,90 @@ public class PeriodicPublication extends SerializedPublication {
             return compare;
 
         try {
-            compare = 0;
-            if(isNumber(getVolume()) && isNumber(p.getVolume())) {
-                int a = Integer.parseInt(convertNumber(getVolume()));
-                int b = Integer.parseInt(convertNumber(p.getVolume()));
-                compare = a - b;
-            }
+            int a;
+            int b;
+            if(isNumber(getVolume()))
+                a = Integer.parseInt(convertNumber(getVolume()));
+            else
+                a = 0;
+
+            if(isNumber(p.getVolume()))
+                b = Integer.parseInt(convertNumber(p.getVolume()));
+            else
+                b = 0;
+
+            compare = a - b;
+
+            if(compare != 0)
+                return compare;
         } catch (NullPointerException e) {
             compare = 0;
         }
-        if(compare != 0)
-            return 0;
 
         try {
-            compare = 0;
-            if(isNumber(getFascicle()) && isNumber(p.getFascicle())) {
-                int a = Integer.parseInt(convertNumber(getFascicle()));
-                int b = Integer.parseInt(convertNumber(p.getFascicle()));
-                compare = a - b;
-            }
+            int a;
+            int b;
+            if(isNumber(getFascicle()))
+                a = Integer.parseInt(convertNumber(getFascicle()));
+            else
+                a = 0;
+
+            if(isNumber(p.getFascicle()))
+                b = Integer.parseInt(convertNumber(p.getFascicle()));
+            else
+                b = 0;
+
+            compare = a - b;
+
+            if(compare != 0)
+                return compare;
         } catch (NullPointerException e) {
             compare = 0;
         }
-        if(compare != 0)
-            return compare;
 
         try {
-            compare = 0;
-            if(isNumber(getSeries()) && isNumber(p.getSeries())) {
-                int a = Integer.parseInt(convertNumber(getSeries()));
-                int b = Integer.parseInt(convertNumber(p.getSeries()));
-                compare = a - b;
-            }
+            int a;
+            int b;
+            if(isNumber(getSeries()))
+                a = Integer.parseInt(convertNumber(getSeries()));
+            else
+                a = 0;
+
+            if(isNumber(p.getSeries()))
+                b = Integer.parseInt(convertNumber(p.getSeries()));
+            else
+                b = 0;
+
+            compare = a - b;
+
+            if(compare != 0)
+                return compare;
         } catch (NullPointerException e) {
             compare = 0;
         }
-        if(compare != 0)
-            return compare;
 
         try {
-            compare = getISSN().compareTo(p.getISSN());
+            compare = convertStringISSN(getISSN()).compareTo(convertStringISSN(p.getISSN()));
+            if(compare != 0)
+                return compare;
         } catch (NullPointerException e) {
             compare = 0;
         }
-        if(compare != 0)
-            return compare;
 
         compare = getPages() - p.getPages();
         return compare;
     }
 
+    public boolean equals(Publication pa) {
+        if(compareTo(pa) == 0) return true;
+        else return false;
+    }
+
     private boolean isNumber(String s) {
+
+        if(s == null)
+            return false;
+
         // Trying to know if s is a number.
         Pattern pattern = Pattern.compile("([0-9][0-9][0-9])|([0-9][0-9])|([0-9])");
         Matcher matcher = pattern.matcher(s);
@@ -146,16 +178,20 @@ public class PeriodicPublication extends SerializedPublication {
 
         splited = s.split(" ");
         builder = new StringBuilder();
-        //builder.reverse();
 
         builder.append(splited[0].replaceAll("(\\()|(\\))|(-)", ""));
-        /*
+        //builder.reverse();
+
         for(int i = 1; i < splited.length; i++) {
             builder.append(splited[i]);
         }
-        */
+
 
         return builder.toString();
 
+    }
+
+    public static String getCSVStyleHeader() {
+        return "Natureza;Idioma;Editora;Cidade;Volume;Fasciculo;Serie;ISSN;Paginas";
     }
 }

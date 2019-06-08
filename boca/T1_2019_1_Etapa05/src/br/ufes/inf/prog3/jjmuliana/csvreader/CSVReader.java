@@ -17,8 +17,9 @@ public class CSVReader {
     private String s; // Separator
     private ArrayList<String> stream;
     private String[] cache_string;
+    private String next_line = null;
     private BufferedReader br;
-    private boolean thereIsNextLine = true;
+    private boolean thereIsNextLine = false;
     private Map<String, Integer> index;
 
     public CSVReader(File f, String separator, boolean autoread, boolean has_index_row) {
@@ -40,7 +41,13 @@ public class CSVReader {
             } catch(IOException e) {
                 return;
             }
-            nextLine();
+            try {
+                next_line = br.readLine();
+                thereIsNextLine = true;
+            } catch(NullPointerException | IOException e) {
+                next_line = null;
+                thereIsNextLine = false;
+            }
         }
 
     }
@@ -77,16 +84,25 @@ public class CSVReader {
     }
 
     public void nextLine() {
-        try {
-            cache_string = br.readLine().split(s);
-            // Performance optimization.
+
+        // Performance optimization.
             /*
             The program was spending a lot of time with splits, so I decided to store only one splitted vector instead of
             splitting at the get function.
              */
+
+        if(thereIsNextLine) {
+            cache_string = next_line.split(s);
+        }
+
+        try {
+            next_line = br.readLine();
+            thereIsNextLine = true;
         } catch (IOException | NullPointerException e) {
             thereIsNextLine = false;
         }
+        if(next_line == null)
+            thereIsNextLine = false;
     }
 
     public String getCachedLineContent(int elem) throws NullPointerException {

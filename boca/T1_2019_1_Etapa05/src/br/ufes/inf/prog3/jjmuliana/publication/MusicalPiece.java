@@ -8,8 +8,8 @@ public class MusicalPiece extends EditorialPublication {
 
     private String instrumental; /* instrumental formation */
 
-    public MusicalPiece(String title, String lang, String city, boolean p, int p1, int p2, String editor, String instrumental) {
-        super(title, lang, city, p, p1, p2, editor);
+    public MusicalPiece(String title, String lang, String city, int pages, String editor, String instrumental) {
+        super(title, lang, city, 0, pages, editor);
         this.instrumental = instrumental;
         this.setNature(PublicationConst.MUSIC.toString());
     }
@@ -32,18 +32,18 @@ public class MusicalPiece extends EditorialPublication {
         if(compare != 0)
             return compare;
 
-        compare = getCity().compareTo(p.getCity());
-        if(compare != 0)
-            return compare;
+        if(!getCity().equals(p.getCity()))
+            return getCity().compareTo(p.getCity());
 
-        compare = getInstrumentalFormation().compareTo(p.getInstrumentalFormation());
-        if(compare != 0)
-            return 0;
+        if(!getInstrumentalFormation().equals(p.getInstrumentalFormation()))
+            return getInstrumentalFormation().compareTo(p.getInstrumentalFormation());
 
         if(getPages() != 0 || p.getPages() != 0)
             compare = getPages() - p.getPages();
-        else
-            compare = getCity().compareTo(p.getCity());
         return compare;
+    }
+
+    public static String getCSVStyleHeader() {
+        return "Natureza;Editora;Cidade;Formacao;Paginas";
     }
 }

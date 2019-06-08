@@ -2,8 +2,8 @@ package br.ufes.inf.prog3.jjmuliana.publication;
 
 public class GenericPublication extends EditorialPublication {
 
-    public GenericPublication(String title, String lang, String city, boolean p, int p1, int p2, String editor) {
-        super(title, lang, city, p, p1, p2, editor);
+    public GenericPublication(String title, String lang, String city, int pages, String editor) {
+        super(title, lang, city, 0, pages, editor);
         super.setNature(PublicationConst.GENERIC.toString());
     }
 
@@ -31,6 +31,10 @@ public class GenericPublication extends EditorialPublication {
 
         compare = getPages() - p.getPages();
         return compare;
+    }
+
+    public static String getCSVStyleHeader() {
+        return "Natureza;Idioma;Editora;Cidade;Paginas";
     }
 
 }

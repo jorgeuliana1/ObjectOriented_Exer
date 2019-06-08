@@ -13,28 +13,16 @@ public class MagazinePublication extends SerializedPublication {
 
     private String publishing_date;
 
-    public MagazinePublication(String title, String lang, String city, boolean p, int p1, int p2, String editor,
+    public MagazinePublication(String title, String lang, String city, int p1, int p2, String editor,
                                String issn, String publishing_date)
     {
-        super(title, lang, city, p, p1, p2, editor, issn);
+        super(title, lang, city, p1, p2, editor, issn);
         this.publishing_date = publishing_date;
         super.setNature(PublicationConst.MAGAZINE.toString());
     }
 
     public String getPublishingDate() {
         return publishing_date;
-    }
-
-    @Override
-    public String getBigHashKey() {
-        String pages = String.valueOf(getPages());
-        if(pages.equals("0"))
-            pages = "";
-
-        if(getTitle() != null)
-            return CSVBuilder.getCSVStyleLine(";", getTitle(), getLanguage(), getCity(), getPublishingDate(), getISSN(),
-                    pages);
-        else return "0" + getHashKey();
     }
 
     @Override
@@ -89,6 +77,10 @@ public class MagazinePublication extends SerializedPublication {
 
         // Returns YYYY/MM/DD format if input is DD/MM/YYYY
         return splitted[2] + splitted[1] + splitted[0];
+    }
+
+    public static String getCSVStyleHeader() {
+        return "Titulo;Idioma;Cidade;Data;ISSN;Paginas";
     }
 
 }

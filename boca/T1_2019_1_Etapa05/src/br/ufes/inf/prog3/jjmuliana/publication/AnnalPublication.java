@@ -10,25 +10,14 @@ public class AnnalPublication extends Publication {
 
     private String annal; /* event */
 
-    public AnnalPublication(String title, String lang, String city, boolean p, int p1, int p2, String event) {
-        super(title, lang, city, p, p1, p2);
+    public AnnalPublication(String title, String lang, String city, int p1, int p2, String event) {
+        super(title, lang, city, p1, p2);
         setNature(PublicationConst.ANNAL.toString());
         annal = event;
     }
 
     public String getAnnal() {
         return annal;
-    }
-
-    @Override
-    public String getBigHashKey() {
-        String pages = String.valueOf(getPages());
-        if(pages.equals("0"))
-            pages = "";
-
-        if(getNature() != null && getTitle() != null)
-            return CSVBuilder.getCSVStyleLine(";", getNature(), getTitle(), getLanguage(), annal, getCity(), pages);
-        else return "0" + getHashKey();
     }
 
     @Override
@@ -59,5 +48,9 @@ public class AnnalPublication extends Publication {
 
         compare = getPages() - p.getPages();
         return compare;
+    }
+
+    public static String getCSVStyleHeader() {
+        return "Natureza;Titulo;Idioma;Evento;Cidade;Paginas";
     }
 }
