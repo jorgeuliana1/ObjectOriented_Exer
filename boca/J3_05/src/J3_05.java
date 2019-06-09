@@ -40,18 +40,19 @@ public class J3_05 {
     }
 
     private static void printFibonacci(PrintWriter out, int elements) {
-        int fibo1 = 2;
-        int fibo2 = 1;
+        int fibo1 = 1;
+        int fibo2 = 0;
 
-        for(int i = 0; i < elements - 1; i++) {
-            String output_str = Integer.toString(fibo2);
-            if(i < elements - 3)
-                output_str = output_str + " ";
+        if(elements > 0)
+            out.print("0 ");
+
+        for(int i = 1; i < elements; i++) {
+            String output_str = Integer.toString(fibo2) + " ";
 
             out.print(output_str);
             int aux = fibo2;
-            fibo2 = fibo1;
-            fibo1 = aux + fibo2;
+            fibo2 = fibo1 + fibo2;
+            fibo1 = aux;
         }
 
         out.println();
