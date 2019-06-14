@@ -1,20 +1,22 @@
-//
-// Created by ulian on 12/06/19.
-//
+/*
+ * GeometricPoint.cpp
+ *
+ *  Created on: 14 de jun de 2019
+ *      Author: ulian
+ */
 
 #include "GeometricPoint.h"
 #include <cmath>
 
- GeometricPoint::GeometricPoint(const double x, const double y) {
-    this->x = x;
-    this->y = y;
+GeometricPoint::GeometricPoint(const double& x, const double& y) {
+	this->x = x;
+	this->y = y;
 }
 
-double GeometricPoint::distanceTo(const GeometricPoint* p) {
-    float dx, dy;
+double GeometricPoint::getDistanceTo(GeometricPoint point) {
+	double dx, dy;
+	dx = point.x - this->x;
+	dy = point.y - this->y;
 
-    dx = this->x - p->x;
-    dy = this->y - p->y;
-
-    return sqrt(dx * dx + dy * dy);
+	return sqrt((dx * dx + dy * dy));
 }

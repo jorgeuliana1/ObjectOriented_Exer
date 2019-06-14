@@ -1,20 +1,23 @@
-//
-// Created by ulian on 12/06/19.
-//
+/*
+ * Triangle.h
+ *
+ *  Created on: 14 de jun de 2019
+ *      Author: ulian
+ */
+
+#ifndef TRIANGLE_H_
+#define TRIANGLE_H_
 
 #include "GeometricPoint.h"
 
-#ifndef C1_01_TRIANGLE_H
-#define C1_01_TRIANGLE_H
-
-
 class Triangle {
-private:
-    GeometricPoint p1, p2, p3;
+	GeometricPoint p1;
+	GeometricPoint p2;
+	GeometricPoint p3;
+
 public:
-    Triangle(const double, const double, const double, const double, const double, const double);
-    double getPerimeter();
+	Triangle(double, double, double, double, double, double);
+	double getPerimeter();
 };
 
-
-#endif //C1_01_TRIANGLE_H
+#endif /* TRIANGLE_H_ */

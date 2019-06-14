@@ -1,17 +1,19 @@
-//
-// Created by ulian on 12/06/19.
-//
+/*
+ * GeometricPoint.h
+ *
+ *  Created on: 14 de jun de 2019
+ *      Author: ulian
+ */
 
-#ifndef C1_01_GEOMETRICPOINT_H
-#define C1_01_GEOMETRICPOINT_H
+#ifndef GEOMETRICPOINT_H_
+#define GEOMETRICPOINT_H_
 
 class GeometricPoint {
-private:
-    double x, y;
+	double x;
+	double y;
 public:
-    GeometricPoint(const double, const double);
-    double distanceTo(const GeometricPoint*);
+	GeometricPoint(const double&, const double&);
+	double getDistanceTo(GeometricPoint);
 };
 
-
-#endif //C1_01_GEOMETRICPOINT_H
+#endif /* GEOMETRICPOINT_H_ */
