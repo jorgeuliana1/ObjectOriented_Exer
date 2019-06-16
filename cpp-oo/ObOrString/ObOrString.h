@@ -19,20 +19,21 @@ class String {
 public:
 	String();
 	String(char*);
+	String(const char*);
 	virtual ~String();
 	void operator=(const std::string&);
 	void operator=(char*);
+	void operator=(const char*);
+	bool operator==(const String&);
+    void operator+(const char& c);
 	bool contains();
 	char* toString();
 	unsigned long int length();
 	int compareTo(String&);
 	unsigned int countOccurrences(String&);
-	bool operator==(const String&);
 	String substring(const unsigned int&, const unsigned int&);
 	void append(const char&);
-	void operator=(const char*);
 	unsigned int countOccurrences(const char*);
-	String(const char*);
 };
 
 std::ostream& operator<<(std::ostream&, String&);

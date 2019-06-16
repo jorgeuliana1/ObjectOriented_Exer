@@ -18,7 +18,8 @@ String::String() {
 }
 
 String::~String() {
-	free(this->string);
+    if(contains())
+	    free(this->string);
 }
 
 String::String(char* str) {
@@ -27,7 +28,9 @@ String::String(char* str) {
 
 String::String(const char *str) {
 	char* temp = (char *)malloc(sizeof(char)*(strlen(str) + 1));
-	strcpy(temp, str);
+	for(unsigned int i = 0; i <= strlen(str); i++) {
+	    temp[i] = str[i];
+	}
 	setString(temp);
 	free(temp);
 }
@@ -61,8 +64,8 @@ void String::copyConst(char* destiny, const std::string& origin) {
 void String::setString(char* str) {
 
 	// Removing the pointer data, if it exists.
-	if(contains())
-		free(this->string);
+    if (contains())
+        free(this->string);
 
 	// Allocating memory for the string.
 	this->string = (char *)malloc((strlen(str) + 1) * sizeof(char));
@@ -127,6 +130,10 @@ void String::append(const char& c) {
 	// Deleting the temporary string.
 	free(temp.string);
 
+}
+
+void String::operator+(const char& c) {
+    append(c);
 }
 
 String String::substring(const unsigned int& s, const unsigned int& f) {
