@@ -12,24 +12,31 @@
 
 namespace string_utils {
 
-class ObOrString {
+class String {
 	char *string;
 	void setString(char *);
 	void copyConst(char*, const std::string&);
 public:
-	ObOrString();
-	ObOrString(char*);
-	virtual ~ObOrString();
+	String();
+	String(char*);
+	virtual ~String();
 	void operator=(const std::string&);
 	void operator=(char*);
 	bool contains();
 	char* toString();
 	unsigned long int length();
-	int compareTo(ObOrString&);
+	int compareTo(String&);
+	unsigned int countOccurrences(String&);
+	bool operator==(const String&);
+	String substring(const unsigned int&, const unsigned int&);
+	void append(const char&);
+	void operator=(const char*);
+	unsigned int countOccurrences(const char*);
+	String(const char*);
 };
 
-std::ostream& operator<<(std::ostream&, ObOrString&);
+std::ostream& operator<<(std::ostream&, String&);
 
-} /* namespace ObOrString */
+} /* namespace String */
 
 #endif /* OBORSTRING_H_ */
