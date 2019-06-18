@@ -5,7 +5,7 @@
  *      Author: ulian
  */
 #include <iostream>
-#include <cstdio>
+#include <iomanip>
 #include "Triangle.h"
 
 using namespace std;
@@ -20,7 +20,10 @@ int main() {
 	Triangle t(x1, y1, x2, y2, x3, y3);
 
 	double perimeter = t.getPerimeter();
-	printf("%.5f", perimeter);
+	cout << fixed;
+	cout << setprecision(5);
+	cout << perimeter << endl;
+
 }
 
 

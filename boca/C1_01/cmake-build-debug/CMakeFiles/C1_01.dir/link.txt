@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/C1_01.dir/src/C1_01.cpp.o CMakeFiles/C1_01.dir/src/GeometricPoint.cpp.o CMakeFiles/C1_01.dir/src/Triangle.cpp.o  -o C1_01 

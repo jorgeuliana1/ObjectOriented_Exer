@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/2018102932/CURSOS/PROGIII/ObjectOriented_Exer/boca/C1_01/src/C1_01.cpp
+iostream
+-
+iomanip
+-
+Triangle.h
+/home/2018102932/CURSOS/PROGIII/ObjectOriented_Exer/boca/C1_01/src/Triangle.h
+
+/home/2018102932/CURSOS/PROGIII/ObjectOriented_Exer/boca/C1_01/src/GeometricPoint.h
+
+/home/2018102932/CURSOS/PROGIII/ObjectOriented_Exer/boca/C1_01/src/Triangle.h
+GeometricPoint.h
+/home/2018102932/CURSOS/PROGIII/ObjectOriented_Exer/boca/C1_01/src/GeometricPoint.h
+
