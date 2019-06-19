@@ -18,16 +18,17 @@ String::String() {
 }
 
 String::~String() {
-    if(contains())
-	    free(this->string);
+    // TODO: Create remove function.
 }
 
 String::String(char* str) {
+    this->string = NULL;
 	setString(str);
 }
 
 String::String(const char *str) {
-	char* temp = (char *)malloc(sizeof(char)*(strlen(str) + 1));
+    this->string = NULL;
+	char* temp = new char[strlen(str) + 1];
 	for(unsigned int i = 0; i <= strlen(str); i++) {
 	    temp[i] = str[i];
 	}
@@ -35,22 +36,27 @@ String::String(const char *str) {
 	free(temp);
 }
 
-void String::operator=(const std::string& str) {
-	char* str1 = (char *)malloc((str.length() + 1)*sizeof(char));
+String::String(const String& str) {
+    this->string = new char[strlen(str.string) + 1];
+    strcpy(this->string, str.string);
+}
+/*
+String& String::operator=(const std::string& str) {
+	char* str1 = new char[str.length() + 1];
 
 	copyConst(str1, str);
 	setString(str1);
 	free(str1);
 }
 
-void String::operator=(char* str) {
+String& String::operator=(char* str) {
 	setString(str);
 }
 
-void String::operator=(const char* str) {
-	char* temp = (char *)malloc(sizeof(char)*(strlen(str) + 1));
+String& String::operator=(const char* str) {
+	char* temp = new char[strlen(str) + 1];
 	strcpy(temp, str);
-	setString(temp);
+	*this = temp;
 	free(temp);
 }
 
@@ -60,15 +66,19 @@ void String::copyConst(char* destiny, const std::string& origin) {
 	}
 	destiny[origin.length()] = '\0';
 }
-
+*/
 void String::setString(char* str) {
 
+    // Verifying if str isn't null
+    if(!str)
+        return;
+
 	// Removing the pointer data, if it exists.
-    if (contains())
-        free(this->string);
+    if(this->string)
+        delete this->string;
 
 	// Allocating memory for the string.
-	this->string = (char *)malloc((strlen(str) + 1) * sizeof(char));
+	this->string = new char[strlen(str) + 1];
 
 	// Copying to the string.
 	for(unsigned int i = 0; i < strlen(str) + 1; i++) {
@@ -76,7 +86,7 @@ void String::setString(char* str) {
 	}
 
 }
-
+/*
 char* String::toString() {
 	return this->string;
 }
@@ -101,14 +111,20 @@ int String::compareTo(String& str) {
 }
 
 bool String::operator==(const String& str) {
-	if(strcmp(this->string, str.string) == 0)
+	if(strcmp(this->string, str.string))
 		return true;
 	else return false; 
 }
 
+bool String::exists() {
+    if(this->string)
+        return true;
+    return false;
+}
+
 void String::append(const char& c) {
 	if(!contains()) {
-		char *temp = (char *)malloc(sizeof(char) * 2);
+		char *temp = new char[2];
 		temp[1] = '\0';
 		temp[0] = c;
 		setString(temp);
@@ -118,9 +134,9 @@ void String::append(const char& c) {
 
 	// Creating a copy of the string.
 	String temp = this->string;
-	free(this->string);
+	delete this->string;
 
-	this->string = (char *)malloc(sizeof(char) + (temp.length() + 2));
+	this->string = new char[temp.length() + 2];
 	// One space for the new char and another for the \0.
 
 	strcpy(this->string, temp.string);
@@ -128,12 +144,14 @@ void String::append(const char& c) {
 	this->string[temp.length() + 1] = '\0';
 
 	// Deleting the temporary string.
-	free(temp.string);
+	//free(temp.string);
 
 }
 
-void String::operator+(const char& c) {
-    append(c);
+String& String::operator+(const char& c) {
+    String str = *this;
+    str.append(c);
+    return str;
 }
 
 String String::substring(const unsigned int& s, const unsigned int& f) {
@@ -181,5 +199,5 @@ unsigned int String::countOccurrences(const char* text) {
 	free(temp.string);
 	return occurrences;
 }
-
+*/
 } /* namespace String */

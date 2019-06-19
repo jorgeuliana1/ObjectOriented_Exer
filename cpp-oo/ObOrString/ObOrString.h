@@ -20,12 +20,14 @@ public:
 	String();
 	String(char*);
 	String(const char*);
+    String(const String&);
 	virtual ~String();
-	void operator=(const std::string&);
-	void operator=(char*);
-	void operator=(const char*);
+	/*
+	String& operator=(const std::string&);
+	String& operator=(char*);
+	String& operator=(const char*);
 	bool operator==(const String&);
-    void operator+(const char& c);
+    String& operator+(const char& c);
 	bool contains();
 	char* toString();
 	unsigned long int length();
@@ -34,6 +36,8 @@ public:
 	String substring(const unsigned int&, const unsigned int&);
 	void append(const char&);
 	unsigned int countOccurrences(const char*);
+    bool exists();
+    */
 };
 
 std::ostream& operator<<(std::ostream&, String&);
