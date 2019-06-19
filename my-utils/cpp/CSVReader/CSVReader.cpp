@@ -99,7 +99,7 @@ namespace csv_reader {
         /*
          * Small problem here:
          *  - if we give the function a wrong index name we will receive the index 0 content.
-         *  TODO: FIND A SOLLUTION FOR THAT AND TRHOW AN EXCEPTION.
+         *  TODO: FIND A SOLLUTION FOR THAT AND THROW AN EXCEPTION.
          */
 
         int index = 0; // The dafault index value was set to 0.
