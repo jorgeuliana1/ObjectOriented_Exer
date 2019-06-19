@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ulian/Documentos/Codes/College/ProgIII/ObjectOriented_Exer/my-utils/cpp/CSVReader/CSVReader.cpp
+CSVReader.h
+/home/ulian/Documentos/Codes/College/ProgIII/ObjectOriented_Exer/my-utils/cpp/CSVReader/CSVReader.h
+
+/home/ulian/Documentos/Codes/College/ProgIII/ObjectOriented_Exer/my-utils/cpp/CSVReader/CSVReader.h
+map
+-
+fstream
+-
+regex
+-
+

@@ -1,0 +1,4 @@
+/home/ulian/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/191.7479.33/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/ulian/Documentos/Codes/College/ProgIII/ObjectOriented_Exer/my-utils/cpp/CSVReader
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/ulian/Documentos/Codes/College/ProgIII/ObjectOriented_Exer/my-utils/cpp/CSVReader/cmake-build-debug
