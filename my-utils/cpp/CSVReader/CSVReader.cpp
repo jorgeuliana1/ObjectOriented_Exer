@@ -7,29 +7,33 @@
 
 using namespace std;
 
+// TODO: Document the file.
+// TODO: Find exceptions and do it.
+
 namespace csv_reader {
 
-    /**
-     * @author J. Jorge Moutinho Uliana (GitHub: jorgeuliana1)
-     * @name CSVReader
-     * @class CSVReader
-     * @namespace csv_reader
-     * @param filepath
-     * @param separator
-     * @param isThereIndex
-     */
-    CSVReader::CSVReader(const string& filepath, const string& separator, const bool& isThereIndex) {
-        this->input.open(filepath);               // Opening the file stream
+    CSVReader::CSVReader(const string& filepath, const string& sprtr, const bool& isThereIndex) {
+
+        // Copying the sprtr string content to separator in order to avoid some problems (please don't remove it).
+        string separator;
+        separator.clear();
+        separator.append(sprtr);
+
+        this->input.open(filepath); // Opening the file stream
+
+        if(this->input.fail()) /* Handling file stream errors. */ {
+            // In case we couldn't find the file:
+            tiNext = false; // Responsible programmers won't get to read the files.
+        }
+        else // Otherwise:
+            tiNext = true; // The file can be read without any problem.
+
         this->separator = separator;              // Setting up the separator.
         /*
          * NOTE:
          * As it can be noticed, this->cache hasn't received any value, the library must be implemented in a way that
          * we won't have troubles with this->cache being unassigned.
          */
-
-        // TODO: Insert proper exceptions at this function.
-        // TODO: Properly comment this function.
-        // TODO: Finish this function by creating the header interpreter hash.
 
         if(!isThereIndex) {
             this->tiIndex = false; // Used to avoid problems in functions that call by index name.
@@ -49,17 +53,11 @@ namespace csv_reader {
 
     }
 
-    // Debug function:
-    void CSVReader::printIndexes() {
-        cout << this->header.find("Name")->first << endl;
-        cout << this->header.find("Age")->first << endl;
-    }
-
     CSVReader::~CSVReader() {
         this->input.close();
     }
 
-    vector<string> CSVReader::split(const string& str, const regex& spr) {
+    vector<string> CSVReader::split(const string& str, regex spr) {
         /*
          * This functions works similarly to Java String.split(regex) function.
          */
@@ -70,6 +68,46 @@ namespace csv_reader {
             vctr.push_back(*itr);
 
         return vctr;
+    }
+
+    void CSVReader::next() {
+        // If the file hasn't reached the end:
+        if(!eof())
+            // Get the whole line and put on the cache.
+            getline(this->input, this->cache);
+        else // it sets the cache line value to null.
+            this->cache = "null";
+    }
+
+    bool CSVReader::eof() {
+        // Returns true if the reader has reached the end of the file or if the file doesn't exists.
+        return !(this->tiNext && !this->input.eof());
+    }
+
+    string CSVReader::getFromCachedLine(const int& index) {
+        // Creating vector to store the line content.
+        vector<string> vctr;
+
+        // Storing the splitted-line content in the vector.
+        vctr = split(this->cache, this->separator);
+
+        // Returning the cached line content.
+        return vctr[index];
+    }
+
+    string CSVReader::getFromCachedLine(const string& indexName) {
+        /*
+         * Small problem here:
+         *  - if we give the function a wrong index name we will receive the index 0 content.
+         *  TODO: FIND A SOLLUTION FOR THAT AND TRHOW AN EXCEPTION.
+         */
+
+        int index = 0; // The dafault index value was set to 0.
+        if(this->tiIndex) // This function can only be used properly if the user set the CSVReader to read the index.
+            index = this->header[indexName];
+
+        // Index is whitespace sensitive.
+        return getFromCachedLine(index);
     }
 
 }

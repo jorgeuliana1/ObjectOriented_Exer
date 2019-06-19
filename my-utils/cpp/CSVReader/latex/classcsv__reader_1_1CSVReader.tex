@@ -1,0 +1,103 @@
+\hypertarget{classcsv__reader_1_1CSVReader}{}\section{csv\+\_\+reader\+:\+:C\+S\+V\+Reader Class Reference}
+\label{classcsv__reader_1_1CSVReader}\index{csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}}
+
+
+{\ttfamily \#include $<$C\+S\+V\+Reader.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcsv__reader_1_1CSVReader_a1c9e44a97262f1babaa795bdd92dc81e}{C\+S\+V\+Reader} (const std\+::string \&, const std\+::string \&, const bool \&)
+\item 
+\hyperlink{classcsv__reader_1_1CSVReader_a2bab9d6e9e1a42389dcc60c5e24e0559}{$\sim$\+C\+S\+V\+Reader} ()
+\item 
+void \hyperlink{classcsv__reader_1_1CSVReader_a935f052bb21d30a21271c14adf1c2cdf}{next} ()
+\item 
+bool \hyperlink{classcsv__reader_1_1CSVReader_aaa896b34e603f82f5999fdb46a5e3450}{eof} ()
+\item 
+std\+::string \hyperlink{classcsv__reader_1_1CSVReader_a9f589ea936d84a8c7f774ceb8d93d9a2}{get\+From\+Cached\+Line} (const int \&)
+\item 
+std\+::string \hyperlink{classcsv__reader_1_1CSVReader_a3be8bcb33ec67ae9edeb711f534d840d}{get\+From\+Cached\+Line} (const std\+::string \&)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classcsv__reader_1_1CSVReader}{C\+S\+V\+Reader} main class. This class is the responsible for the reading of C\+SV files, it is meant to be simple and functional. Uses only C++ basic features. \begin{DoxyAuthor}{Author}
+J. Jorge Moutinho Uliana (Git\+Hub\+: jorgeuliana1) 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcsv__reader_1_1CSVReader_a1c9e44a97262f1babaa795bdd92dc81e}\label{classcsv__reader_1_1CSVReader_a1c9e44a97262f1babaa795bdd92dc81e}} 
+\index{csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}!C\+S\+V\+Reader@{C\+S\+V\+Reader}}
+\index{C\+S\+V\+Reader@{C\+S\+V\+Reader}!csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}}
+\subsubsection{\texorpdfstring{C\+S\+V\+Reader()}{CSVReader()}}
+{\footnotesize\ttfamily csv\+\_\+reader\+::\+C\+S\+V\+Reader\+::\+C\+S\+V\+Reader (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{,  }\item[{const std\+::string \&}]{,  }\item[{const bool \&}]{ }\end{DoxyParamCaption})}
+
+\hyperlink{classcsv__reader_1_1CSVReader}{C\+S\+V\+Reader} constructor. 
+\begin{DoxyParams}{Parameters}
+{\em const} & std\+::string\& filepath. Path of the C\+SV file to be read. \\
+\hline
+{\em const} & std\+::string\& sprtr. Regex of the separator. The information will be separated based on this. \\
+\hline
+{\em const} & bool\& is\+There\+Index. True if the first line of the C\+SV is a header. False if it isn\textquotesingle{}t. If false, there will be no possibility of using functions that search by index name, only by number. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classcsv__reader_1_1CSVReader_a2bab9d6e9e1a42389dcc60c5e24e0559}\label{classcsv__reader_1_1CSVReader_a2bab9d6e9e1a42389dcc60c5e24e0559}} 
+\index{csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}!````~C\+S\+V\+Reader@{$\sim$\+C\+S\+V\+Reader}}
+\index{````~C\+S\+V\+Reader@{$\sim$\+C\+S\+V\+Reader}!csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}}
+\subsubsection{\texorpdfstring{$\sim$\+C\+S\+V\+Reader()}{~CSVReader()}}
+{\footnotesize\ttfamily csv\+\_\+reader\+::\+C\+S\+V\+Reader\+::$\sim$\+C\+S\+V\+Reader (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\hyperlink{classcsv__reader_1_1CSVReader}{C\+S\+V\+Reader} destructor. Destructs the object. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classcsv__reader_1_1CSVReader_aaa896b34e603f82f5999fdb46a5e3450}\label{classcsv__reader_1_1CSVReader_aaa896b34e603f82f5999fdb46a5e3450}} 
+\index{csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}!eof@{eof}}
+\index{eof@{eof}!csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}}
+\subsubsection{\texorpdfstring{eof()}{eof()}}
+{\footnotesize\ttfamily bool csv\+\_\+reader\+::\+C\+S\+V\+Reader\+::eof (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Used to check if the reader has reached the end of the file. \begin{DoxyReturn}{Returns}
+Returns \textquotesingle{}true\textquotesingle{} if the reader has reached the end of the file or if the file wasn\textquotesingle{}t initialized properly. Returns \textquotesingle{}false\textquotesingle{} if the next line can be read without any problem. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcsv__reader_1_1CSVReader_a9f589ea936d84a8c7f774ceb8d93d9a2}\label{classcsv__reader_1_1CSVReader_a9f589ea936d84a8c7f774ceb8d93d9a2}} 
+\index{csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}!get\+From\+Cached\+Line@{get\+From\+Cached\+Line}}
+\index{get\+From\+Cached\+Line@{get\+From\+Cached\+Line}!csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}}
+\subsubsection{\texorpdfstring{get\+From\+Cached\+Line()}{getFromCachedLine()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily string csv\+\_\+reader\+::\+C\+S\+V\+Reader\+::get\+From\+Cached\+Line (\begin{DoxyParamCaption}\item[{const int \&}]{index }\end{DoxyParamCaption})}
+
+Function that returns a string of the content located at the current cached line and in the specific given index. 
+\begin{DoxyParams}{Parameters}
+{\em Index} & number of the wanted element. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the wanted element if the index is valid. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcsv__reader_1_1CSVReader_a3be8bcb33ec67ae9edeb711f534d840d}\label{classcsv__reader_1_1CSVReader_a3be8bcb33ec67ae9edeb711f534d840d}} 
+\index{csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}!get\+From\+Cached\+Line@{get\+From\+Cached\+Line}}
+\index{get\+From\+Cached\+Line@{get\+From\+Cached\+Line}!csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}}
+\subsubsection{\texorpdfstring{get\+From\+Cached\+Line()}{getFromCachedLine()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily std\+::string csv\+\_\+reader\+::\+C\+S\+V\+Reader\+::get\+From\+Cached\+Line (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{ }\end{DoxyParamCaption})}
+
+Function that returns a string of the content located at the current cached line and in the specific given index. 
+\begin{DoxyParams}{Parameters}
+{\em Name} & of the wanted element index/category. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the wanted element if the index is valid, otherwise it will return the first element of the line. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcsv__reader_1_1CSVReader_a935f052bb21d30a21271c14adf1c2cdf}\label{classcsv__reader_1_1CSVReader_a935f052bb21d30a21271c14adf1c2cdf}} 
+\index{csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}!next@{next}}
+\index{next@{next}!csv\+\_\+reader\+::\+C\+S\+V\+Reader@{csv\+\_\+reader\+::\+C\+S\+V\+Reader}}
+\subsubsection{\texorpdfstring{next()}{next()}}
+{\footnotesize\ttfamily void csv\+\_\+reader\+::\+C\+S\+V\+Reader\+::next (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Reads the next line of the csv file. The lines are all stored on a cache string. When a new line is read the one before it is thrown away and replaced by a new one. It is prudent to be careful with this function for a efficient program. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+S\+V\+Reader.\+h\item 
+C\+S\+V\+Reader.\+cpp\end{DoxyCompactItemize}
