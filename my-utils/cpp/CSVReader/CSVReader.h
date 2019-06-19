@@ -25,6 +25,7 @@ private:
 public:
     CSVReader(const std::string&, const std::string& , const bool&);
     ~CSVReader();
+    void printIndexes();
 
 };
 

@@ -7,6 +7,8 @@
 #IncludeRegexTransform: 
 
 /home/ulian/Documentos/Codes/College/ProgIII/ObjectOriented_Exer/my-utils/cpp/CSVReader/CSVReader.cpp
+iostream
+-
 CSVReader.h
 /home/ulian/Documentos/Codes/College/ProgIII/ObjectOriented_Exer/my-utils/cpp/CSVReader/CSVReader.h
 
