@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/ObOrString.dir/ObOrString.cpp.o CMakeFiles/ObOrString.dir/tester.cpp.o  -o ObOrString 
