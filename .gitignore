@@ -73,6 +73,12 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 
+#########################
+# CLion
+#########################
+CMakeLists.txt
+cmake-build-debug/
+
 ##########################
 ## IntelliJ
 ##########################

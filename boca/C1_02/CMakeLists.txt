@@ -1,9 +1,17 @@
-cmake_minimum_required(VERSION 3.12.3)  # CMake version check
-project(C1_02)               # Create project "simple_example"
-set(CMAKE_CXX_STANDARD 14)            # Enable c++14 standard
+cmake_minimum_required(VERSION 3.14)
+project(C1_02)
 
-# Add main.cpp file of project root directory as source file
-set(SOURCE_FILES main.cpp Employee.cpp StringUtils.cpp DateUtils.cpp)
+set(CMAKE_CXX_STANDARD 14)
 
-# Add executable target with source files listed in SOURCE_FILES variable
-add_executable(simple_example ${SOURCE_FILES})
+include_directories(.)
+
+add_executable(C1_02
+        C1_02.cpp
+        Company.h
+        DateUtils.cpp
+        DateUtils.h
+        Department.h
+        Employee.cpp
+        Employee.h
+        StringUtils.cpp
+        StringUtils.h)
