@@ -15,12 +15,12 @@ private:
     time_t admission_date;
     double salary;
 public:
-    Employee(string&, string&, const double&); // new
+    Employee(const string&, const string&, const double&); // new
     string getName();
     int getAdmissionDay();
     int getAdmissionMonth();
     int getAdmissionYear();
-    double getSalary();
+    const double getSalary();
     void changeSalary(const double&);
 };
 

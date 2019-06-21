@@ -10,6 +10,7 @@ add_executable(C1_02
         Company.h
         DateUtils.cpp
         DateUtils.h
+        Department.cpp
         Department.h
         Employee.cpp
         Employee.h

@@ -177,6 +177,33 @@ DateUtils.cpp.s:
 	$(MAKE) -f CMakeFiles/C1_02.dir/build.make CMakeFiles/C1_02.dir/DateUtils.cpp.s
 .PHONY : DateUtils.cpp.s
 
+Department.o: Department.cpp.o
+
+.PHONY : Department.o
+
+# target to build an object file
+Department.cpp.o:
+	$(MAKE) -f CMakeFiles/C1_02.dir/build.make CMakeFiles/C1_02.dir/Department.cpp.o
+.PHONY : Department.cpp.o
+
+Department.i: Department.cpp.i
+
+.PHONY : Department.i
+
+# target to preprocess a source file
+Department.cpp.i:
+	$(MAKE) -f CMakeFiles/C1_02.dir/build.make CMakeFiles/C1_02.dir/Department.cpp.i
+.PHONY : Department.cpp.i
+
+Department.s: Department.cpp.s
+
+.PHONY : Department.s
+
+# target to generate assembly for a file
+Department.cpp.s:
+	$(MAKE) -f CMakeFiles/C1_02.dir/build.make CMakeFiles/C1_02.dir/Department.cpp.s
+.PHONY : Department.cpp.s
+
 Employee.o: Employee.cpp.o
 
 .PHONY : Employee.o
@@ -246,6 +273,9 @@ help:
 	@echo "... DateUtils.o"
 	@echo "... DateUtils.i"
 	@echo "... DateUtils.s"
+	@echo "... Department.o"
+	@echo "... Department.i"
+	@echo "... Department.s"
 	@echo "... Employee.o"
 	@echo "... Employee.i"
 	@echo "... Employee.s"
