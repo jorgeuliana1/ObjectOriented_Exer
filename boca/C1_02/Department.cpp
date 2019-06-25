@@ -17,8 +17,8 @@ Department::~Department() {
     this->emps.clear();
 }
 
-void Department::addEmployee(Employee* emp) {
-    this->emps.push_back(*emp);
+void Department::addEmployee(Employee emp) {
+    this->emps.insert(this->emps.end(), emp);
 }
 
 string Department::getName() {
@@ -31,32 +31,11 @@ Employee* Department::popEmployee() {
     return emp;
 }
 
-Employee* Department::getEmployee(const string& name) {
-
-    // Iterator of list
-    list<Employee>::iterator i;
-
-    // Iterating over the list
-    for(i = this->emps.begin(); i != this->emps.end(); i++ ) {
-
-        // Verifying if we found the wanted employee.
-        Employee emp = *i;
-        if(cpp_util::stringCompare(name, emp.getName())) {
-            auto* e = new Employee(emp);
-            return e;
-        }
-    }
-
-    return nullptr;
-}
-
 double Department::getSalariesSum() {
     double sum = 0;
 
-    list<Employee>::iterator i;
-
-    for(i = this->emps.begin(); i != this->emps.end(); i++) {
-        sum += i->getSalary();
+    for(Employee e : this->emps) {
+       sum += e.getSalary();
     }
 
     return sum;
@@ -67,10 +46,15 @@ int Department::size() {
 }
 
 void Department::increaseSalaryPercentage(const double& percentage) {
-    list<Employee>::iterator i;
 
-    for(i = this->emps.begin(); i != this->emps.end(); i++) {
-        i->changeSalary(i->getSalary() + i->getSalary() * percentage);
+    for(int i = 0; i < this->emps.size(); i++) {
+        this->emps[i].changeSalary(this->emps[i].getSalary() + this->emps[i].getSalary()*percentage);
     }
 
+}
+
+Employee Department::getEmployee(const int& index) {
+    Employee ret = this->emps[index];
+    this->emps.erase(this->emps.begin() + index);
+    return ret;
 }

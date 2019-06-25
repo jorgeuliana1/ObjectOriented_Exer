@@ -5,20 +5,23 @@
 #ifndef PROJECT_COMPANY_H
 #define PROJECT_COMPANY_H
 
+#include <vector>
 #include "Department.h"
 
 class Company {
 private:
     string name;
     string regist;
-    list<Department> depart;
+    vector<Department> depart;
 public:
-    Company(string&, string&); // new
+    Company(const string&, const string&); // new
     ~Company(); // delete
-    void addDepartment(Department*);
+    void addDepartment(Department);
     Department* popDepartment();
+    Department getDepartment(const int&);
     void printSalaries();
     int size();
+
 };
 
 #endif //PROJECT_COMPANY_H

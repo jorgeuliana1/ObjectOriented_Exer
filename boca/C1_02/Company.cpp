@@ -12,7 +12,7 @@
 
 using namespace std;
 
-Company::Company(string& name, string& regis) {
+Company::Company(const string& name, const string& regis) {
     this->name = name;
     this->regist = regis;
 }
@@ -21,8 +21,8 @@ Company::~Company() {
     this->depart.clear();
 }
 
-void Company::addDepartment(Department* dept) {
-    this->depart.push_back(*dept);
+void Company::addDepartment(Department dept) {
+    this->depart.insert(this->depart.end(), dept);
 }
 
 Department* Company::popDepartment() {
@@ -72,4 +72,10 @@ void Company::printSalaries() {
 
 int Company::size() {
     return this->depart.size();
+}
+
+Department Company::getDepartment(const int& index) {
+    Department ret = this->depart[index];
+    this->depart.erase(this->depart.begin() + index);
+    return ret;
 }

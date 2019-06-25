@@ -6,19 +6,20 @@
 #define PROJECT_DEPARTMENT_H
 
 #include <list>
+#include <vector>
 #include "Employee.h"
 
 class Department {
 private:
-    list<Employee> emps;
+    vector<Employee> emps;
     string name;
 public:
     Department(const string&); // new
     ~Department(); // delete
-    void addEmployee(Employee*);
+    void addEmployee(Employee);
     string getName();
     Employee* popEmployee(); // Takes the last added employee and remove it from the list.
-    Employee* getEmployee(const string&);
+    Employee getEmployee(const int&);
     double getSalariesSum();
     int size();
     void increaseSalaryPercentage(const double&);
