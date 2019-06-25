@@ -21,6 +21,10 @@ void Department::addEmployee(Employee* emp) {
     this->emps.push_back(*emp);
 }
 
+string Department::getName() {
+    return this->name;
+}
+
 Employee* Department::popEmployee() {
     auto* emp = new Employee(this->emps.back());
     this->emps.pop_back();
@@ -52,7 +56,7 @@ double Department::getSalariesSum() {
     list<Employee>::iterator i;
 
     for(i = this->emps.begin(); i != this->emps.end(); i++) {
-        sum += (*i).getSalary();
+        sum += i->getSalary();
     }
 
     return sum;
@@ -66,7 +70,7 @@ void Department::increaseSalaryPercentage(const double& percentage) {
     list<Employee>::iterator i;
 
     for(i = this->emps.begin(); i != this->emps.end(); i++) {
-        (*i).changeSalary((*i).getSalary() + (*i).getSalary() * percentage);
+        i->changeSalary(i->getSalary() + i->getSalary() * percentage);
     }
 
 }

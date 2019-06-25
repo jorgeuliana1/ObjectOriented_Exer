@@ -150,6 +150,33 @@ C1_02.cpp.s:
 	$(MAKE) -f CMakeFiles/C1_02.dir/build.make CMakeFiles/C1_02.dir/C1_02.cpp.s
 .PHONY : C1_02.cpp.s
 
+Company.o: Company.cpp.o
+
+.PHONY : Company.o
+
+# target to build an object file
+Company.cpp.o:
+	$(MAKE) -f CMakeFiles/C1_02.dir/build.make CMakeFiles/C1_02.dir/Company.cpp.o
+.PHONY : Company.cpp.o
+
+Company.i: Company.cpp.i
+
+.PHONY : Company.i
+
+# target to preprocess a source file
+Company.cpp.i:
+	$(MAKE) -f CMakeFiles/C1_02.dir/build.make CMakeFiles/C1_02.dir/Company.cpp.i
+.PHONY : Company.cpp.i
+
+Company.s: Company.cpp.s
+
+.PHONY : Company.s
+
+# target to generate assembly for a file
+Company.cpp.s:
+	$(MAKE) -f CMakeFiles/C1_02.dir/build.make CMakeFiles/C1_02.dir/Company.cpp.s
+.PHONY : Company.cpp.s
+
 DateUtils.o: DateUtils.cpp.o
 
 .PHONY : DateUtils.o
@@ -270,6 +297,9 @@ help:
 	@echo "... C1_02.o"
 	@echo "... C1_02.i"
 	@echo "... C1_02.s"
+	@echo "... Company.o"
+	@echo "... Company.i"
+	@echo "... Company.s"
 	@echo "... DateUtils.o"
 	@echo "... DateUtils.i"
 	@echo "... DateUtils.s"

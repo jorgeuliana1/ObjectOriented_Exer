@@ -20,7 +20,7 @@ public:
     int getAdmissionDay();
     int getAdmissionMonth();
     int getAdmissionYear();
-    const double getSalary();
+    double getSalary();
     void changeSalary(const double&);
 };
 

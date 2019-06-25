@@ -7,6 +7,7 @@ include_directories(.)
 
 add_executable(C1_02
         C1_02.cpp
+        Company.cpp
         Company.h
         DateUtils.cpp
         DateUtils.h

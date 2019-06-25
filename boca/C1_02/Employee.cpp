@@ -21,9 +21,9 @@ string Employee::getName() {
     return this->name;
 }
 
-const double Employee::getSalary() {
-    const double& salary = this->salary;
-    return salary;
+double Employee::getSalary() {
+    double s(this->salary);
+    return s;
 }
 
 void Employee::changeSalary(const double& newsalary) {

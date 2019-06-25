@@ -16,6 +16,7 @@ public:
     Department(const string&); // new
     ~Department(); // delete
     void addEmployee(Employee*);
+    string getName();
     Employee* popEmployee(); // Takes the last added employee and remove it from the list.
     Employee* getEmployee(const string&);
     double getSalariesSum();
