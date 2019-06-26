@@ -19,6 +19,7 @@ public:
     void addDepartment(Department);
     Department* popDepartment();
     Department getDepartment(const int&);
+    void addToBegin(Department dept);
     void printSalaries();
     int size();
 

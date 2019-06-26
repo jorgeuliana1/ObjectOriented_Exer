@@ -47,7 +47,7 @@ int main() {
 
     // STEP 1: INCREASE THE SALARY OF EVERY EMPLOYEE OF THE FIRST DEPT IN 10%
 
-    // STEP 1.1: GETTING THE FIRST AND SECOND DEPARTMENTS
+    // STEP 1.1: GETTING THE FIRST AND SECOND DEPARTMENT
     Department d2 = company.getDepartment(1);
 
     Department d1 = company.getDepartment(0);
@@ -62,8 +62,8 @@ int main() {
     d2.addEmployee(e);
 
     // FINISHING
-    company.addDepartment(d1);
-    company.addDepartment(d2);
+    company.addToBegin(d2);
+    company.addToBegin(d1);
 
     company.printSalaries();
 

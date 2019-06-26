@@ -79,3 +79,7 @@ Department Company::getDepartment(const int& index) {
     this->depart.erase(this->depart.begin() + index);
     return ret;
 }
+
+void Company::addToBegin(Department dept) {
+    this->depart.insert(this->depart.begin(), dept);
+}
