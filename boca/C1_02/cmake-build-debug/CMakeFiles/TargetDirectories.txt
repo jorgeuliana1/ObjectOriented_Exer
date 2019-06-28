@@ -1,3 +1,3 @@
-/home/ulian/Documentos/Codes/College/ProgIII/ObjectOriented_Exer/boca/C1_02/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/ulian/Documentos/Codes/College/ProgIII/ObjectOriented_Exer/boca/C1_02/cmake-build-debug/CMakeFiles/C1_02.dir
-/home/ulian/Documentos/Codes/College/ProgIII/ObjectOriented_Exer/boca/C1_02/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/2018102932/CURSOS/PROGIII/ObjectOriented_Exer/boca/C1_02/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/2018102932/CURSOS/PROGIII/ObjectOriented_Exer/boca/C1_02/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/2018102932/CURSOS/PROGIII/ObjectOriented_Exer/boca/C1_02/cmake-build-debug/CMakeFiles/C1_02.dir
