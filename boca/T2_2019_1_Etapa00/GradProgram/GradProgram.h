@@ -5,7 +5,7 @@
 #ifndef T2_2019_1_ETAPA00_GRADPROGRAM_H
 #define T2_2019_1_ETAPA00_GRADPROGRAM_H
 
-#include "Publication.h"
+#include "../Publication/Publication.h"
 
 namespace scienprod_stats {
 /**

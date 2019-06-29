@@ -5,7 +5,7 @@
 #ifndef T2_2019_1_ETAPA00_UNIVERSITY_H
 #define T2_2019_1_ETAPA00_UNIVERSITY_H
 
-#include "GradProgram.h"
+#include "../GradProgram/GradProgram.h"
 
 namespace scienprod_stats {
 class University {

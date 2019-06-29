@@ -8,7 +8,7 @@
 #include <exception>
 
 namespace scienprod_stats {
-    class UnknownCommandException : public std::exception {
+class UnknownCommandException : public std::exception {
     private:
         const char *file;
         int line;
