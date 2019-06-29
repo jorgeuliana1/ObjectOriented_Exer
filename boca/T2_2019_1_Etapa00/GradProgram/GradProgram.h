@@ -14,34 +14,37 @@ namespace scienprod_stats {
 class GradProgram {
 public:
     /**
-     * @param Graduation Program's name.
-     * @param Graduation Program's code / id.
-     */
+    * @param Graduation Program's name.
+    * @param Graduation Program's code / id.
+    */
     GradProgram(const std::string &, const std::string &);
     ~GradProgram();
-
     /**
-     * @return Graduation Program's name.
-     */
+    * @return Graduation Program's name.
+    */
     std::string name();
     /**
-     * @return Graduation Program's code / id.
-     */
-     std::string id();
-
-     /**
-      * @param New Graduation Program's publication.
-      */
-     void add(Publication *);
-     /**
-      * @return Number of Publications by the Graduation Program.
-      */
-     long unsigned int size();
-     /**
-      * @param Index of the wanted Publication.
-      * @return Wanted Publication.
-      */
-     Publication * get(const long unsigned int &);
+    * @return Graduation Program's code / id.
+    */
+    std::string id();
+    /**
+    * @param New Graduation Program's publication.
+    */
+    void add(Publication *);
+    /**
+    * @return Number of Publications by the Graduation Program.
+    */
+    long unsigned int size();
+    /**
+    * @param Index of the wanted Publication.
+    * @return Wanted Publication.
+    */
+    Publication * get(const long unsigned int &);
+    /**
+    * Use this method before deleting the Publication from the memory.
+    * @param Index of the Publication to be removed.
+    */
+    void remove(const long unsigned int &);
 
 private:
     std::string n; // Graduation Program's name.

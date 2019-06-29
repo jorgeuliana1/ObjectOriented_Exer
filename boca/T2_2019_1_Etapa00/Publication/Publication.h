@@ -69,6 +69,8 @@ private:
         int begin; // Initial page
         int end; // Final page
     };
+
+    Pages p;
 };
 }
 

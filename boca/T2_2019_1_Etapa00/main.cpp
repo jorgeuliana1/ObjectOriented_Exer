@@ -1,6 +1,8 @@
 #include <iostream>
+#include "University/University.h"
+
+using namespace scienprod_stats;
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
     return 0;
 }
