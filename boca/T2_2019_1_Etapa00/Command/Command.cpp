@@ -55,7 +55,7 @@ string Command::get(const int & index) {
     else return sc[index - 1];
 }
 
-void Command::execute() {
+void Command::execute(/* TODO: Insert the parameters here. */) {
     //TODO: Create the IES command executor.
     //TODO: Create the CSV command executor.
     //TODO: Create the PPG command executor.
