@@ -3,16 +3,17 @@
 #include "Command/Command.h"
 #include "Exceptions/UnknownCommandException.h"
 #include "CSVReader/CSVReader.h"
+#include "Publication/PublicationType.h"
 
 using namespace scienprod_stats;
 
+// TODO: Organize the functions below in a class
 void read_csv(csv_reader::CSVReader & csv, std::vector<University *> & u, std::vector<GradProgram *> & g,
               std::vector<Publication*> & p);
-bool is_csv(const std::string & line);
+bool is_csv(const std::string & file_path);
 std::string csv_type(const std::string & path);
-// TODO: Implement read_csv
-// TODO: Implement is_csv
-// TODO: Implement csv_type
+PublicationType get_type(const std::string & type);
+// TODO: Create a function to get numbers from the csv.
 
 int main() {
 
@@ -42,7 +43,6 @@ int main() {
             csv = new csv_reader::CSVReader(path, ",", true);
             read_csv(*csv, u, g, p);
 ￼
-0
 
             // We won't use this file anymore.
             delete csv;
@@ -87,7 +87,7 @@ int main() {
 }
 
 void read_csv(csv_reader::CSVReader & csv, std::vector<University *> & u, std::vector<GradProgram *> & g,
-              std::vector<Publication*> & p)
+              std::vector<Publication*> & p, PublicationType type)
 {
     while(!csv.eof()) /* while csv file hasn't ended */{
         csv.next();
@@ -119,10 +119,82 @@ void read_csv(csv_reader::CSVReader & csv, std::vector<University *> & u, std::v
             nature   = csv.getFromCachedLine("DS_NATUREZA");
             title    = csv.getFromCachedLine("NM_TITULO");
             language = csv.getFromCachedLine("DS_IDIOMA");
-            // TODO: FINISH THIS FUNCTION FROM HERE (CSV_TYPE IMPLEMENTATION NEEDED) (See T1 code for details.)
-            // TODO: USE THE CSV_TYPE HERE
+            if(type == PublicationType::BOOK)
+                city = csv.getFromCachedLine("NM_CIDADE_PAIS");
+            else
+                city = csv.getFromCachedLine("NM_CIDADE");
+            uni_s = csv.getFromCachedLine("SG_ENTIDADE_ENSINO");
+            uni_n = csv.getFromCachedLine("NM_ENTIDADE_ENSINO");
+            g_id  = csv.getFromCachedLine("CD_PROGRAMA_IES");
+            g_n   = csv.getFromCachedLine("NM_PROGRAMA_IES");
         } catch (std::exception & e) {
             break;
         }
+
+        // TODO: Get data to editorials
+        // TODO: Get ISSN
+        // TODO: Get ISBN
+        // TODO: Get newspaper and magazine data
+        // TODO: Get Periodic data
+        // TODO; Get data for musical piece
+        // TODO: Get translation data
+        // TODO: Get data for annals
+        // TODO: Get the pages
+        // TODO: Insert the data in the lists.
     }
+}
+
+bool is_csv(const std::string & file_path) {
+
+        // Using string.find() to search for the ".csv" extension in the file path.
+        if(file_path.find(".csv") != std::string::npos)
+            return true;
+
+        else return false;
+
+}
+
+std::string csv_type(const std::string & path) {
+
+    std::string types[] = {"anais", "artjr", "artpe", "livro", "partmu", "tradu", "outro"};
+
+    // Iterating through the types vector.
+    for(std::string type : types) {
+
+        // Creating the identifier string, that identifies the type by the file name.
+        // Ex.: "-anais."
+        std::string identifier;
+        identifier = "-";
+        identifier.append(type);
+        identifier.append(".");
+
+        // If the file name contains the identifier...
+        if(path.find(identifier) != std::string::npos)
+            return type;
+
+    }
+
+    // If none of the identifiers have been found...
+    return nullptr;
+}
+
+PublicationType get_type(const std::string & type) {
+    std::string types[] = {"anais", "artjr", "artpe", "livro", "partmu", "tradu", "outro"};
+
+    if(type == types[0])
+        return PublicationType::ANNAL;
+    if(type == types[1])
+        return PublicationType::MAGAZINE;
+    if(type == types[2])
+        return PublicationType::PERIODIC;
+    if(type == types[3])
+        return PublicationType::BOOK;
+    if(type == types[4])
+        return PublicationType::MUSIC;
+    if(type == types[5])
+        return PublicationType::TRANSLATION;
+    if(type == types[6])
+        return PublicationType::GENERIC;
+
+    return PublicationType::INVALID;
 }
