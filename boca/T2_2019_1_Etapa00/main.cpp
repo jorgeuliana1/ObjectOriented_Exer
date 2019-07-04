@@ -4,6 +4,7 @@
 #include "Exceptions/UnknownCommandException.h"
 #include "CSVReader/CSVReader.h"
 #include "Publication/PublicationType.h"
+#include "Publication/BookPublication.h"
 
 using namespace scienprod_stats;
 
@@ -13,7 +14,13 @@ void read_csv(csv_reader::CSVReader & csv, std::vector<University *> & u, std::v
 bool is_csv(const std::string & file_path);
 std::string csv_type(const std::string & path);
 PublicationType get_type(const std::string & type);
-// TODO: Create a function to get numbers from the csv.
+int to_int(const std::string & string);
+bool is_editorial(const PublicationType & type);
+std::string try_to_get(csv_reader::CSVReader & csv, const std::string & index);
+
+// TODO: Implement insert_university
+// TODO: Implement insert_gradprogram
+// TODO: Implement insert_publication
 
 int main() {
 
@@ -83,11 +90,13 @@ int main() {
     */
 
     // TODO: Uncomment the main function.
+
+
     return 0;
 }
 
-void read_csv(csv_reader::CSVReader & csv, std::vector<University *> & u, std::vector<GradProgram *> & g,
-              std::vector<Publication*> & p, PublicationType type)
+void read_csv(csv_reader::CSVReader & csv, std::map<std::string, University *> & u, std::map<std::string, GradProgram *> & g,
+              std::vector<Publication*> & p, const PublicationType & type)
 {
     while(!csv.eof()) /* while csv file hasn't ended */{
         csv.next();
@@ -108,39 +117,116 @@ void read_csv(csv_reader::CSVReader & csv, std::vector<University *> & u, std::v
                     volume,         // Volume
                     fascicle,       // Fascicle
                     series,         // Series
-                    intruments,     // Instrumental formation
+                    instruments,    // Instrumental formation
                     translation;    // Translation
 
         int first, last;            // First and last pages.
         first = last = 0;           // Defining it as 0
 
-        try {
-            // Fundamental informations, every publication has it.
-            nature   = csv.getFromCachedLine("DS_NATUREZA");
-            title    = csv.getFromCachedLine("NM_TITULO");
-            language = csv.getFromCachedLine("DS_IDIOMA");
-            if(type == PublicationType::BOOK)
-                city = csv.getFromCachedLine("NM_CIDADE_PAIS");
-            else
-                city = csv.getFromCachedLine("NM_CIDADE");
-            uni_s = csv.getFromCachedLine("SG_ENTIDADE_ENSINO");
-            uni_n = csv.getFromCachedLine("NM_ENTIDADE_ENSINO");
-            g_id  = csv.getFromCachedLine("CD_PROGRAMA_IES");
-            g_n   = csv.getFromCachedLine("NM_PROGRAMA_IES");
-        } catch (std::exception & e) {
-            break;
+        // Fundamental informations, every publication has it.
+        nature   = try_to_get(csv, "DS_NATUREZA");
+        title    = try_to_get(csv, "NM_TITULO");
+        language = try_to_get(csv, "DS_IDIOMA");
+        if(type == PublicationType::BOOK)
+            city = try_to_get(csv, "NM_CIDADE_PAIS");
+        else
+            city = try_to_get(csv, "NM_CIDADE");
+        uni_s = try_to_get(csv, "SG_ENTIDADE_ENSINO");
+        uni_n = try_to_get(csv, "NM_ENTIDADE_ENSINO");
+        g_id  = try_to_get(csv, "CD_PROGRAMA_IES");
+        g_n   = try_to_get(csv, "NM_PROGRAMA_IES");
+
+
+        // Getting data for editorials
+        if(is_editorial(type))
+            editor = try_to_get(csv, "NM_EDITORA");
+        if(type == PublicationType::TRANSLATION)
+            editor = try_to_get(csv, "NM_EDITORA_TRADUCAO");
+
+        // Getting ISSN
+        if(type == PublicationType::PERIODIC || type == PublicationType::MAGAZINE)
+            serial = try_to_get(csv, "DS_ISSN");
+
+        // Getting ISBN
+        if(type == PublicationType::BOOK)
+            serial = try_to_get(csv, "DS_ISBN");
+
+        // Getting newspaper and magazine data
+        if(type == PublicationType::MAGAZINE)
+            p_date = try_to_get(csv, "DT_PUBLICACAO");
+
+        // Getting periodic data
+        if(type == PublicationType::PERIODIC) {
+
+            volume   = try_to_get(csv, "NR_VOLUME");
+            fascicle = try_to_get(csv, "DS_FASCICULO");
+            series   = try_to_get(csv, "NR_SERIE");
+
+            // Fixing the numbers
+            volume   = std::to_string(to_int(volume));
+            fascicle = std::to_string(to_int(fascicle));
+            series   = std::to_string(to_int(series));
+
         }
 
-        // TODO: Get data to editorials
-        // TODO: Get ISSN
-        // TODO: Get ISBN
-        // TODO: Get newspaper and magazine data
-        // TODO: Get Periodic data
-        // TODO; Get data for musical piece
-        // TODO: Get translation data
-        // TODO: Get data for annals
-        // TODO: Get the pages
-        // TODO: Insert the data in the lists.
+        // Getting musical piece data
+        if(type == PublicationType::MUSIC)
+            instruments = try_to_get(csv, "DS_FORMACAO_INSTRUMENTAL");
+
+        // Getting translated article data
+        if(type == PublicationType::TRANSLATION)
+            translation = try_to_get(csv, "DS_IDIOMA_TRADUCAO");
+
+        // Getting annal publication data
+        if(type == PublicationType::BOOK)
+            annal = try_to_get(csv, "DS_EVENTO");
+
+        // Getting pages data.
+
+        if(type == PublicationType::BOOK)
+            last = to_int(try_to_get(csv, "NR_PAGINAS_CONTRIBUICAO")) - 1;
+
+        else if(type == PublicationType::MUSIC || type == PublicationType::GENERIC || type == PublicationType::TRANSLATION)
+            last = to_int(try_to_get(csv, "NR_PAGINAS")) - 1;
+
+        else {
+            first = to_int(try_to_get(csv, "NR_PAGINA_INICIAL"));
+            last  = to_int(try_to_get(csv, "NR_PAGINA_FINAL"));
+        }
+
+        // TODO: Create Publication
+
+        University * university;
+        university = new University(uni_n, uni_s);
+
+        GradProgram * program;
+        program = new GradProgram(g_id, g_n);
+
+        // Key for the university
+        std::string uni_key;
+
+        // Key for the Graduation Program
+        std::string gpr_key;
+
+        uni_key = uni_n + uni_s;
+        gpr_key = g_id;
+
+        if(u.count(uni_key) > 0) {
+            delete university;
+            university = u[uni_key];
+        } else
+            u[uni_key] = university;
+
+        if(g.count(gpr_key) > 0) {
+            delete program;
+            program = g[gpr_key];
+        } else
+            g[gpr_key] = program;
+
+        university->add(program);
+        // program->add(publication);
+
+        // TODO: Finish this function.
     }
 }
 
@@ -181,20 +267,49 @@ std::string csv_type(const std::string & path) {
 PublicationType get_type(const std::string & type) {
     std::string types[] = {"anais", "artjr", "artpe", "livro", "partmu", "tradu", "outro"};
 
-    if(type == types[0])
+    if (type == types[0])
         return PublicationType::ANNAL;
-    if(type == types[1])
+    if (type == types[1])
         return PublicationType::MAGAZINE;
-    if(type == types[2])
+    if (type == types[2])
         return PublicationType::PERIODIC;
-    if(type == types[3])
+    if (type == types[3])
         return PublicationType::BOOK;
-    if(type == types[4])
+    if (type == types[4])
         return PublicationType::MUSIC;
-    if(type == types[5])
+    if (type == types[5])
         return PublicationType::TRANSLATION;
-    if(type == types[6])
+    if (type == types[6])
         return PublicationType::GENERIC;
 
     return PublicationType::INVALID;
+}
+
+int to_int(const std::string & str) {
+    if(str.find(".") != std::string::npos || str.find(",") != std::string::npos)
+        return -1;
+
+    std::istringstream iss(str);
+
+    int n;
+
+    iss >> n;
+
+    return n;
+}
+
+bool is_editorial(const PublicationType & type) {
+    if(type == PublicationType::BOOK || type == PublicationType::PERIODIC || type == PublicationType::MAGAZINE ||
+      type == PublicationType::MUSIC || type == PublicationType::GENERIC)
+        return true;
+
+    return false;
+}
+
+std::string try_to_get(csv_reader::CSVReader & csv, const std::string & index) {
+    try {
+        return csv.getFromCachedLine(index);
+    } catch (std::exception & e) {
+        return nullptr;
+    }
 }
