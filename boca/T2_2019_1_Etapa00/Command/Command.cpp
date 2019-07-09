@@ -2,7 +2,6 @@
 // Created by ulian on 29/06/19.
 //
 
-#include <stdarg.h>
 #include <complex>
 #include "Command.h"
 #include "../Exceptions/UnknownCommandException.h"
@@ -55,7 +54,7 @@ string Command::get(const int & index) {
     else return sc[index - 1];
 }
 
-void Command::execute(vector<University &> & u, vector<GradProgram *> & g, vector<Publication *> & p) {
+void Command::execute(Stats & stats) {
     //TODO: Create the IES command executor.
     //TODO: Create the CSV command executor.
     //TODO: Create the PPG command executor.

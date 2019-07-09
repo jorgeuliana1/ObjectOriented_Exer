@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include "../University/University.h"
+#include "../Stats/Stats.h"
 
 namespace scienprod_stats {
 enum CommandConst {
@@ -49,7 +50,7 @@ public:
     /**
      * Executes the command.
      */
-    void execute(std::vector<University &> &, std::vector<GradProgram *> &, std::vector<Publication *> &);
+    void execute(Stats &);
 };
 }
 
