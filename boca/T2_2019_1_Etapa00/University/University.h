@@ -20,11 +20,11 @@ public:
     /**
     * @return University's name.
     */
-    std::string name();
+    std::string name() const;
     /**
     * @return University's short name.
     */
-    std::string short_name();
+    std::string short_name() const;
     /**
     * @param New University's Graduation Program.
     */
@@ -32,7 +32,7 @@ public:
     /**
     * @return Number of Graduation Programs in that specific University.
     */
-    long unsigned int size();
+    long unsigned int size() const;
     /**
     * @param Index of the Graduation Program that belongs to the University.
     * @return Pointer to the wanted Graduation Program.
@@ -48,6 +48,18 @@ public:
     * @return True if the Graduate Program of the given ID exists in this University.
     */
     bool contains_program(const std::string &);
+    /**
+     * Overrides operator ==.
+     */
+    bool operator==(const University &) const;
+    /**
+     * Overrides operator <<.
+     */
+    friend std::ostream & operator<<(std::ostream &, const University &);
+    /**
+     * @return The hash key for this specific university.
+     */
+    std::string hash() const;
 
 private:
     std::string n; // University's name.

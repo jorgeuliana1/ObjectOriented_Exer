@@ -15,9 +15,9 @@ private:
     std::string type;             // Publication type
     csv_reader::CSVReader csv;    // CSV to be read
     // TODO: Implement map instead of vector.
-    std::vector<University  *> u; // Universities vector
-    std::vector<GradProgram *> g; // Graduation Programs vector
-    std::vector<Publication *> p; // Publications vector
+    std::map<std::string, University  *> u; // Universities vector
+    std::map<std::string, GradProgram *> g; // Graduation Programs vector
+    std::map<std::string, Publication *> p; // Publications vector
 
     /**
      * @param String with the name of the index the user is trying to get.
@@ -39,6 +39,11 @@ private:
      * @param graduation program to be inserted in the list.
      */
     void add_gradprogram(GradProgram *);
+
+    /**
+     * @param publication to be inserted in the list.
+     */
+    void add_publication(Publication *);
 
 public:
     /**

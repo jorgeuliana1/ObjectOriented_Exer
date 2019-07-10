@@ -2,10 +2,12 @@
 // Created by ulian on 27/06/19.
 //
 
+#include <sstream>
 #include "Publication.h"
 
 using namespace std;
-using namespace scienprod_stats;
+
+namespace scienprod_stats {
 
 Publication::Publication(const std::string & title, const std::string & language, const std::string & nature, const std::string & city) {
     t = title;
@@ -16,19 +18,21 @@ Publication::Publication(const std::string & title, const std::string & language
 
 Publication::~Publication()=default;
 
-string Publication::title() {
+string Publication::title() const {
     return t;
 }
 
-string Publication::language() {
+string Publication::language() const {
     return l;
 }
 
-string Publication::nature() {
+string Publication::nature() const {
     return n;
 }
 
-string Publication::city() {
+string Publication::city() const {
+    if(c.empty())
+        return "-";
     return c;
 }
 
@@ -43,7 +47,7 @@ void Publication::set_pages(const int & begin, const int & end) {
     p.has_page = true;
 }
 
-int Publication::size() {
+int Publication::size() const {
     if(p.has_page)
         return p.end - p.begin + 1;
     else
@@ -58,4 +62,14 @@ bool Publication::compare(Publication * publication) {
             } return (n > publication->nature());
         } return (l > publication->language());
     } return (t > publication->title());
+}
+
+string Publication::hash() const {
+    static int counter = 0;
+
+    counter++;
+
+    return to_string(counter);
+}
+
 }

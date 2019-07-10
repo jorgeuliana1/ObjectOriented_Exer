@@ -22,11 +22,11 @@ public:
     /**
     * @return Graduation Program's name.
     */
-    std::string name();
+    std::string name() const;
     /**
     * @return Graduation Program's code / id.
     */
-    std::string id();
+    std::string id() const;
     /**
     * @param New Graduation Program's publication.
     */
@@ -34,17 +34,29 @@ public:
     /**
     * @return Number of Publications by the Graduation Program.
     */
-    long unsigned int size();
+    long unsigned int size() const;
     /**
     * @param Index of the wanted Publication.
     * @return Wanted Publication.
     */
-    Publication * get(const long unsigned int &);
+    Publication * get(const long unsigned int &) const;
     /**
     * Use this method before deleting the Publication from the memory.
     * @param Index of the Publication to be removed.
     */
     void remove(const long unsigned int &);
+    /**
+     * Overrides operator ==.
+     */
+    bool operator==(const GradProgram &) const;
+    /**
+     * Overrides operator <<.
+     */
+    friend std::ostream & operator<<(std::ostream &, const GradProgram &);
+    /**
+     * @return The hash key for this specific graduation program.
+     */
+    std::string hash() const;
 
 private:
     std::string n; // Graduation Program's name.

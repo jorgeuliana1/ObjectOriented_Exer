@@ -24,22 +24,22 @@ public:
      *
      * @return The publication's title.
      */
-    std::string title();
+    std::string title() const;
     /**
      *
      * @return The publication's language
      */
-    std::string language();
+    std::string language() const;
     /**
      *
      * @return The publication's nature.
      */
-    std::string nature();
+    std::string nature() const;
     /**
      *
      * @return The publication's city.
      */
-    std::string city();
+    std::string city() const;
 
     /**
      * @param Initial page.
@@ -50,13 +50,17 @@ public:
     /**
      * @return Number of pages in the Publication.
      */
-    int size();
+    int size() const;
 
     /**
      * @param Publication to be compared.
      * @return True if this is greater than param. Else it returns False.
      */
     virtual bool compare(Publication *);
+    /**
+     * @return The hash key for this specific publication.
+     */
+    std::string hash() const;
 
 private:
     std::string t; // Article title

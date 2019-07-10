@@ -235,16 +235,8 @@ void Stats::read() {
         GradProgram * program;
         program = new GradProgram(g_id, g_n);
 
-        // Key for the university
-        std::string uni_key;
-
-        // Key for the Graduation Program
-        std::string gpr_key;
-
-        uni_key = uni_n + uni_s;
-        gpr_key = g_id;
-
-        // TODO: Add University and Graduation Program here.
+        add_gradprogram(program);
+        add_university(university);
 
         university->add(program);
         // program->add(publication);
@@ -254,11 +246,45 @@ void Stats::read() {
 }
 
 void Stats::add_gradprogram(GradProgram * gradprogram) {
-    // TODO: Implement
+    string hash_key = gradprogram->hash();
+
+    auto found = g.find(hash_key);
+
+    // If the element couldn't be found...
+    if(found == g.end()) {
+        // Inserting element to map.
+        g.insert({hash_key, gradprogram});
+    } else
+        // Updating pointer to the graduation program.
+        gradprogram = g.at(hash_key);
 }
 
 void Stats::add_university(University * university) {
-    // TODO: Implement
+    string hash_key = university->hash();
+
+    auto found = u.find(hash_key);
+
+    // If the element couldn't be found...
+    if(found == u.end()) {
+        // Inserting element to map.
+        u.insert({hash_key, university});
+    } else
+        // Updating pointer to the university.
+        university = u.at(hash_key);
+}
+
+void Stats::add_publication(Publication * publication) {
+    string hash_key = publication->hash();
+
+    auto found = p.find(hash_key);
+
+    // If the element couldn't be found...
+    if(found == p.end()) {
+        // Inserting element to map.
+        p.insert({hash_key, publication});
+    } else
+        // Updating pointer to the university.
+        publication = p.at(hash_key);
 }
 
 }

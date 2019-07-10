@@ -77,6 +77,18 @@ int main() {
 
     // TODO: Uncomment the main function.
 
+    University u1("Ufes", "Ufes");
+    University u2("USP", "USP");
+    University u3("Ufes", "Ufes");
+
+    std::cout << (u1 == u2) << std::endl;
+    std::cout << (u1 == u3) << std::endl;
+
+    std::cout << u1 << std::endl;
+
+    GradProgram gp("PPGI", "SEILAOCODIGO");
+    std::cout << gp << std::endl;
+
 
     return 0;
 }
